@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es6",
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "pretty": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+  },
+
+  "include": [
+    ".eslintrc.js",
+    "app/**/*"
+  ],
+
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

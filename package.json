@@ -1,0 +1,43 @@
+{
+  "name": "pizzi-api",
+  "version": "1.0.0",
+  "description": "API for Pizzi fueled by TypeScript NodeJS, built on OAuth2 and REST",
+  "main": "app/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc-watch --onsuccess \"node app/index.js\"",
+    "test": "echo \"Error: no tests specified\"",
+    "lint": "eslint . --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PizziPayment/PizziAPI.git"
+  },
+  "keywords": [
+    "api",
+    "nodejs",
+    "rest",
+    "oauth2",
+    "typescript",
+    "javascript"
+  ],
+  "author": "PizziPayment",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PizziPayment/PizziAPI/issues"
+  },
+  "homepage": "https://github.com/PizziPayment/PizziAPI#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.11",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^7.2.0",
+    "prettier": "^2.2.1",
+    "tsc-watch": "^4.2.9",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
