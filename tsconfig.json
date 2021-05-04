@@ -9,12 +9,9 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
+    "rootDir": "./app",
+    "outDir": "./dist"
   },
-
-  "include": [
-    ".eslintrc.js",
-    "app/**/*"
-  ],
 
   "exclude": [
     "node_modules",

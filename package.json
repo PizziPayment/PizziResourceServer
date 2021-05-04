@@ -2,12 +2,12 @@
   "name": "pizzi-api",
   "version": "1.0.0",
   "description": "API for Pizzi fueled by TypeScript NodeJS, built on OAuth2 and REST",
-  "main": "app/index.js",
+  "main": "app/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "tsc-watch --onsuccess \"node app/index.js\"",
+    "start": "tsc-watch --onsuccess \"node dist/index.js\"",
     "test": "echo \"Error: no tests specified\"",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint '*/**/*.ts' --quiet --fix"
   },
   "repository": {
     "type": "git",

@@ -40,7 +40,7 @@ bower_components
 .lock-wscript
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
+dist/Release
 
 # Dependency directories
 node_modules/
@@ -85,19 +85,19 @@ typings/
 .cache
 .parcel-cache
 
-# Next.js build output
+# Next.js dist output
 .next
 
-# Nuxt.js build / generate output
+# Nuxt.js dist / generate output
 .nuxt
 dist
 
-# Storybook build outputs
+# Storybook dist outputs
 .out
 .storybook-out
 storybook-static
 
-# rollup.js default build output
+# rollup.js default dist output
 dist/
 
 # Gatsby files
@@ -106,7 +106,7 @@ dist/
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
-# vuepress build output
+# vuepress dist output
 .vuepress/dist
 
 # Serverless directories
