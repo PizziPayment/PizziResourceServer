@@ -1,0 +1,13 @@
+name: Check doc
+on: [push, pull_request]
+
+jobs:
+  check-doc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npm -g install redoc-cli
+      - run: redoc-cli bundle OpenAPI/pizzi_api.yaml
