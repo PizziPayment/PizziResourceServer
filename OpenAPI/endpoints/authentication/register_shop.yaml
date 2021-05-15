@@ -1,0 +1,18 @@
+post:
+  tags:
+    - Auth
+  summary: Register Shop
+  description: Create a Pizzi shop account.
+  requestBody:
+    description: User's informations
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/register_shop.yaml'
+  responses:
+    '201':
+      description: CREATED
+    '400':
+      description: BAD REQUEST
+    '500':
+      description: INTERNAL ERROR

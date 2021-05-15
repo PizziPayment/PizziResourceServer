@@ -1,0 +1,18 @@
+post:
+  tags:
+    - Auth
+  summary: Register User
+  description: Create a Pizzi user account.
+  requestBody:
+    description: User's informations
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/register_user.yaml'
+  responses:
+    '201':
+      description: CREATED
+    '400':
+      description: BAD REQUEST
+    '500':
+      description: INTERNAL ERROR

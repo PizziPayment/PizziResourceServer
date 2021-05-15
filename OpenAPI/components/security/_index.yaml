@@ -1,0 +1,2 @@
+BearerAuth:
+  $ref: './bearer.yaml'

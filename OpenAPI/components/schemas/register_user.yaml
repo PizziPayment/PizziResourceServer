@@ -1,0 +1,18 @@
+type: object
+properties:
+  name:
+    type: string
+  surname:
+    type: string
+  email:
+    type: string
+  password:
+    type: string
+    description: A string longer than 8 character with at least a number and a special character.
+example:
+  {
+    "name": "testname",
+    "surname": "testsurname",
+    "email": "test@test.eu",
+    "password": "Testeee8!"
+  }
