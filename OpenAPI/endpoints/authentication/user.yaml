@@ -16,3 +16,17 @@ post:
       description: BAD REQUEST
     '500':
       description: INTERNAL ERROR
+delete:
+  tags:
+    - Auth
+  summary: Delete User
+  description: Delete the Pizzi user account related to the given token.
+  security:
+    - BearerAuth: []
+  responses:
+    '204':
+      description: OK
+    '403':
+      description: UNAUTORIZED
+    '500':
+      description: INTERNAL ERROR

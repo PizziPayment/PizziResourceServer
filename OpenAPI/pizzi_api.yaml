@@ -19,16 +19,17 @@ tags:
     description: Everything about receipts querying.
 
 paths:
-  /auth/user/register:
-    $ref: './endpoints/authentication/register_user.yaml'
-  /auth/shop/register:
-    $ref: './endpoints/authentication/register_shop.yaml'
+  /auth/user:
+    $ref: './endpoints/authentication/user.yaml'
+  /auth/shop:
+    $ref: './endpoints/authentication/shop.yaml'
   /auth/user/login:
     $ref: './endpoints/authentication/login_user.yaml'
   /auth/shop/login:
     $ref: './endpoints/authentication/login_shop.yaml'
   /auth/disconnect:
     $ref: './endpoints/authentication/disconnect.yaml'
+
 
 components:
   securitySchemes:
