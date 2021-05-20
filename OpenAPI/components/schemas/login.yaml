@@ -2,10 +2,9 @@ type: object
 properties:
   email:
     type: string
-  password:
-    type: string
-example:
-  {
-    "username": "test@test.eu",
+  $ref: "./password.yaml"
+examples:
+  - {
+    "email": "test@test.eu",
     "password": "Testeee8!",
   }

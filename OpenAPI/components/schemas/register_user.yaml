@@ -6,11 +6,9 @@ properties:
     type: string
   email:
     type: string
-  password:
-    type: string
-    description: A string longer than 8 character with at least a number and a special character.
-example:
-  {
+  $ref: "./password.yaml"
+examples:
+  - {
     "name": "testname",
     "surname": "testsurname",
     "email": "test@test.eu",

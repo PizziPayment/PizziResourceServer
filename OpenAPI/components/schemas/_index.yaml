@@ -4,5 +4,3 @@ RegisterShop:
   $ref: './register_shop.yaml'
 Login:
   $ref: './login.yaml'
-Token:
-  $ref: './token.yaml'

@@ -15,11 +15,9 @@ properties:
     type: string
   phone:
     type: string
-  password:
-    type: string
-    description: A string longer than 8 character with at least a number and a special character.
-example:
-  {
+  $ref: "./password.yaml"
+examples:
+  - {
     "name": "shop",
     "place":
       {

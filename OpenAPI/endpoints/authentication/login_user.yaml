@@ -14,7 +14,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../../components/schemas/token.yaml'
+            $ref: '../../components/responses/token.yaml'
     '400':
       description: BAD REQUEST
     '500':
