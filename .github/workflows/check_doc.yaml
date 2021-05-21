@@ -7,12 +7,14 @@ on:
 jobs:
   check-doc:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./OpenAPI
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - run: cd OpenAPI
       - run: npm install .
         name: Install documentation tools
       - run: npm run linter
