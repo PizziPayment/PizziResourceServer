@@ -17,7 +17,18 @@ jobs:
           node-version: '14'
       - run: npm install .
         name: Install documentation tools
-      - run: npm run linter
-        name: Linter
+      # - run: npm run linter
+        # name: Linter
       - run: npm run builder
         name: Builder
+
+  trigger-doc-build:
+    if: ${{ github.ref == 'ref/heads/doc_ci' }}
+    needs: check-doc
+    steps:
+      - name: Trigger documentation build
+        run: |
+          curl -X POST https://api.github.com/repos/PizziPayment/PiziPayment.github.io/dispatches \
+          -H 'Accept: application/vnd.github.v3+json' \
+          -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
+          --data '{ "event_type": "update" }'

@@ -1,8 +1,7 @@
 name: Deploy doc
 on:
-  push:
-    branches:
-      - doc_ci
+  repository_dispatch:
+    types: update
 
 jobs:
   deploy-doc:
