@@ -9,5 +9,6 @@ jobs:
       - name:
         uses: peter-evans/repository-dispatch@v1
         with:
+          repository: PizziPayment/PizziPayment.github.io
           token: ${{ secrets.ACCESS_TOKEN }}
           event-type: Trigger documentation build workflow
