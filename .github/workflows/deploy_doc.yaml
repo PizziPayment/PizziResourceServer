@@ -6,8 +6,8 @@ jobs:
   deploy-doc:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          curl -X POST https://api.github.com/repos/PizziPayment/PiziPayment.github.io/dispatches \
-          -H 'Accept: application/vnd.github.v3+json' \
-          -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
-          --data '{ "event_type": "update" }'
+      - name:
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event-type: Trigger documentation build workflow
