@@ -1,0 +1,13 @@
+{
+  "name": "openapi",
+  "version": "1.0.0",
+  "description": "Dependencies related to the documentation",
+  "scripts": {
+      "linter": "speccy lint pizzi_api.yaml",
+      "builder": "redoc-cli bundle pizzi_api.yaml -o index.html"
+  },
+  "dependencies": {
+    "redoc-cli": "^0.11.4",
+    "speccy": "^0.11.0"
+  }
+}

@@ -1,5 +1,8 @@
 name: Check doc
-on: []
+on:
+  push:
+    paths:
+      - OpenAPI/**
 
 jobs:
   check-doc:
@@ -9,5 +12,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - run: npm -g install redoc-cli
-      - run: redoc-cli bundle OpenAPI/pizzi_api.yaml
+      - run: cd OpenAPI
+      - run: npm install .
+        name: Install documentation tools
+      - run: npm run linter
+        name: Linter
+      - run: npm run builder
+        name: Builder
