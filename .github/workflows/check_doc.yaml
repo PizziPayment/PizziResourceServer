@@ -24,7 +24,7 @@ jobs:
 
   trigger-doc-build:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'ref/heads/doc_ci' }}
+    if: ${{ github.ref == 'refs/heads/doc_ci' }}
     needs: check-doc
     steps:
       - name: Trigger documentation build
