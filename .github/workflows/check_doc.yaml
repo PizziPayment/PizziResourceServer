@@ -17,8 +17,8 @@ jobs:
           node-version: '14'
       - run: npm install .
         name: Install documentation tools
-      # - run: npm run linter
-      # name: Linter
+      - run: npm run linter
+        name: Linter
       - run: npm run builder
         name: Builder
 
