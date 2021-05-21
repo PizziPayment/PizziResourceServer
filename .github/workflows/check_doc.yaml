@@ -28,8 +28,7 @@ jobs:
     needs: check-doc
     steps:
       - name: Trigger documentation build
-        run: |
-          curl -X POST https://api.github.com/repos/PizziPayment/PiziAPI/dispatches \
-          -H 'Accept: application/vnd.github.v3+json' \
-          -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
-          --data '{ "event_type": "update" }'
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event-type: build-doc

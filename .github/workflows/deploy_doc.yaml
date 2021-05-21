@@ -1,7 +1,6 @@
 name: Deploy doc
 on:
   repository_dispatch:
-    types: update
 
 jobs:
   deploy-doc:
