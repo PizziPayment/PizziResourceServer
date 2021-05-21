@@ -1,6 +1,6 @@
 openapi: "3.0.2"
 info:
-  title: Pizzi API
+  title: Pizzi API 
   version: "pre-alpha"
   description: >
     This is the internal API documentation for Pizzi.
