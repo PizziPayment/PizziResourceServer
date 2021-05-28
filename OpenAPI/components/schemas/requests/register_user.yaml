@@ -6,9 +6,10 @@ properties:
     type: string
   email:
     type: string
-  $ref: "./password.yaml"
-examples:
-  - {
+  password:
+    $ref: "../../types.yaml#/password"
+example:
+  {
     "name": "testname",
     "surname": "testsurname",
     "email": "test@test.eu",

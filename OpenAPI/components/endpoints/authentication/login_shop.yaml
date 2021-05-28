@@ -1,20 +1,21 @@
 post:
+  operationId: "login_shop"
   tags:
     - Auth
-  summary: Login User
+  summary: Login Shop
   description: Retreive access token from account credentials.
   requestBody:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/login.yaml'
+          $ref: '../../schemas/requests/login.yaml'
   responses:
     '200':
       description: OK
       content:
         application/json:
           schema:
-            $ref: '../../components/responses/token.yaml'
+            $ref: '../../schemas/responses/token.yaml'
     '400':
       description: BAD REQUEST
     '500':

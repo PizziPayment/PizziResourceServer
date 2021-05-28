@@ -1,5 +1,7 @@
 openapi: "3.0.2"
 info:
+  x-logo:
+    url: "https://avatars.githubusercontent.com/u/72045151?s=400&u=2da454a65a925719805331f9e3993bec4bc0b417&v=4"
   title: Pizzi API
   version: "pre-alpha"
   description: >
@@ -20,20 +22,16 @@ tags:
 
 paths:
   /auth/user:
-    $ref: './endpoints/authentication/user.yaml'
+    $ref: './components/endpoints/authentication/user.yaml'
   /auth/shop:
-    $ref: './endpoints/authentication/shop.yaml'
+    $ref: './components/endpoints/authentication/shop.yaml'
   /auth/user/login:
-    $ref: './endpoints/authentication/login_user.yaml'
+    $ref: './components/endpoints/authentication/login_user.yaml'
   /auth/shop/login:
-    $ref: './endpoints/authentication/login_shop.yaml'
+    $ref: './components/endpoints/authentication/login_shop.yaml'
   /auth/disconnect:
-    $ref: './endpoints/authentication/disconnect.yaml'
-
+    $ref: './components/endpoints/authentication/disconnect.yaml'
 
 components:
   securitySchemes:
     $ref: './components/security/_index.yaml'
-
-  schemas:
-    $ref: './components/schemas/_index.yaml'

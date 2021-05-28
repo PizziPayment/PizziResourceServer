@@ -1,14 +1,15 @@
 post:
+  operationId: "create_shop"
   tags:
     - Auth
-  summary: Register User
-  description: Create a Pizzi user account.
+  summary: Register Shop
+  description: Create a Pizzi shop account.
   requestBody:
     description: User's informations
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/register_user.yaml'
+          $ref: '../../schemas/requests/register_shop.yaml'
   responses:
     '201':
       description: CREATED
@@ -17,16 +18,17 @@ post:
     '500':
       description: INTERNAL ERROR
 delete:
+  operationId: "delete_shop"
   tags:
     - Auth
-  summary: Delete User
-  description: Delete the Pizzi user account related to the given token.
+  summary: Delete Shop
+  description: Delete the Pizzi shop account related to the given token.
   security:
     - BearerAuth: []
   responses:
     '204':
       description: OK
     '403':
-      description: UNAUTORIZED
+      description: UNAUTHORIZED
     '500':
       description: INTERNAL ERROR
