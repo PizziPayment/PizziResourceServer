@@ -2,7 +2,7 @@ openapi: "3.0.2"
 info:
   x-logo:
     url: "https://avatars.githubusercontent.com/u/72045151?s=400&u=2da454a65a925719805331f9e3993bec4bc0b417&v=4"
-  title: Pizzi API
+  title: Pizzi API - Ressource server
   version: "pre-alpha"
   description: >
     This is the internal API resource server documentation for the PizziPayment.
