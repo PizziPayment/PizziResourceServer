@@ -1,0 +1,3 @@
+password:
+  type: string
+  description: A string longer than 8 characters with at least a number and a special character.

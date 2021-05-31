@@ -1,0 +1,40 @@
+post:
+  operationId: "create_shop"
+  tags:
+    - Shop
+  summary: Register Shop
+  description: Create a Pizzi shop account.
+  requestBody:
+    description: User's informations.
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/requests/_index.yaml#/RegisterUser'
+  responses:
+    '201':
+      description: CREATED
+    '400':
+      description: BAD REQUEST
+    '500':
+      description: INTERNAL SERVER ERROR
+delete:
+  operationId: "delete_shop"
+  tags:
+    - Shop
+  summary: Delete Shop
+  description: Delete the Pizzi shop account related to the given token.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: User's password.
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/requests/_index.yaml#/DeleteShop'
+  responses:
+    '204':
+      description: OK
+    '403':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR

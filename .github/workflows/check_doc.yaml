@@ -2,14 +2,14 @@ name: Check doc
 on:
   push:
     paths:
-      - OpenAPI/**
+      - documentation/**
 
 jobs:
   check-doc:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./OpenAPI
+        working-directory: ./documentation
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
