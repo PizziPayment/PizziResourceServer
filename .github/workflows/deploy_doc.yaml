@@ -12,3 +12,4 @@ jobs:
           repository: PizziPayment/PizziPayment.github.io
           token: ${{ secrets.ACCESS_TOKEN }}
           event-type: Trigger documentation build workflow
+          client-payload: '{ "repo": "resource-server" }'
