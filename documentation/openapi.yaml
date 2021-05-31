@@ -5,8 +5,8 @@ info:
   title: Pizzi API
   version: "pre-alpha"
   description: >
-    This is the internal API documentation for Pizzi.
-    You can find out more about Pizzi at [https://www.pizzi-payment.fr](https://www.pizzi-payment.fr).
+    This is the internal API resource server documentation for the PizziPayment.
+    You can find out more about Pizzi at [here](https://www.pizzi-payment.fr).
   contact:
     email: contact@pizzi-payment.fr
 
@@ -15,23 +15,17 @@ servers:
     url: http://localhost:5000
 
 tags:
-  - name: Auth
-    description: Everything about authentication.
+  - name: Shop
+    description: Everything about shop.
 
-  - name: Receipts
-    description: Everything about receipts querying.
+  - name: User
+    description: Everything about user.
 
 paths:
-  /auth/user:
+  /user:
     $ref: './components/endpoints/authentication/user.yaml'
-  /auth/shop:
+  /shop:
     $ref: './components/endpoints/authentication/shop.yaml'
-  /auth/user/login:
-    $ref: './components/endpoints/authentication/login_user.yaml'
-  /auth/shop/login:
-    $ref: './components/endpoints/authentication/login_shop.yaml'
-  /auth/disconnect:
-    $ref: './components/endpoints/authentication/disconnect.yaml'
 
 components:
   securitySchemes:
