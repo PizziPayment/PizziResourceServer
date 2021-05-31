@@ -6,7 +6,7 @@ info:
   version: "pre-alpha"
   description: >
     This is the internal API resource server documentation for the PizziPayment.
-    You can find out more about Pizzi at [here](https://www.pizzi-payment.fr).
+    You can find out more about Pizzi [here](https://www.pizzi-payment.fr).
   contact:
     email: contact@pizzi-payment.fr
 
