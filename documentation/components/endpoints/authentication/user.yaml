@@ -1,0 +1,41 @@
+post:
+  operationId: "create_user"
+  tags:
+    - User
+  summary: Register User
+  description: Create a Pizzi user account.
+  requestBody:
+    description: User's informations.
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/requests/_index.yaml#/RegisterUser'
+  responses:
+    '201':
+      description: CREATED
+    '400':
+      description: BAD REQUEST
+    '500':
+      description: INTERNAL SERVER ERROR
+
+delete:
+  operationId: "delete_user"
+  tags:
+    - User
+  summary: Delete User
+  description: Delete the Pizzi user account related to the given token.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: User's password.
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/requests/_index.yaml#/DeleteUser'
+  responses:
+    '204':
+      description: OK
+    '403':
+      description: UNAUTORIZED
+    '500':
+      description: INTERNAL SERVER ERROR
