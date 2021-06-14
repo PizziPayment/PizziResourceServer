@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import RegisterRequestModel from '../models/register.request.model'
-import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response.model'
-import DatabaseService from '../../common/services/database/database.service'
+import RegisterRequestModel from '../../shop/models/register.request.model'
+import { ApiFailure, ApiResponseWrapper } from '../models/api.response.model'
+import DatabaseService from '../services/database/database.service'
 
 export default async function validUniqueEmail(
     req: Request<unknown, unknown, RegisterRequestModel>,
