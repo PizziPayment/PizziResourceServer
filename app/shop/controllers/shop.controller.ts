@@ -18,7 +18,7 @@ export async function register(req: Request<unknown, unknown, RegisterRequestMod
             'shop',
             user.value.id,
             req.body.email,
-            DatabaseService.crypt(req.body.password)
+            DatabaseService.encrypt(req.body.password)
         )
 
         if (credentials.isOk()) {

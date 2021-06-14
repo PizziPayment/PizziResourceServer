@@ -17,7 +17,7 @@ enum DatabaseServiceError {
 }
 
 export default class DatabaseService {
-    static crypt(source: string): string {
+    static encrypt(source: string): string {
         return createHash('sha256').update(source).digest('hex')
     }
 
