@@ -1,10 +1,10 @@
 export default class Config {
     static apiPort = 5000
     static database = {
-        host: '0.0.0.0',
-        port: 5432,
-        name: 'db',
-        user: 'postgre',
-        password: 'postgre',
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        name: process.env.DB_NAME,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
     }
 }
