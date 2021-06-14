@@ -1,18 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import RegisterRequestModel from '../models/register.request.model'
 import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response.model'
-
-function isValidEmail(email: string): boolean {
-    const rule = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-
-    return rule.test(email)
-}
-
-function isValidPassword(password: string): boolean {
-    const rule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/
-
-    return rule.test(password)
-}
+import FieldValidationService from '../../common/services/field_validation/field.validation.service'
 
 export default function validRegisterRequest(
     req: Request<unknown, unknown, RegisterRequestModel>,
@@ -28,10 +17,10 @@ export default function validRegisterRequest(
         if (!req.body.surname) {
             errors.push('invalid "surname"')
         }
-        if (!req.body.email || !isValidEmail(req.body.email)) {
+        if (!req.body.email || !FieldValidationService.isValidEmail(req.body.email)) {
             errors.push('invalid "email"')
         }
-        if (!req.body.password || !isValidPassword(req.body.password)) {
+        if (!req.body.password || !FieldValidationService.isValidPassword(req.body.password)) {
             errors.push('invalid "password"')
         }
         if (!req.body.place || !req.body.place.address || !req.body.place.city || !req.body.place.zipcode) {
