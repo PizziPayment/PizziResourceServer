@@ -2,7 +2,9 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 
 import Config from './common/config/env.config'
-import AuthenticationRouter from './authentication/routes.config'
+import UserRouter from './user/routes.config'
+import { Orm } from './common/services/orm/orm.service'
+import ShopRouter from './shop/routes.config'
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -22,7 +24,14 @@ app.use((req, res, next) => {
     }
 })
 
-AuthenticationRouter(app)
+UserRouter(app)
+ShopRouter(app)
+
+Orm.authenticate()
+    .then(() => console.log('Orm synchronised'))
+    .catch(() => {
+        throw new Error("Can't connect to database")
+    })
 
 app.listen(Config.apiPort, () => {
     console.log(`API is listening on ${Config.apiPort}`)
