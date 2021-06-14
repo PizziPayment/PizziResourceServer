@@ -6,10 +6,20 @@ import { ApiFailure } from '../../common/models/api.response.model'
 import TokenModel from '../../common/services/database/models/token.model'
 
 export async function register(req: Request<unknown, unknown, RegisterRequestModel>, res: Response): Promise<void> {
-    const user = await ShopServices.createShop(req.body.name, req.body.phone, `${req.body.place.address} ${req.body.place.city}`, req.body.place.zipcode)
+    const user = await ShopServices.createShop(
+        req.body.name,
+        req.body.phone,
+        `${req.body.place.address} ${req.body.place.city}`,
+        req.body.place.zipcode
+    )
 
     if (user.isOk()) {
-        const credentials = await DatabaseService.createCredentialWithId('shop', user.value.id, req.body.email, DatabaseService.crypt(req.body.password))
+        const credentials = await DatabaseService.createCredentialWithId(
+            'shop',
+            user.value.id,
+            req.body.email,
+            DatabaseService.crypt(req.body.password)
+        )
 
         if (credentials.isOk()) {
             res.status(201).send()

@@ -27,7 +27,12 @@ export default class ShopServices {
             return err(ShopServiceError.DatabaseError)
         }
     }
-    static async createShop(name: string, phone: string, address: string, zipcode: number): Promise<ShopServiceResult<ShopModel>> {
+    static async createShop(
+        name: string,
+        phone: string,
+        address: string,
+        zipcode: number
+    ): Promise<ShopServiceResult<ShopModel>> {
         try {
             const shop = await Shop.create({
                 address: address,

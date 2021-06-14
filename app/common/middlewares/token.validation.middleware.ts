@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from 'express'
 import { ApiFailure, ApiResponseWrapper } from '../models/api.response.model'
 import DatabaseService from '../services/database/database.service'
 
-export default async function validToken(req: Request, res: Response<ApiResponseWrapper<unknown>>, next: NextFunction): Promise<Response | void> {
+export default async function validToken(
+    req: Request,
+    res: Response<ApiResponseWrapper<unknown>>,
+    next: NextFunction
+): Promise<Response | void> {
     const authorization_type = req.headers.authorization?.split(' ')
 
     if (authorization_type && authorization_type.length === 2 && authorization_type[0] === 'Bearer') {

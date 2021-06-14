@@ -27,9 +27,20 @@ export default class UserServices {
             return err(UserServiceError.DatabaseError)
         }
     }
-    static async createUser(name: string, surname: string, address: string, zipcode: number): Promise<UserServiceResult<UserModel>> {
+    static async createUser(
+        name: string,
+        surname: string,
+        address: string,
+        zipcode: number
+    ): Promise<UserServiceResult<UserModel>> {
         try {
-            const user = await User.create({ address: address, firstname: name, surname: surname, zipcode: zipcode, picture_id: null })
+            const user = await User.create({
+                address: address,
+                firstname: name,
+                surname: surname,
+                zipcode: zipcode,
+                picture_id: null,
+            })
 
             return ok(user)
         } catch {
