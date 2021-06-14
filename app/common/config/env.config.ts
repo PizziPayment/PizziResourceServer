@@ -1,5 +1,5 @@
 export default class Config {
-    static apiPort = 3000
+    static apiPort = 5000
     static database = {
         host: '0.0.0.0',
         port: 5432,

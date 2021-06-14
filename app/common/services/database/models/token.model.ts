@@ -3,4 +3,6 @@ export default interface TokenModel {
     access_token: string
     refresh_token: string
     expires_at: Date
+    client_id: number
+    credential_id: number
 }

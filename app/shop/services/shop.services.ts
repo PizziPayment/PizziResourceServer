@@ -9,9 +9,24 @@ enum ShopServiceError {
     ClientNotFound,
     DatabaseError,
     TokenNotFound,
+    ShopNotFound,
 }
 
 export default class ShopServices {
+    static async deleteShopById(shop_id: number): Promise<ShopServiceResult<void>> {
+        try {
+            const shop = await Shop.findOne({ where: { id: shop_id } })
+
+            if (!shop) {
+                return err(ShopServiceError.ShopNotFound)
+            } else {
+                await shop.destroy()
+                return ok(null)
+            }
+        } catch {
+            return err(ShopServiceError.DatabaseError)
+        }
+    }
     static async createShop(name: string, phone: string, address: string, zipcode: number): Promise<ShopServiceResult<ShopModel>> {
         try {
             const shop = await Shop.create({

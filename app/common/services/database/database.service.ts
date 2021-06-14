@@ -21,6 +21,37 @@ export default class DatabaseService {
         return createHash('sha256').update(source).digest('hex')
     }
 
+    static async deleteCredentialFromId(credential_id: number): Promise<DatabaseServiceResult<void>> {
+        try {
+            const credential = await Credential.findOne({ where: { id: credential_id } })
+
+            if (!credential) {
+                return err(DatabaseServiceError.OwnerNotFound)
+            } else {
+                const tokens = await Token.findAll({ where: { credential_id: credential_id } })
+
+                await Promise.all(tokens.map((tok) => tok.destroy()))
+                await credential.destroy()
+                return ok(null)
+            }
+        } catch (e) {
+            console.log(e)
+            return err(DatabaseServiceError.DatabaseError)
+        }
+    }
+    static async getCredentialFromId(credential_id: number): Promise<DatabaseServiceResult<CredentialModel>> {
+        try {
+            const credential = await Credential.findOne({ where: { id: credential_id } })
+
+            if (!credential) {
+                return ok(credential)
+            }
+            return err(DatabaseServiceError.OwnerNotFound)
+        } catch {
+            return err(DatabaseServiceError.DatabaseError)
+        }
+    }
+
     static async getTokenFromValue(token: string): Promise<DatabaseServiceResult<TokenModel>> {
         try {
             const maybe_token = await Token.findOne({ where: { access_token: token } })
