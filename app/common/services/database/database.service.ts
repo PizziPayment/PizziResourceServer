@@ -44,9 +44,10 @@ export default class DatabaseService {
             const credential = await Credential.findOne({ where: { id: credential_id } })
 
             if (!credential) {
+                return err(DatabaseServiceError.OwnerNotFound)
+            } else {
                 return ok(credential)
             }
-            return err(DatabaseServiceError.OwnerNotFound)
         } catch {
             return err(DatabaseServiceError.DatabaseError)
         }
