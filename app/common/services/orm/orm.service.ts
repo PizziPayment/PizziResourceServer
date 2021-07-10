@@ -9,4 +9,5 @@ export const Orm = new Sequelize({
     username: config.database.user,
     password: config.database.password,
     models: [`${__dirname}/models`],
+    logging: false,
 })
