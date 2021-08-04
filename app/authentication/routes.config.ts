@@ -1,10 +1,9 @@
 import { Application } from 'express'
-import { login, register, deleteAccount } from './controllers/user.auth.controller'
+import { register, deleteAccount } from './controllers/user.auth.controller'
 const baseUrl = '/auth'
-const userBaseUrl = `${baseUrl}/user`
+const userBaseUrl = `${baseUrl}/users`
 
 export default function AuthenticationRouter(app: Application): void {
-    app.post(`${userBaseUrl}/login`, [login])
-    app.post(`${userBaseUrl}/register`, [register])
+    app.post(`${userBaseUrl}/`, [register])
     app.delete(`${userBaseUrl}/`, [deleteAccount])
 }
