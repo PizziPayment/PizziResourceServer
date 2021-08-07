@@ -22,9 +22,9 @@ tags:
     description: Everything about user.
 
 paths:
-  /user:
+  /users:
     $ref: './components/endpoints/authentication/user.yaml'
-  /shop:
+  /shops:
     $ref: './components/endpoints/authentication/shop.yaml'
 
 components:
