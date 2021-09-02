@@ -9,7 +9,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/requests/_index.yaml#/RegisterUser'
+          $ref: '../../schemas/requests/_index.yaml#/RegisterShop'
   responses:
     '201':
       description: CREATED
