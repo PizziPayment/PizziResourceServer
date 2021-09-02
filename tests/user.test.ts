@@ -18,6 +18,10 @@ beforeEach(async () => {
 
 afterAll(async () => await Orm.close())
 
+beforeAll(async () =>  {
+  await Orm.sync()
+})
+
 describe('User endpoint', () => {
     const endpoint = '/user'
 

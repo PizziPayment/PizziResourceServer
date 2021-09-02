@@ -1,6 +1,5 @@
 import { AutoIncrement, Column, ForeignKey, Model, PrimaryKey, Table } from 'sequelize-typescript'
 import Picture from './pictures.database.model'
-import { Col } from 'sequelize/types/lib/utils'
 
 interface ShopAttributes {
     id: number

@@ -1,5 +1,6 @@
-import { AutoIncrement, Column, Model, PrimaryKey, Table } from 'sequelize-typescript'
+import { AutoIncrement, Column, ForeignKey, Model, PrimaryKey, Table } from 'sequelize-typescript'
 import { Omit } from 'sequelize-typescript/dist/shared/types'
+import Picture from './pictures.database.model'
 
 interface UserAttributes {
     id: number
@@ -25,6 +26,7 @@ export default class User extends Model<UserAttributes, UserCreation> {
     @Column
     surname!: string
 
+    @ForeignKey(() => Picture)
     @Column
     picture_id?: number
 
