@@ -5,7 +5,7 @@ import validRegisterRequest from './middlewares/register.request.validation.midd
 import validUniqueEmail from '../common/middlewares/unique_email.validation.middleware'
 import validToken from '../common/middlewares/token.validation.middleware'
 
-const baseUrl = '/shop'
+const baseUrl = '/shops'
 
 export default function ShopRouter(app: Application): void {
     app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])
