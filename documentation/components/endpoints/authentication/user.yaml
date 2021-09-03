@@ -4,6 +4,8 @@ post:
     - User
   summary: Register User
   description: Create a Pizzi user account.
+  security:
+    - BasicAuth: []
   requestBody:
     description: User's informations.
     content:
