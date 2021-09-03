@@ -5,7 +5,7 @@ import validRegisterRequest from './middlewares/register.request.validation.midd
 import validUniqueEmail from '../common/middlewares/unique_email.validation.middleware'
 import validToken from '../common/middlewares/token.validation.middleware'
 
-const baseUrl = '/user'
+const baseUrl = '/users'
 
 export default function UserRouter(app: Application): void {
     app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])

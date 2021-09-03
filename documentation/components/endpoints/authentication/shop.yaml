@@ -4,6 +4,8 @@ post:
     - Shop
   summary: Register Shop
   description: Create a Pizzi shop account.
+  security:
+    - BasicAuth: []
   requestBody:
     description: User's informations.
     content:
