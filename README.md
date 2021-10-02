@@ -12,7 +12,7 @@
 
 ## API Configuration
 
-The API can be configure through the environment or config files. Environment
+The API can be configured through the environment or config files. Environment
 variables override config files values.
 
 Config files must be inside the `config` folder.
