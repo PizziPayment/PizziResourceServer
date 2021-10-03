@@ -1,4 +1,4 @@
-const config_provider = require('config')
+import config_provider = require('config')
 
 interface IConfig {
     port: number
