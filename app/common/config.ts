@@ -1,6 +1,6 @@
 const config_provider = require('config')
 
-interface InterfaceConfig {
+interface IConfig {
     port: number
     database: InterfaceDatabase
 }
@@ -13,7 +13,7 @@ interface InterfaceDatabase {
     password: string
 }
 
-class Config implements InterfaceConfig {
+class Config implements IConfig {
     port: number = config_provider.get('port')
     database: InterfaceDatabase = {
         host: config_provider.get('database.host'),
