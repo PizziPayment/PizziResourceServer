@@ -1,5 +1,5 @@
 {
-    "port": "API_PORT",
+    "port": "RSC_SERVER_PORT",
     "database": {
         "host": "DB_HOST",
         "port": "DB_PORT",
