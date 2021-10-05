@@ -1,4 +1,4 @@
-import config_provider = require('config')
+import ConfigProvider = require('config')
 
 interface IConfig {
     port: number
@@ -14,13 +14,13 @@ interface InterfaceDatabase {
 }
 
 class Config implements IConfig {
-    port: number = config_provider.get('port')
+    port: number = ConfigProvider.get('port')
     database: InterfaceDatabase = {
-        host: config_provider.get('database.host'),
-        port: config_provider.get('database.port'),
-        name: config_provider.get('database.name'),
-        user: config_provider.get('database.user'),
-        password: config_provider.get('database.password'),
+        host: ConfigProvider.get('database.host'),
+        port: ConfigProvider.get('database.port'),
+        name: ConfigProvider.get('database.name'),
+        user: ConfigProvider.get('database.user'),
+        password: ConfigProvider.get('database.password'),
     }
 }
 
