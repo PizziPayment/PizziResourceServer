@@ -1,0 +1,10 @@
+{
+    "port": "RSC_SERVER_PORT",
+    "database": {
+        "host": "DB_HOST",
+        "port": "DB_PORT",
+        "name": "DB_NAME",
+        "user": "DB_USER",
+        "password": "DB_PASSWORD"
+    }
+}

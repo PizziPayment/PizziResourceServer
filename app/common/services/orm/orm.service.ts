@@ -1,12 +1,12 @@
-import Config from '../../config/env.config'
+import { config } from '../../config'
 import { Sequelize } from 'sequelize-typescript'
 
 export const Orm = new Sequelize({
     dialect: 'postgres',
-    host: Config.database.host,
-    port: Number(Config.database.port),
-    database: Config.database.name,
-    username: Config.database.user,
-    password: Config.database.password,
+    host: config.database.host,
+    port: config.database.port,
+    database: config.database.name,
+    username: config.database.user,
+    password: config.database.password,
     models: [`${__dirname}/models`],
 })
