@@ -51,7 +51,7 @@
     "express": "^4.17.1",
     "neverthrow": "^4.2.2",
     "pg": "^8.6.0",
-    "pizzi-db": "^0.1.6",
+    "pizzi-db": "^0.1.7",
     "reflect-metadata": "^0.1.13",
     "sequelize": "=6.6.2",
     "sequelize-typescript": "^2.1.0",
