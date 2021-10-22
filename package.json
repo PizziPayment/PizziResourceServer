@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc-watch --onsuccess \"node dist/index.js\"",
-    "test": "DB_HOST=localhost DB_PORT=5432 DB_USER=postgre DB_PASSWORD=postgre DB_NAME=db jest --runInBand --verbose",
+    "test": "DB_HOST=localhost DB_PORT=5432 DB_USER=postgres DB_PASSWORD=password DB_NAME=db jest --runInBand --verbose",
     "lint": "eslint '*/**/*.ts' --quiet --fix"
   },
   "repository": {
@@ -51,7 +51,7 @@
     "express": "^4.17.1",
     "neverthrow": "^4.2.2",
     "pg": "^8.6.0",
-    "pizzi-db": "^0.1.5",
+    "pizzi-db": "^0.1.6",
     "reflect-metadata": "^0.1.13",
     "sequelize": "=6.6.2",
     "sequelize-typescript": "^2.1.0",
