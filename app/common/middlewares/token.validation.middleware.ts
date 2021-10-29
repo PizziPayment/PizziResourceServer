@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { ApiFailure, ApiResponseWrapper } from '../models/api.response.model'
-import DatabaseService from '../services/database/database.service'
+import { TokensService } from 'pizzi-db'
 
 export default async function validToken(
     req: Request,
@@ -11,7 +11,7 @@ export default async function validToken(
 
     if (authorization_type && authorization_type.length === 2 && authorization_type[0] === 'Bearer') {
         const access_token = authorization_type[1]
-        const maybe_token = await DatabaseService.getTokenFromValue(access_token)
+        const maybe_token = await TokensService.getTokenFromValue(access_token)
 
         if (maybe_token.isOk()) {
             if (new Date(maybe_token.value.expires_at).getDate() > new Date().getDate()) {

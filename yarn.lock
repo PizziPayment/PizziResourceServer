@@ -2894,7 +2894,7 @@ negotiator@0.6.2:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.2.tgz#feacf7ccf525a77ae9634436a64883ffeca346fb"
   integrity sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==
 
-neverthrow@^4.2.1:
+neverthrow@^4.2.2:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-4.2.2.tgz#cf333a8ab37398bc0c7a0349b9ea3c67de0ff880"
   integrity sha512-zmJ1Oo368VlI7Fp2p+uD3ekkEEYzHr4ZlTE/4vfjA+TPtstftvJ3meIS2EReKy604wVXb+N+8XtwN98Mc1jJsA==
@@ -3132,6 +3132,17 @@ pirates@^4.0.1:
   dependencies:
     node-modules-regexp "^1.0.0"
 
+pizzi-db@^0.1.2:
+  version "0.1.2"
+  resolved "https://pointecouteau.fr:40403/pizzi-db/-/pizzi-db-0.1.2.tgz#e55c21ecfb9cd28695fee557ce4e78c21b4033fb"
+  integrity sha512-cbue8VrNBNVGmnUhjUezAkjIyMiYY/EOAQPNf8M82u90Yvmdyz/CZ6O0EJIfEQN2Ruh7vERN9SVcI4Chh8PuqQ==
+  dependencies:
+    neverthrow "^4.2.2"
+    prettier "^2.3.2"
+    reflect-metadata "^0.1.13"
+    sequelize "=6.6.2"
+    sequelize-typescript "^2.1.0"
+
 pkg-dir@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-4.2.0.tgz#f099133df7ede422e81d1d8448270eeb3e4261f3"
@@ -3175,6 +3186,11 @@ prettier@^2.2.1:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.2.tgz#ef280a05ec253712e486233db5c6f23441e7342d"
   integrity sha512-lnJzDfJ66zkMy58OL5/NY5zp70S7Nz6KqcKkXYzn2tMVrNxvbqaBpg7H3qHaLxCJ5lNMsGuM8+ohS7cZrthdLQ==
+
+prettier@^2.3.2:
+  version "2.4.0"
+  resolved "https://pointecouteau.fr:40403/prettier/-/prettier-2.4.0.tgz#85bdfe0f70c3e777cf13a4ffff39713ca6f64cba"
+  integrity sha512-DsEPLY1dE5HF3BxCRBmD4uYZ+5DCbvatnolqTqcxEgKVZnL2kUfyu7b8pPQ5+hTBkdhU9SLUmK0/pHb07RE4WQ==
 
 pretty-format@^26.0.0, pretty-format@^26.6.2:
   version "26.6.2"

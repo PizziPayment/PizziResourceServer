@@ -1,8 +1,15 @@
 import Config from './common/config/env.config'
 import { App } from './api'
-import { Orm } from './common/services/orm/orm.service'
+import { initOrm } from 'pizzi-db'
 
-Orm.authenticate()
+initOrm({
+    host: Config.database.host,
+    name: Config.database.name,
+    password: Config.database.password,
+    port: Number(Config.database.port),
+    user: Config.database.user,
+    logging: false,
+})
     .then(() => console.log('Orm synchronised'))
     .catch(() => {
         throw new Error("Can't connect to database")
