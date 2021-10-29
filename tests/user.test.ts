@@ -1,5 +1,5 @@
 import { App } from '../app/api'
-import Config from '../app/common/config/env.config'
+import { config } from '../app/common/config'
 import * as request from 'supertest'
 import { rewriteTables } from 'pizzi-db'
 import { ClientsService } from 'pizzi-db'
@@ -44,13 +44,13 @@ function create_bearer_header(token: string): Object {
 }
 
 beforeEach(async () => {
-    const config = Config.database
+    const database = config.database
     const orm_config: OrmConfig = {
-        user: config.user,
-        password: config.password,
-        name: config.name,
-        host: config.host,
-        port: Number(config.port),
+        user: database.user,
+        password: database.password,
+        name: database.name,
+        host: database.host,
+        port: Number(database.port),
         logging: false
     }
 

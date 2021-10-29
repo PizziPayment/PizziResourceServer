@@ -1,7 +1,7 @@
 import * as request from 'supertest'
 
 import { App } from '../app/api'
-import Config from '../app/common/config/env.config'
+import { config } from '../app/common/config'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
 import { ClientsService, CredentialsService, EncryptionService, rewriteTables, TokensService } from 'pizzi-db'
 
@@ -54,13 +54,13 @@ function create_bearer_header(token: string): Object {
 }
 
 beforeEach(async () => {
-    const config = Config.database
+    const database = config.database
     const orm_config: OrmConfig = {
-        user: config.user,
-        password: config.password,
-        name: config.name,
-        host: config.host,
-        port: Number(config.port),
+        user: database.user,
+        password: database.password,
+        name: database.name,
+        host: database.host,
+        port: Number(database.port),
         logging: false
     }
 
@@ -74,8 +74,6 @@ describe('Shop endpoint', () => {
     describe('POST request', () => {
         it('should allow the creation of a valid shop', async () => {
             const res = await request(App).post(endpoint).set(client_header).send(shop)
-
-            console.log(res.body)
 
             expect(res.statusCode).toEqual(201)
         })

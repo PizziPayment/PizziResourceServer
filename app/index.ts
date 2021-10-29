@@ -1,13 +1,13 @@
-import Config from './common/config/env.config'
+import { config } from './common/config'
 import { App } from './api'
 import { initOrm } from 'pizzi-db'
 
 initOrm({
-    host: Config.database.host,
-    name: Config.database.name,
-    password: Config.database.password,
-    port: Number(Config.database.port),
-    user: Config.database.user,
+    host: config.database.host,
+    name: config.database.name,
+    password: config.database.password,
+    port: Number(config.database.port),
+    user: config.database.user,
     logging: false,
 })
     .then(() => console.log('Orm synchronised'))
@@ -15,6 +15,6 @@ initOrm({
         throw new Error("Can't connect to database")
     })
 
-App.listen(Config.apiPort, () => {
-    console.log(`API is listening on ${Config.apiPort}`)
+App.listen(config.port, () => {
+    console.log(`API is listening on ${config.port}`)
 })
