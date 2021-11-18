@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-          registery-url: 'https://pointecouteau.fr:40403/'
+          registry-url: 'https://pointecouteau.fr:40403/'
           cache: 'yarn'
       - name: Install dependencies.
         run: yarn install --ignore-scripts
@@ -25,6 +25,7 @@ jobs:
           repository: PizziPayment/PizziBackDeploymentTools
           ref: master
           path: db
+          token: ${{ secrets.ACCESS_TOKEN }}
       - name: Create database.
         run: cd db && docker compose up db -d
       - name: Run jest tests.
