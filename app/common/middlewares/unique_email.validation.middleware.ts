@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
-import RegisterRequestModel from '../../shop/models/register.request.model'
 import { ApiFailure, ApiResponseWrapper } from '../models/api.response.model'
 import { CredentialsService } from 'pizzi-db'
 
+interface EmailRequest {
+    email: string
+}
+
 export default async function validUniqueEmail(
-    req: Request<unknown, unknown, RegisterRequestModel>,
+    req: Request<unknown, unknown, EmailRequest>,
     res: Response<ApiResponseWrapper<unknown>>,
     next: NextFunction
 ): Promise<Response | void> {

@@ -36,7 +36,7 @@ delete:
   responses:
     '204':
       description: OK
-    '403':
+    '401':
       description: UNAUTHORIZED
     '500':
       description: INTERNAL SERVER ERROR
