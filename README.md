@@ -5,8 +5,8 @@
 ### Setup the access to the private registery
  - Go to the [private npm registry](https://pointecouteau.fr:40403/)
  - Login with github
- - Click and the info button
- - Run your js package manager command
+ - Click on the info button
+ - Follow the instructions for your package manager
  - Prey for it to work
 
 ### Install dependencies
@@ -19,21 +19,23 @@ npm install
 ### Setup the database
 
 #### Creating and launching the database
-    ```bash
-    git clone git@github.com:PizziPayment/PizziBackDeploymentTools.git
-    cd PizziBackDeploymentTools
-    docker compose up db -d
-    cd -
-    ```
-#### Running migration
-    ```bash
-    git clone git@ggithub.com/PizziPayment/PizziAPIDB.git
-    cd PizziAPIDB/deploy
-    yarn install
-    yarn start table recreate
-    cd -
-    ```
+ ```bash
+ git clone git@github.com:PizziPayment/PizziBackDeploymentTools.git
+ cd PizziBackDeploymentTools
+ docker compose up db -d
+ cd -
+ ```
 
+#### Running migration
+```bash
+git clone git@ggithub.com/PizziPayment/PizziAPIDB.git
+cd PizziAPIDB/deploy
+yarn install
+yarn start table recreate
+cd -
+```
+
+## Run the API
 You should now be able to launch the resource server:
 ```bash
 yarn run start
