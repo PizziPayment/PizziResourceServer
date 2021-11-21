@@ -10,6 +10,6 @@ import validPassword from '../common/middlewares/password.validation.middleware'
 const baseUrl = '/shops'
 
 export default function ShopRouter(app: Application): void {
-    app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])
-    app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
+  app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])
+  app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
 }
