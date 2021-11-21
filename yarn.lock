@@ -3144,10 +3144,10 @@ pirates@^4.0.1:
   dependencies:
     node-modules-regexp "^1.0.0"
 
-pizzi-db@^0.1.8:
-  version "0.1.8"
-  resolved "https://pointecouteau.fr:40403/pizzi-db/-/pizzi-db-0.1.8.tgz#cb7b205332f983c53533f4615a2934bb2b3ec58d"
-  integrity sha512-PcnbUar6ggavFYGX1Dn/KSlTYqRVHc0GY8A9mrWRq09w6jutp0IRlmPh2A3stUBPHmHLSkkD8Ua0bXtsg7IAtw==
+pizzi-db@^1.0.0:
+  version "1.0.0"
+  resolved "https://pointecouteau.fr:40403/pizzi-db/-/pizzi-db-1.0.0.tgz#766ee95950ebb86e43c27af970e81c8e2ff94b75"
+  integrity sha512-vQv6Raq40vmA9thyLatbcEPMt0ncKHNoDU+RuyCeYDLymyk3k+cOz+FC1Opq1OaDf2jD++WMat38Oam9cX8J7w==
   dependencies:
     neverthrow "^4.2.2"
     prettier "^2.3.2"

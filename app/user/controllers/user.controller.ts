@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
 import RegisterRequestModel from '../models/register.request.model'
 import { ApiFailure } from '../../common/models/api.response.model'
-import { CredentialsService, EncryptionService, UsersServices, TokenModel } from 'pizzi-db'
+import { CredentialModel, CredentialsService, EncryptionService, TokenModel, UsersServices } from 'pizzi-db'
+import PatchRequestModel from '../models/patch.request.model'
 
 export async function register(req: Request<unknown, unknown, RegisterRequestModel>, res: Response): Promise<void> {
   await UsersServices.createUser(req.body.name, req.body.surname, `${req.body.place.address} ${req.body.place.city}`, req.body.place.zipcode)
@@ -20,13 +21,25 @@ export async function register(req: Request<unknown, unknown, RegisterRequestMod
     )
 }
 
-export async function deleteAccount(req: Request<unknown, unknown, TokenModel>, res: Response<unknown, Record<string, TokenModel>>): Promise<void> {
+export async function deleteAccount(req: Request, res: Response<unknown, Record<string, TokenModel>>): Promise<void> {
   await CredentialsService.deleteCredentialFromId(res.locals.token.credential_id).match(
     () => res.status(204).send(),
     () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
   )
 }
 
-export async function changeUserInformation(req: Request<unknown, unknown, TokenModel>, res: Response<unknown, Record<string, TokenModel>>): Promise<void> {
-  res.status(200).send(res.locals.token.credential_id)
+export async function changeUserInformation(
+  req: Request<unknown, unknown, PatchRequestModel>,
+  res: Response<unknown, Record<string, TokenModel | CredentialModel>>,
+): Promise<void> {
+  await UsersServices.updateUserFromId(
+    (res.locals.credential as CredentialModel).user_id,
+    req.body.name,
+    req.body.surname,
+    `${req.body.place.address}, ${req.body.place.city}`,
+    req.body.place.zipcode,
+  ).match(
+    (user) => res.status(200).send(user),
+    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+  )
 }
