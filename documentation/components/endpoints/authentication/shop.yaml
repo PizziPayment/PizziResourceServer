@@ -4,12 +4,14 @@ post:
     - Shop
   summary: Register Shop
   description: Create a Pizzi shop account.
+  security:
+    - BasicAuth: []
   requestBody:
     description: User's informations.
     content:
       application/json:
         schema:
-          $ref: '../../schemas/requests/_index.yaml#/RegisterUser'
+          $ref: '../../schemas/requests/_index.yaml#/RegisterShop'
   responses:
     '201':
       description: CREATED
@@ -34,7 +36,7 @@ delete:
   responses:
     '204':
       description: OK
-    '403':
+    '401':
       description: UNAUTHORIZED
     '500':
       description: INTERNAL SERVER ERROR

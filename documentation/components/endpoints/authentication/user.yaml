@@ -4,6 +4,8 @@ post:
     - User
   summary: Register User
   description: Create a Pizzi user account.
+  security:
+    - BasicAuth: []
   requestBody:
     description: User's informations.
     content:
@@ -35,7 +37,7 @@ delete:
   responses:
     '204':
       description: OK
-    '403':
+    '401':
       description: UNAUTORIZED
     '500':
       description: INTERNAL SERVER ERROR

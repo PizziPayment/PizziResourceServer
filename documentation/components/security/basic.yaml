@@ -1,0 +1,6 @@
+type: http
+scheme: basic
+description: >
+  The credentials are constructed by first combining the client's id and the
+  client's secret with a colon (`client_id:client_secret`), then by encoding
+  the resulting string in base64 (`Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQK`).
