@@ -32,12 +32,14 @@ export async function changeUserInformation(
   req: Request<unknown, unknown, PatchRequestModel>,
   res: Response<unknown, Record<string, TokenModel | CredentialModel>>,
 ): Promise<void> {
+  const address = req.body.place && req.body.place.address && req.body.place.city ? `${req.body.place.address}, ${req.body.place.city}` : undefined
+
   await UsersServices.updateUserFromId(
     (res.locals.credential as CredentialModel).user_id,
     req.body.name,
     req.body.surname,
-    `${req.body.place.address}, ${req.body.place.city}`,
-    req.body.place.zipcode,
+    address,
+    req.body.place?.zipcode,
   ).match(
     (user) => res.status(200).send(user),
     () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
