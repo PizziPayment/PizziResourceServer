@@ -13,10 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: "Setup .npmrc/.yarnrc"
-        run: ./.github/setup/jest.sh
-        env:
-          NODE_AUTH_TOKEN: ${VERDACIO_TOKEN}
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
@@ -25,7 +21,7 @@ jobs:
       - name: Install dependencies.
         run: yarn install --ignore-scripts
         env:
-          NODE_AUTH_TOKEN: ${VERDACIO_TOKEN}
+          NODE_AUTH_TOKEN: ${{ secrets.VERDACIO_TOKEN }}
       - uses: actions/checkout@v2
         with:
           repository: PizziPayment/PizziBackDeploymentTools
