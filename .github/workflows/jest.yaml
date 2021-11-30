@@ -1,12 +1,9 @@
-name: Check doc
+name: jest
 on:
   pull_request:
     branches:
       - 'develop'
       - 'master'
-  push:
-    branches:
-      - 'fix-npmrc'
 
 jobs:
   jest:
@@ -20,12 +17,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-          registry-url: 'https://pointecouteau.fr:40403/'
           cache: 'yarn'
       - name: Install dependencies.
         run: yarn install --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.VERDACIO_TOKEN }}
       - uses: actions/checkout@v2
         with:
           repository: PizziPayment/PizziBackDeploymentTools
