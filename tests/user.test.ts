@@ -24,25 +24,25 @@ const client_header = {
     Authorization: 'Basic ' + Buffer.from(`${client.client_id}:${client.client_secret}`).toString('base64'),
 }
 
-async function get_user_credentials(email: string, password: string): Promise<CredentialModel> {
+async function getUserCredentials(email: string, password: string): Promise<CredentialModel> {
     return (await CredentialsService.getCredentialFromMailAndPassword(email, EncryptionService.encrypt(password)))._unsafeUnwrap()
 }
 
-async function get_user(email: string, password: string): Promise<UserModel> {
-    const credentials = await get_user_credentials(email, password)
+async function getUser(email: string, password: string): Promise<UserModel> {
+    const credentials = await getUserCredentials(email, password)
 
     return (await UsersServices.getUserFromId(credentials.user_id))._unsafeUnwrap()
 }
 
-async function get_user_token(email: string, password: string): Promise<string> {
+async function getUserToken(email: string, password: string): Promise<string> {
     let client_handle = (await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()
-    let credentials = await get_user_credentials(email, password)
+    let credentials = await getUserCredentials(email, password)
     let token = (await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials))._unsafeUnwrap()
 
     return token.access_token
 }
 
-function random_string(length: number): string {
+function randomString(length: number): string {
     let ret = ''
 
     while (ret.length < length) {
@@ -54,17 +54,17 @@ function random_string(length: number): string {
     return ret
 }
 
-function create_random_token(token: string): string {
+function createRandomToken(token: string): string {
     let ret = token
 
     while (ret == token) {
-        ret = random_string(token.length)
+        ret = randomString(token.length)
     }
 
     return ret
 }
 
-function create_bearer_header(token: string): Object {
+function createBearerHeader(token: string): Object {
     return { Authorization: `Bearer ${token}` }
 }
 
@@ -198,7 +198,7 @@ describe('User endpoint', () => {
 
             expect(create_res.statusCode).toEqual(201)
 
-            const header = create_bearer_header(await get_user_token(user.email, user.password))
+            const header = createBearerHeader(await getUserToken(user.email, user.password))
             const res = await request(App).delete(endpoint).set(header).send({ password: user.password })
 
             expect(res.statusCode).toEqual(204)
@@ -212,8 +212,8 @@ describe('User endpoint', () => {
 
             expect(create_res.statusCode).toEqual(201)
 
-            const token = await get_user_token(user.email, user.password)
-            const header = create_bearer_header(create_random_token(token))
+            const token = await getUserToken(user.email, user.password)
+            const header = createBearerHeader(createRandomToken(token))
             const res = await request(App).delete(endpoint).set(header).send({ password: user.password })
 
             expect(res.statusCode).toEqual(401)
@@ -228,7 +228,7 @@ describe('User endpoint', () => {
 
             expect(create_res.statusCode).toEqual(201)
 
-            const header = create_bearer_header(await get_user_token(user.email, user.password))
+            const header = createBearerHeader(await getUserToken(user.email, user.password))
             const res = await request(App).delete(endpoint).set(header).send({ password: invalid_password })
 
             expect(res.statusCode).toEqual(403)
@@ -242,7 +242,7 @@ describe('User endpoint', () => {
 
             expect(create_res.statusCode).toEqual(201)
 
-            const header = create_bearer_header(await get_user_token(user.email, user.password))
+            const header = createBearerHeader(await getUserToken(user.email, user.password))
             const res = await request(App).delete(endpoint).set(header).send({})
 
             expect(res.statusCode).toEqual(400)
@@ -257,18 +257,18 @@ describe('User endpoint', () => {
                 .send(user)
 
             expect(create_res.statusCode).toEqual(201)
-            let user_data = await get_user(user.email, user.password)
+            let user_data = await getUser(user.email, user.password)
             expect(user_data.firstname).toEqual(user.name)
 
             const name = 'woop'
-            const header = create_bearer_header(await get_user_token(user.email, user.password))
+            const header = createBearerHeader(await getUserToken(user.email, user.password))
             const patch_res = await request(App)
                 .patch(endpoint)
                 .set(header)
                 .send({ name })
 
             expect(patch_res.statusCode).toEqual(200)
-            user_data = await get_user(user.email, user.password)
+            user_data = await getUser(user.email, user.password)
             expect(user_data.firstname).toEqual(name)
         })
 
@@ -279,18 +279,18 @@ describe('User endpoint', () => {
                 .send(user)
 
             expect(create_res.statusCode).toEqual(201)
-            let user_data = await get_user(user.email, user.password)
+            let user_data = await getUser(user.email, user.password)
             expect(user_data.surname).toEqual(user.surname)
 
             const surname = 'woop'
-            const header = create_bearer_header(await get_user_token(user.email, user.password))
+            const header = createBearerHeader(await getUserToken(user.email, user.password))
             const patch_res = await request(App)
                 .patch(endpoint)
                 .set(header)
                 .send({ surname })
 
             expect(patch_res.statusCode).toEqual(200)
-            user_data = await get_user(user.email, user.password)
+            user_data = await getUser(user.email, user.password)
             expect(user_data.surname).toEqual(surname)
         })
 
@@ -301,7 +301,7 @@ describe('User endpoint', () => {
                 .send(user)
 
             expect(create_res.statusCode).toEqual(201)
-            let user_data = await get_user(user.email, user.password)
+            let user_data = await getUser(user.email, user.password)
             expect(user_data.address).toEqual(`${user.place.address} ${user.place.city}`)
             expect(user_data.zipcode).toEqual(user.place.zipcode)
 
@@ -310,14 +310,14 @@ describe('User endpoint', () => {
                 city: 'Paville',
                 zipcode: 25620,
             }
-            const header = create_bearer_header(await get_user_token(user.email, user.password))
+            const header = createBearerHeader(await getUserToken(user.email, user.password))
             const patch_res = await request(App)
                 .patch(endpoint)
                 .set(header)
                 .send({ place })
 
             expect(patch_res.statusCode).toEqual(200)
-            user_data = await get_user(user.email, user.password)
+            user_data = await getUser(user.email, user.password)
             expect(user_data.address).toEqual(`${place.address} ${place.city}`)
             expect(user_data.zipcode).toEqual(place.zipcode)
         })
@@ -331,8 +331,8 @@ describe('User endpoint', () => {
             expect(create_res.statusCode).toEqual(201)
 
             const name = 'woop'
-            const token = await get_user_token(user.email, user.password)
-            const header = create_bearer_header(create_random_token(token))
+            const token = await getUserToken(user.email, user.password)
+            const header = createBearerHeader(createRandomToken(token))
             const patch_res = await request(App)
                 .patch(endpoint)
                 .set(header)

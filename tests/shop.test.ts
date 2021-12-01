@@ -23,7 +23,7 @@ const client_header = {
     Authorization: 'Basic ' + Buffer.from(`${client.client_id}:${client.client_secret}`).toString('base64'),
 }
 
-async function get_shop_token(email: string, password: string): Promise<string> {
+async function getShopToken(email: string, password: string): Promise<string> {
     let client_handle = (
         await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret)
     )._unsafeUnwrap()
@@ -37,7 +37,7 @@ async function get_shop_token(email: string, password: string): Promise<string> 
     return token.access_token
 }
 
-function random_string(length: number): string {
+function randomString(length: number): string {
     let ret = ''
 
     while (ret.length < length) {
@@ -49,17 +49,17 @@ function random_string(length: number): string {
     return ret
 }
 
-function create_random_token(token: string): string {
+function createRandomToken(token: string): string {
     let ret = token
 
     while (ret == token) {
-        ret = random_string(token.length)
+        ret = randomString(token.length)
     }
 
     return ret
 }
 
-function create_bearer_header(token: string): Object {
+function createBearerHeader(token: string): Object {
     return { Authorization: `Bearer ${token}` }
 }
 
@@ -172,7 +172,7 @@ describe('Shop endpoint', () => {
 
             expect(create_res.statusCode).toEqual(201)
 
-            const header = create_bearer_header(await get_shop_token(shop.email, shop.password))
+            const header = createBearerHeader(await getShopToken(shop.email, shop.password))
             const res = await request(App).delete(endpoint).set(header).send({ password: shop.password })
 
             expect(res.statusCode).toEqual(204)
@@ -183,8 +183,8 @@ describe('Shop endpoint', () => {
 
             expect(create_res.statusCode).toEqual(201)
 
-            const token = await get_shop_token(shop.email, shop.password)
-            const header = create_bearer_header(create_random_token(token))
+            const token = await getShopToken(shop.email, shop.password)
+            const header = createBearerHeader(createRandomToken(token))
             const res = await request(App).delete(endpoint).set(header).send({ password: shop.password })
 
             expect(res.statusCode).toEqual(401)
@@ -196,7 +196,7 @@ describe('Shop endpoint', () => {
 
             expect(create_res.statusCode).toEqual(201)
 
-            const header = create_bearer_header(await get_shop_token(shop.email, shop.password))
+            const header = createBearerHeader(await getShopToken(shop.email, shop.password))
             const res = await request(App).delete(endpoint).set(header).send({ password: invalid_password })
 
             expect(res.statusCode).toEqual(403)
@@ -207,7 +207,7 @@ describe('Shop endpoint', () => {
 
             expect(create_res.statusCode).toEqual(201)
 
-            const header = create_bearer_header(await get_shop_token(shop.email, shop.password))
+            const header = createBearerHeader(await getShopToken(shop.email, shop.password))
             const res = await request(App).delete(endpoint).set(header).send({})
 
             expect(res.statusCode).toEqual(400)
