@@ -1,2 +1,5 @@
 Token:
   $ref: "./token.yaml"
+
+UsersInfo:
+  $ref: "./users_info.yaml"

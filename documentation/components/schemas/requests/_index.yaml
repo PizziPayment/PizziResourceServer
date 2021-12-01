@@ -7,3 +7,5 @@ RegisterUser:
   $ref: "./register_user.yaml"
 DeleteUser:
   $ref: "./delete_user.yaml"
+UpdateUser:
+  $ref: "./update_user.yaml"
