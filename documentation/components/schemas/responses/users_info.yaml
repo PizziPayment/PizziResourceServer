@@ -16,6 +16,6 @@ example:
     "firsname": "testname",
     "surname": "testsurname",
     "picture_id": null,
-    "address": "13 rue de la bergerie Ville",
+    "address": "13 rue de la bergerie, Ville",
     "zipcode": 330000
   }

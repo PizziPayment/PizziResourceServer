@@ -5,7 +5,7 @@ import { CredentialModel, CredentialsService, EncryptionService, TokenModel, Use
 import PatchRequestModel from '../models/patch.request.model'
 
 export async function register(req: Request<unknown, unknown, RegisterRequestModel>, res: Response): Promise<void> {
-  await UsersServices.createUser(req.body.name, req.body.surname, `${req.body.place.address} ${req.body.place.city}`, req.body.place.zipcode)
+  await UsersServices.createUser(req.body.name, req.body.surname, `${req.body.place.address}, ${req.body.place.city}`, req.body.place.zipcode)
     .andThen((user) =>
       CredentialsService.createCredentialWithId('user', user.id, req.body.email, EncryptionService.encrypt(req.body.password)).mapErr(() =>
         UsersServices.deleteUserById(user.id).match(

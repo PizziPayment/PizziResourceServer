@@ -269,7 +269,7 @@ describe('User endpoint', () => {
 
       expect(create_res.statusCode).toEqual(201)
       let user_data = await getUser(user.email, user.password)
-      expect(user_data.address).toEqual(`${user.place.address} ${user.place.city}`)
+      expect(user_data.address).toEqual(`${user.place.address}, ${user.place.city}`)
       expect(user_data.zipcode).toEqual(user.place.zipcode)
 
       const place = {
