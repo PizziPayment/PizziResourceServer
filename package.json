@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc-watch --onsuccess \"node dist/index.js\"",
-    "test": "DB_HOST=localhost DB_PORT=5432 DB_USER=postgre DB_PASSWORD=postgre DB_NAME=db jest --runInBand --verbose",
+    "test": "jest --runInBand --verbose",
     "lint": "eslint '*/**/*.ts' --quiet --fix"
   },
   "repository": {
