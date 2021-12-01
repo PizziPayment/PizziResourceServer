@@ -282,7 +282,7 @@ describe('User endpoint', () => {
 
       expect(patch_res.statusCode).toEqual(200)
       user_data = await getUser(user.email, user.password)
-      expect(user_data.address).toEqual(`${place.address} ${place.city}`)
+      expect(user_data.address).toEqual(`${place.address}, ${place.city}`)
       expect(user_data.zipcode).toEqual(place.zipcode)
     })
 
