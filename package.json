@@ -50,10 +50,11 @@
     "express": "^4.17.1",
     "neverthrow": "^4.2.2",
     "pg": "^8.6.0",
-    "pizzi-db": "^1.0.1",
+    "pizzi-db": "git@github.com:PizziPayment/PizziAPIDB.git#commit=d394813443dec4d3b9abe9da1b2999fc439e6665&workspace=pizzi-db",
     "reflect-metadata": "^0.1.13",
     "sequelize": "=6.6.2",
     "sequelize-typescript": "^2.1.0",
     "ts-node": "^10.1.0"
-  }
+  },
+  "packageManager": "yarn@3.1.1"
 }
