@@ -138,3 +138,11 @@ temp/
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
+# ignore list from https://next.yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
