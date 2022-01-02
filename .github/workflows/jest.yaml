@@ -18,8 +18,11 @@ jobs:
         with:
           node-version: '14'
           cache: 'yarn'
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.DB_DEPLOY_KEY }}
       - name: Install dependencies.
-        run: yarn install --ignore-scripts
+        run: yarn install
       - uses: actions/checkout@v2
         with:
           repository: PizziPayment/PizziBackDeploymentTools
