@@ -4516,7 +4516,7 @@ __metadata:
     express: ^4.17.2
     jest: ^27.4.5
     neverthrow: ^4.3.1
-    pizzi-db: "git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&commit=1eb02225ff28580889171b8a2da4044b061e52ec"
+    pizzi-db: "git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&tag=v1.0.1"
     prettier: ^2.5.1
     reflect-metadata: ^0.1.13
     source-map-support: ^0.5.21
@@ -4528,9 +4528,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&commit=1eb02225ff28580889171b8a2da4044b061e52ec":
+"pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&tag=v1.0.1":
   version: 1.0.1
-  resolution: "pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&commit=1eb02225ff28580889171b8a2da4044b061e52ec"
+  resolution: "pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&commit=987571b01674e52c0873fb9f3548caacef625549"
   dependencies:
     neverthrow: ^4.3.1
     pg: ^8.7.1
