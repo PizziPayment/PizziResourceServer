@@ -26,6 +26,8 @@ paths:
     $ref: './components/endpoints/authentication/user.yaml'
   /shops:
     $ref: './components/endpoints/authentication/shop.yaml'
+  /receipts:
+    $ref: './components/endpoints/receipts/list.yaml'
 
 components:
   securitySchemes:

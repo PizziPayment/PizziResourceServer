@@ -3,17 +3,11 @@
 ## Prerequisites
 
 ### Setup the access to the private registery
- - Go to the [private npm registry](https://pointecouteau.fr:40403/)
- - Login with github
- - Click on the info button
- - Follow the instructions for your package manager
- - Prey for it to work
+To access the internal dependencies, you need to set up ssh keys to access Pizzi's github repositories.
 
 ### Install dependencies
 ```bash
 yarn install
-# or
-npm install
 ```
 
 ### Setup the database
@@ -39,8 +33,6 @@ cd -
 You should now be able to launch the resource server:
 ```bash
 yarn run start
-# or
-npm run start
 ```
 
 ## API Configuration
@@ -64,6 +56,4 @@ Other config file can be added if needed,
 
 ```bash
 yarn run test
-# or
-npm run test
 ```

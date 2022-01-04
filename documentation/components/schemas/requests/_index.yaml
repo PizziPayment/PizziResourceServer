@@ -9,3 +9,5 @@ DeleteUser:
   $ref: "./delete_user.yaml"
 UpdateUser:
   $ref: "./update_user.yaml"
+ListReceipts:
+  $ref: "./list_receipts.yaml"
