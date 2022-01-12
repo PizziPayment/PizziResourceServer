@@ -6,3 +6,5 @@ UsersInfo:
 
 ReceiptList:
   $ref: "./receipt_list.yaml"
+ReceiptDetails:
+  $ref: "./receipt_details.yaml"

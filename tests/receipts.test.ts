@@ -62,4 +62,13 @@ describe('Receipts endpoint', () => {
       expect(res.statusCode).toEqual(200)
     })
   })
+
+  describe('Details request', () => {
+    it('basic test', async () => {
+      const token = await setupUser()
+      const res = await request(App).get(endpoint + '/0').set(createBearerHeader(token)).send()
+
+      expect(res.statusCode).toEqual(200)
+    })
+  })
 })

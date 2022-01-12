@@ -28,6 +28,8 @@ paths:
     $ref: './components/endpoints/authentication/shop.yaml'
   /receipts:
     $ref: './components/endpoints/receipts/list.yaml'
+  /receipts/{receipt_id}:
+    $ref: './components/endpoints/receipts/details.yaml'
 
 components:
   securitySchemes:
