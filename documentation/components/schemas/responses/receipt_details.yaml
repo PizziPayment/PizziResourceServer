@@ -1,0 +1,76 @@
+type: object
+properties:
+  vendor:
+    type: object
+    properties:
+      logo:
+        type: string
+      name:
+        type: string
+      address:
+        type: object
+        properties:
+          street:
+            type: string
+          city:
+            type: string
+          postalCode:
+            type: string
+      siret:
+        type: string
+      shopNumber:
+        type: string
+  products:
+    type: array
+    items:
+      type: object
+      properties:
+        productName:
+          type: string
+        quantity:
+          type: number
+        priceUnit:
+          type: number
+        warranty:
+          type: string
+        ecoTax:
+          type: number
+        discount:
+          type: number
+  creationDate:
+    type: string
+  paymentType:
+    type: string
+  tvaPercentage:
+    type: number
+  totalHt:
+    type: number
+  totalTtc:
+    type: number
+example:
+  {
+    "vendor": {
+      "logo": "https://store.steampowered.com/favicon.ico",
+      "name": "Steam",
+      "address": {
+        "street": "Rue",
+        "city": "Ville",
+        "postalCode": "Code postal",
+      },
+      "siret": "siret",
+      "shopNumber": "00 00 00 00 00"
+    },
+    "products": [{
+      "productName": "Outer Wilds",
+      "quantity": 1,
+      "priceUnit": 17.4916,
+      "warranty": "18/06/2022",
+      "ecoTax": 0,
+      "discount": 0
+    }],
+    "paymentType": "card",
+    "tvaPercentage": 20,
+    "creationDate": "18/06/2020",
+    "totalHt": 17.4916,
+    "totalTtc": 20.99
+  }
