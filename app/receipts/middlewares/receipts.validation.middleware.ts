@@ -7,7 +7,7 @@ export default function validReceiptsRequest(req: Request<unknown, unknown, Rece
   const errors: Array<string> = []
 
   if (req.body) {
-    if (req.body.filter && !(req.body.filter in FilterModelValues)) {
+    if (req.body.filter && !(FilterModelValues.includes(req.body.filter))) {
       errors.push('invalid "filter"')
     }
     if (req.body.query && !(typeof req.body.query === 'string')) {
