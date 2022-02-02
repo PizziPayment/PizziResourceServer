@@ -23,9 +23,9 @@ tags:
 
 paths:
   /users:
-    $ref: './components/endpoints/authentication/user.yaml'
+    $ref: './components/endpoints/resource/user.yaml'
   /shops:
-    $ref: './components/endpoints/authentication/shop.yaml'
+    $ref: './components/endpoints/resource/shop.yaml'
 
 components:
   securitySchemes:
