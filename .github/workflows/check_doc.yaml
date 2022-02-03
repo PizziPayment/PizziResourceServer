@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - documentation/**
+      - .github/workflows/
     branches:
       - test-workflow
       - develop
