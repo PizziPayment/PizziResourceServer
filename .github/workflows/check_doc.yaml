@@ -2,7 +2,7 @@ name: Check doc
 on:
   push:
     paths:
-      - documentation/**
+      # - documentation/**
       - .github/workflows/
     branches:
       - test-workflow
