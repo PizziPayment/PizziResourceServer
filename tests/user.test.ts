@@ -1,7 +1,7 @@
 import { App } from '../app/api'
 import { config } from '../app/common/config'
 import * as request from 'supertest'
-import { CredentialModel, rewriteTables, UserModel, UsersServices } from 'pizzi-db'
+import { CredentialModel, rewriteTables, TokenModel, TokensServiceError, UserModel, UsersServices } from 'pizzi-db'
 import { ClientsService } from 'pizzi-db'
 import { CredentialsService } from 'pizzi-db'
 import { TokensService } from 'pizzi-db'
@@ -83,14 +83,9 @@ beforeEach(async () => {
   await ClientsService.createClientFromIdAndSecret(client.client_id, client.client_secret)
 })
 
-// afterAll(async () => await Orm.close())
-
-// beforeAll(async () => {
-//     await Orm.sync()
-// })
-
 describe('User endpoint', () => {
   const endpoint = '/users'
+  const endpoint_password = '/user/password'
 
   describe('POST request', () => {
     it('should allow the creation of a valid user', async () => {
@@ -308,6 +303,46 @@ describe('User endpoint', () => {
       const patch_res = await request(App).patch(endpoint).send({ name })
 
       expect(patch_res.statusCode).toEqual(400)
+    })
+  })
+
+  describe('PUT request', () => {
+    it("should allow the modification of a user's password and revoke token with a valid token", async () => {
+      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+
+      expect(create_res.statusCode).toEqual(201)
+
+      const body = {
+        password: user.password,
+        new_password: 'New_passw0rd',
+      }
+
+      let token = await getUserToken(user.email, user.password)
+      const header = createBearerHeader(token)
+
+      const put_res = await request(App).put(endpoint_password).set(header).send(body)
+      expect(put_res.statusCode).toEqual(204)
+
+      let not_revoked_token = await TokensService.getTokenFromValue(token)
+      expect(not_revoked_token.isErr()).toBe(true)
+      expect(not_revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
+    })
+
+    it("should not allow to modification of a user's password with an invalid token", async () => {
+      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+
+      expect(create_res.statusCode).toEqual(201)
+
+      const body = {
+        password: user.password,
+        new_password: 'New_passw0rd',
+      }
+
+      const token = await getUserToken(user.email, user.password)
+      const header = createBearerHeader(createRandomToken(token))
+
+      const put_res = await request(App).put(endpoint_password).set(header).send(body)
+      expect(put_res.statusCode).toEqual(401)
     })
   })
 })

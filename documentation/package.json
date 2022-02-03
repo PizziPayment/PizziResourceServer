@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Dependencies related to the documentation",
   "scripts": {
-      "linter": "speccy lint openapi.yaml",
-      "builder": "redoc-cli bundle openapi.yaml -o index.html"
+    "linter": "speccy lint openapi.yaml",
+    "builder": "redoc-cli bundle openapi.yaml -o index.html"
   },
   "dependencies": {
     "redoc-cli": "^0.11.4",

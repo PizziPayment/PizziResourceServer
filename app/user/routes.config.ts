@@ -7,6 +7,8 @@ import validUniqueEmail from '../common/middlewares/unique_email.validation.midd
 import validToken from '../common/middlewares/token.validation.middleware'
 import validPassword from '../common/middlewares/password.validation.middleware'
 import validUserTokenAffiliation from './middlewares/userTokenAffiliation.validation.middleware'
+import { changeUserPassword } from './controllers/password.controller'
+import validChangePasswordRequest from './middlewares/password.request.validation.middleware'
 
 const baseUrl = '/users'
 
@@ -14,4 +16,5 @@ export default function UserRouter(app: Application): void {
   app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])
   app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
   app.patch(`${baseUrl}/`, [validToken, validUserTokenAffiliation, changeUserInformation])
+  app.put('/user/password/', [validToken, validPassword, validChangePasswordRequest, changeUserPassword])
 }

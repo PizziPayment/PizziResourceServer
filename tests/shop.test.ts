@@ -3,7 +3,7 @@ import * as request from 'supertest'
 import { App } from '../app/api'
 import { config } from '../app/common/config'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
-import { ClientsService, CredentialsService, EncryptionService, rewriteTables, TokensService } from 'pizzi-db'
+import { ClientsService, CredentialsService, EncryptionService, rewriteTables, TokensService, TokensServiceError } from 'pizzi-db'
 
 const shop = {
   name: 'toto',
@@ -74,6 +74,7 @@ beforeEach(async () => {
 
 describe('Shop endpoint', () => {
   const endpoint = '/shops'
+  const endpoint_password = '/shop/password'
 
   describe('POST request', () => {
     it('should allow the creation of a valid shop', async () => {
@@ -205,6 +206,46 @@ describe('Shop endpoint', () => {
       const res = await request(App).delete(endpoint).set(header).send({})
 
       expect(res.statusCode).toEqual(400)
+    })
+  })
+
+  describe('PUT request', () => {
+    it("should allow the modification of a shop's password and revoke token with a valid token", async () => {
+      const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+
+      expect(create_res.statusCode).toEqual(201)
+
+      const body = {
+        password: shop.password,
+        new_password: 'New_passw0rd',
+      }
+
+      let token = await getShopToken(shop.email, shop.password)
+      const header = createBearerHeader(token)
+
+      const put_res = await request(App).put(endpoint_password).set(header).send(body)
+      expect(put_res.statusCode).toEqual(204)
+
+      let not_revoked_token = await TokensService.getTokenFromValue(token)
+      expect(not_revoked_token.isErr()).toBe(true)
+      expect(not_revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
+    })
+
+    it("should not allow to modification of a shop's password with an invalid token", async () => {
+      const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+
+      expect(create_res.statusCode).toEqual(201)
+
+      const body = {
+        password: shop.password,
+        new_password: 'New_passw0rd',
+      }
+
+      const token = await getShopToken(shop.email, shop.password)
+      const header = createBearerHeader(createRandomToken(token))
+
+      const put_res = await request(App).put(endpoint_password).set(header).send(body)
+      expect(put_res.statusCode).toEqual(401)
     })
   })
 })
