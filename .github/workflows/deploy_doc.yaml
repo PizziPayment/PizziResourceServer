@@ -13,6 +13,3 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           event-type: Trigger resource-server documentation build workflow
           client-payload: '{ "repo": "resource-server", "branch": "${{ github.ref_name }}" }'
-      - name: 'step to run'
-        run: >
-          echo "${{ github.ref_name }}"

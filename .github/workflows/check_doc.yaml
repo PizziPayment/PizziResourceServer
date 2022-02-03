@@ -2,12 +2,7 @@ name: Check doc
 on:
   push:
     paths:
-      # - documentation/**
       - .github/workflows/**
-    branches:
-      - test-workflow
-      - develop
-      - master
 
 jobs:
   check-doc:
@@ -29,7 +24,7 @@ jobs:
 
   trigger-doc-build:
     runs-on: ubuntu-latest
-    if:  github.ref_name == 'master' || github.ref_name == 'test-workflow'
+    if:  github.ref_name == 'master' || github.ref_name == 'develop'
     needs: check-doc
     steps:
       - name: Trigger documentation build
