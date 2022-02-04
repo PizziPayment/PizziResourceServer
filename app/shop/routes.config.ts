@@ -5,7 +5,7 @@ import validRegisterRequest from './middlewares/register.request.validation.midd
 import validUniqueEmail from '../common/middlewares/unique_email.validation.middleware'
 import validToken from '../common/middlewares/token.validation.middleware'
 import validDeleteRequest from './middlewares/delete.request.validation.middleware'
-import validPassword from '../common/middlewares/password.validation.middleware'
+import validPassword, { validChangePassword } from '../common/middlewares/password.validation.middleware'
 import { changeShopPassword } from './controllers/password.controller'
 import validChangePasswordRequest from './middlewares/password.request.validation.middleware'
 
@@ -14,5 +14,5 @@ const baseUrl = '/shops'
 export default function ShopRouter(app: Application): void {
   app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])
   app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
-  app.put(`/shop/password/`, [validToken, validPassword, validChangePasswordRequest, changeShopPassword])
+  app.put(`/shop/password/`, [validToken, validChangePasswordRequest, validChangePassword, changeShopPassword])
 }

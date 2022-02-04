@@ -314,7 +314,7 @@ describe('User endpoint', () => {
 
       const body = {
         password: user.password,
-        new_password: 'New_passw0rd',
+        new_password: 'New_passw0rd!',
       }
 
       let token = await getUserToken(user.email, user.password)
@@ -335,7 +335,7 @@ describe('User endpoint', () => {
 
       const body = {
         password: user.password,
-        new_password: 'New_passw0rd',
+        new_password: 'New_passw0rd!',
       }
 
       const token = await getUserToken(user.email, user.password)

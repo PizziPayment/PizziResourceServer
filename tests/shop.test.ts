@@ -217,13 +217,14 @@ describe('Shop endpoint', () => {
 
       const body = {
         password: shop.password,
-        new_password: 'New_passw0rd',
+        new_password: 'New_passw0rd!',
       }
 
       let token = await getShopToken(shop.email, shop.password)
       const header = createBearerHeader(token)
 
       const put_res = await request(App).put(endpoint_password).set(header).send(body)
+      console.log(put_res.body)
       expect(put_res.statusCode).toEqual(204)
 
       let not_revoked_token = await TokensService.getTokenFromValue(token)
@@ -238,7 +239,7 @@ describe('Shop endpoint', () => {
 
       const body = {
         password: shop.password,
-        new_password: 'New_passw0rd',
+        new_password: 'New_passw0rd!',
       }
 
       const token = await getShopToken(shop.email, shop.password)
