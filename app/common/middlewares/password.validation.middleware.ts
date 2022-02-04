@@ -42,7 +42,6 @@ export async function validChangePassword(
     if (credential.value.password !== EncryptionService.encrypt(req.body.password)) {
       errors.push('invalid "password"')
     }
-    console.log(req.body.new_password)
     if (FieldValidationService.isValidPassword(req.body.new_password) == false) {
       errors.push('invalid "new_password"')
     }

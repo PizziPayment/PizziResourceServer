@@ -98,62 +98,22 @@ describe('Shop endpoint', () => {
       expect(second_res.statusCode).toEqual(400)
     })
 
-    describe('should not allow the creation of a shop with an invalid password', () => {
-      it('shorter than 12 characters', async () => {
+    describe('should not allow the creation of a shop with a password which has', () => {
+      const passwords: Array<Array<String>> = [
+        ['not at least 12 characters', '@Bcd3'],
+        ['no special character', 'Abcd3fgh1jklmnOp'],
+        ['no number', '@bcdEfghIjklmnOp'],
+        ['no uppercase character', '@bcd3fgh1jklmnop'],
+        ['no lowercase character', '@BCD3FGH1JKLMNOP'],
+      ]
+
+      it.each(passwords)('%s: %s', async (password) => {
         const res = await request(App)
           .post(endpoint)
           .set(client_header)
           .send({
             ...shop,
-            password: '@bcd3',
-          })
-
-        expect(res.statusCode).toEqual(400)
-      })
-
-      it('no special character', async () => {
-        const res = await request(App)
-          .post(endpoint)
-          .set(client_header)
-          .send({
-            ...shop,
-            password: 'Abcd3fgh1jklmnOp',
-          })
-
-        expect(res.statusCode).toEqual(400)
-      })
-
-      it('no number', async () => {
-        const res = await request(App)
-          .post(endpoint)
-          .set(client_header)
-          .send({
-            ...shop,
-            password: '@bcdEfghIjklmnOp',
-          })
-
-        expect(res.statusCode).toEqual(400)
-      })
-
-      it('no uppercase character', async () => {
-        const res = await request(App)
-          .post(endpoint)
-          .set(client_header)
-          .send({
-            ...shop,
-            password: '@bcd3fgh1jklmnop',
-          })
-
-        expect(res.statusCode).toEqual(400)
-      })
-
-      it('no lowercase character', async () => {
-        const res = await request(App)
-          .post(endpoint)
-          .set(client_header)
-          .send({
-            ...shop,
-            password: '@BCD3FGH1JKLMNOP',
+            password,
           })
 
         expect(res.statusCode).toEqual(400)
@@ -224,7 +184,6 @@ describe('Shop endpoint', () => {
       const header = createBearerHeader(token)
 
       const put_res = await request(App).put(endpoint_password).set(header).send(body)
-      console.log(put_res.body)
       expect(put_res.statusCode).toEqual(204)
 
       let not_revoked_token = await TokensService.getTokenFromValue(token)

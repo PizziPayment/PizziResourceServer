@@ -6,9 +6,27 @@ export default class FieldValidationService {
   }
 
   static isValidPassword(password: string): boolean {
-    const rule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/
+    let min_length = 12
+    let min: boolean = false
+    let maj: boolean = false
+    let spe: boolean = false
+    let digit: boolean = false
 
-    return rule.test(password)
+    for (const char of password) {
+      let lower = char.toLowerCase()
+      let upper = char.toUpperCase()
+
+      min = (char != upper && char.toLowerCase() == lower) || min
+      maj = (char != lower && char.toUpperCase() == upper) || maj
+      spe = '!@#$%^&*'.includes(char) || spe
+      digit = '0123456789'.includes(char) || digit
+
+      if (min && maj && spe && digit) {
+        return password.length >= min_length
+      }
+    }
+
+    return min && maj && spe && digit && password.length >= min_length
   }
 
   static isValidPhone(phone: string): boolean {
