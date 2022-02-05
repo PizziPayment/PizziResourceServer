@@ -6,7 +6,7 @@ export default class FieldValidationService {
   }
 
   static isValidPassword(password: string): boolean {
-    const rule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/
+    const rule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*_?&])[A-Za-z\d \t@$!%_*?&]{12,}$/
 
     return rule.test(password)
   }

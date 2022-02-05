@@ -3,7 +3,7 @@ import * as request from 'supertest'
 import { App } from '../app/api'
 import { config } from '../app/common/config'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
-import { ClientsService, CredentialsService, EncryptionService, rewriteTables, TokensService } from 'pizzi-db'
+import { ClientsService, CredentialsService, EncryptionService, rewriteTables, TokensService, TokensServiceError } from 'pizzi-db'
 
 const shop = {
   name: 'toto',
@@ -74,6 +74,7 @@ beforeEach(async () => {
 
 describe('Shop endpoint', () => {
   const endpoint = '/shops'
+  const endpoint_password = '/shop/password'
 
   describe('POST request', () => {
     it('should allow the creation of a valid shop', async () => {
@@ -97,62 +98,22 @@ describe('Shop endpoint', () => {
       expect(second_res.statusCode).toEqual(400)
     })
 
-    describe('should not allow the creation of a shop with an invalid password', () => {
-      it('shorter than 12 characters', async () => {
+    describe('should not allow the creation of a shop with a password which has', () => {
+      const passwords: Array<Array<String>> = [
+        ['not at least 12 characters', '@Bcd3'],
+        ['no special character', 'Abcd3fgh1jklmnOp'],
+        ['no number', '@bcdEfghIjklmnOp'],
+        ['no uppercase character', '@bcd3fgh1jklmnop'],
+        ['no lowercase character', '@BCD3FGH1JKLMNOP'],
+      ]
+
+      it.each(passwords)('%s: %s', async (password) => {
         const res = await request(App)
           .post(endpoint)
           .set(client_header)
           .send({
             ...shop,
-            password: '@bcd3',
-          })
-
-        expect(res.statusCode).toEqual(400)
-      })
-
-      it('no special character', async () => {
-        const res = await request(App)
-          .post(endpoint)
-          .set(client_header)
-          .send({
-            ...shop,
-            password: 'Abcd3fgh1jklmnOp',
-          })
-
-        expect(res.statusCode).toEqual(400)
-      })
-
-      it('no number', async () => {
-        const res = await request(App)
-          .post(endpoint)
-          .set(client_header)
-          .send({
-            ...shop,
-            password: '@bcdEfghIjklmnOp',
-          })
-
-        expect(res.statusCode).toEqual(400)
-      })
-
-      it('no uppercase character', async () => {
-        const res = await request(App)
-          .post(endpoint)
-          .set(client_header)
-          .send({
-            ...shop,
-            password: '@bcd3fgh1jklmnop',
-          })
-
-        expect(res.statusCode).toEqual(400)
-      })
-
-      it('no lowercase character', async () => {
-        const res = await request(App)
-          .post(endpoint)
-          .set(client_header)
-          .send({
-            ...shop,
-            password: '@BCD3FGH1JKLMNOP',
+            password,
           })
 
         expect(res.statusCode).toEqual(400)
@@ -205,6 +166,65 @@ describe('Shop endpoint', () => {
       const res = await request(App).delete(endpoint).set(header).send({})
 
       expect(res.statusCode).toEqual(400)
+    })
+  })
+
+  describe('PUT request', () => {
+    it("should allow the modification of a shop's password and revoke token with a valid token", async () => {
+      const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+
+      expect(create_res.statusCode).toEqual(201)
+
+      const body = {
+        password: shop.password,
+        new_password: 'New_passw0rd!',
+      }
+
+      let token = await getShopToken(shop.email, shop.password)
+      const header = createBearerHeader(token)
+
+      const put_res = await request(App).put(endpoint_password).set(header).send(body)
+      expect(put_res.statusCode).toEqual(204)
+
+      let not_revoked_token = await TokensService.getTokenFromValue(token)
+      expect(not_revoked_token.isErr()).toBe(true)
+      expect(not_revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
+
+      await getShopToken(shop.email, body.new_password)
+    })
+
+    it("should not allow to modification of a shop's password with an invalid token", async () => {
+      const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+
+      expect(create_res.statusCode).toEqual(201)
+
+      const body = {
+        password: shop.password,
+        new_password: 'New_passw0rd!',
+      }
+
+      const token = await getShopToken(shop.email, shop.password)
+      const header = createBearerHeader(createRandomToken(token))
+
+      const put_res = await request(App).put(endpoint_password).set(header).send(body)
+      expect(put_res.statusCode).toEqual(401)
+    })
+
+    it("should not allow to modification of a shop's password with an invalid password", async () => {
+      const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+
+      expect(create_res.statusCode).toEqual(201)
+
+      const body = {
+        password: '!nvalid Passw0rd',
+        new_password: 'New_passw0rd!',
+      }
+
+      const token = await getShopToken(shop.email, shop.password)
+      const header = createBearerHeader(token)
+
+      const put_res = await request(App).put(endpoint_password).set(header).send(body)
+      expect(put_res.statusCode).toEqual(403)
     })
   })
 })
