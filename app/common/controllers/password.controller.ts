@@ -3,7 +3,7 @@ import RequestPasswordModel from '../models/password.request.model'
 import { CredentialsService, TokenModel, EncryptionService } from 'pizzi-db'
 import { ApiFailure } from '../../common/models/api.response.model'
 
-export async function changeShopPassword(
+export default async function changePassword(
   req: Request<unknown, unknown, RequestPasswordModel>,
   res: Response<unknown, Record<string, TokenModel>>,
 ): Promise<void> {
