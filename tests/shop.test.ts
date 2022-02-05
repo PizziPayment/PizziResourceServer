@@ -189,6 +189,8 @@ describe('Shop endpoint', () => {
       let not_revoked_token = await TokensService.getTokenFromValue(token)
       expect(not_revoked_token.isErr()).toBe(true)
       expect(not_revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
+
+      await getShopToken(shop.email, body.new_password)
     })
 
     it("should not allow to modification of a shop's password with an invalid token", async () => {

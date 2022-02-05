@@ -286,6 +286,8 @@ describe('User endpoint', () => {
       let not_revoked_token = await TokensService.getTokenFromValue(token)
       expect(not_revoked_token.isErr()).toBe(true)
       expect(not_revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
+
+      await getUserToken(user.email, body.new_password)
     })
 
     it("should not allow to modification of a user's password with an invalid token", async () => {
