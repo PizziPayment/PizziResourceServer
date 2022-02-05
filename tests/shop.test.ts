@@ -207,5 +207,22 @@ describe('Shop endpoint', () => {
       const put_res = await request(App).put(endpoint_password).set(header).send(body)
       expect(put_res.statusCode).toEqual(401)
     })
+
+    it("should not allow to modification of a shop's password with an invalid password", async () => {
+      const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+
+      expect(create_res.statusCode).toEqual(201)
+
+      const body = {
+        password: '!nvalid Passw0rd',
+        new_password: 'New_passw0rd!',
+      }
+
+      const token = await getShopToken(shop.email, shop.password)
+      const header = createBearerHeader(token)
+
+      const put_res = await request(App).put(endpoint_password).set(header).send(body)
+      expect(put_res.statusCode).toEqual(403)
+    })
   })
 })
