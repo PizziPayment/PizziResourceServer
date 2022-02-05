@@ -4,6 +4,8 @@ DeleteShop:
   $ref: "./delete_shop.yaml"
 ChangeShopPassword:
   $ref: "./change_shop_password.yaml"
+ChangeShopEmail:
+  $ref: "./change_shop_email.yaml"
 
 RegisterUser:
   $ref: "./register_user.yaml"
@@ -13,3 +15,5 @@ UpdateUser:
   $ref: "./update_user.yaml"
 ChangeUserPassword:
   $ref: "./change_user_password.yaml"
+ChangeUserEmail:
+  $ref: "./change_user_email.yaml"

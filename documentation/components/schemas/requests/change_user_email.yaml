@@ -1,0 +1,11 @@
+type: object
+properties:
+  password:
+    $ref: "../../types.yaml#/password"
+  new_email:
+    type: string
+example:
+  {
+    "password": "Valid_passw0rd",
+    "new_email": "bernard.gerard.julie.chloe@example.com"
+  }

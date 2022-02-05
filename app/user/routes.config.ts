@@ -9,6 +9,8 @@ import validPassword, { validChangePassword } from '../common/middlewares/passwo
 import validUserTokenAffiliation from './middlewares/userTokenAffiliation.validation.middleware'
 import changePassword from '../common/controllers/password.controller'
 import validChangePasswordRequest from '../common/middlewares/password.request.validation.middleware'
+import { validChangeEmailRequest } from '../common/middlewares/email.request.validation.middleware'
+import changeEmail from '../common/controllers/email.controller'
 
 const baseUrl = '/users'
 
@@ -17,4 +19,5 @@ export default function UserRouter(app: Application): void {
   app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
   app.patch(`${baseUrl}/`, [validToken, validUserTokenAffiliation, changeUserInformation])
   app.put('/user/password/', [validToken, validChangePasswordRequest, validChangePassword, changePassword])
+  app.patch('/user/email', [validToken, validChangeEmailRequest, validPassword, changeEmail])
 }
