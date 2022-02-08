@@ -19,5 +19,5 @@ export default function UserRouter(app: Application): void {
   app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
   app.patch(`${baseUrl}/`, [validToken, validUserTokenAffiliation, changeUserInformation])
   app.put('/user/password/', [validToken, validChangePasswordRequest, validChangePassword, changePassword])
-  app.patch('/user/email', [validToken, validChangeEmailRequest, validPassword, changeEmail])
+  app.patch('/user/email/', [validToken, validChangeEmailRequest, validPassword, changeEmail])
 }

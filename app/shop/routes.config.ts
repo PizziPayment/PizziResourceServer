@@ -17,5 +17,5 @@ export default function ShopRouter(app: Application): void {
   app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])
   app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
   app.put(`/shop/password/`, [validToken, validChangePasswordRequest, validChangePassword, changePassword])
-  app.patch('/shop/email', [validToken, validChangeEmailRequest, validPassword, changeEmail])
+  app.patch('/shop/email/', [validToken, validChangeEmailRequest, validPassword, changeEmail])
 }

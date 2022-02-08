@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import RequestPasswordModel from '../models/password.request.model'
-import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response.model'
+import { ApiFailure, ApiResponseWrapper } from '../models/api.response.model'
 
 export default function validChangePasswordRequest(
   req: Request<unknown, unknown, RequestPasswordModel>,

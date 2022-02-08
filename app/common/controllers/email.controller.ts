@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import ChangeEmailValidationModel from '../models/email.request.model'
 import { CredentialsService, TokenModel } from 'pizzi-db'
-import { ApiFailure } from '../../common/models/api.response.model'
+import { ApiFailure } from '../models/api.response.model'
 
 export default async function changeEmail(
   req: Request<unknown, unknown, ChangeEmailValidationModel>,
