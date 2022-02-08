@@ -1,0 +1,6 @@
+extends: '@ibm-cloud/openapi-ruleset'
+rules:
+  content-entry-provided: off
+  major-version-in-path: off
+  response-error-response-schema: off
+  string-boundary: off

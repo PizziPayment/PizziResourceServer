@@ -4,6 +4,7 @@ properties:
     $ref: "../../types.yaml#/password"
   new_email:
     type: string
+    description: Shop's new email.
 example:
   {
     "password": "Valid_passw0rd",

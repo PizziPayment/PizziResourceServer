@@ -2,14 +2,19 @@ type: object
 properties:
   id:
     type: number
+    description: User's id.
   firstname:
     type: string
+    description: User's firsname.
   surname:
     type: string
+    description: User's surname.
   address:
     type: string
+    description: User's address.
   zipcode:
     type: number
+    description: User's zipcode.
 example:
   {
     "id": 1,
