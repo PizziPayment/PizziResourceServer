@@ -23,6 +23,6 @@ export async function register(req: Request<unknown, unknown, RegisterRequestMod
 export async function deleteAccount(req: Request, res: Response<unknown, Record<string, TokenModel>>): Promise<void> {
   await CredentialsService.deleteCredentialFromId(res.locals.token.credential_id).match(
     () => res.status(204).send(),
-    () => res.status(500).send(),
+    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
   )
 }
