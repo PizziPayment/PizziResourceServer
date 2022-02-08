@@ -11,11 +11,13 @@ import validChangePasswordRequest from '../common/middlewares/password.request.v
 import { validChangeEmailRequest } from '../common/middlewares/email.request.validation.middleware'
 import changeEmail from '../common/controllers/email.controller'
 
-const baseUrl = '/shops'
+export const baseUrl = '/shops'
+export const baseUrlPassword = `${baseUrl}/me/password`
+export const baseUrlEmail = `${baseUrl}/me/email`
 
 export default function ShopRouter(app: Application): void {
   app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])
   app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
-  app.put(`/shop/password/`, [validToken, validChangePasswordRequest, validChangePassword, changePassword])
-  app.patch('/shop/email/', [validToken, validChangeEmailRequest, validPassword, changeEmail])
+  app.put(`${baseUrlPassword}/`, [validToken, validChangePasswordRequest, validChangePassword, changePassword])
+  app.patch(`${baseUrlEmail}/`, [validToken, validChangeEmailRequest, validPassword, changeEmail])
 }

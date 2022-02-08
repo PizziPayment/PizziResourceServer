@@ -1,6 +1,7 @@
 import * as request from 'supertest'
 
 import { App } from '../app/api'
+import { baseUrl as endpoint, baseUrlPassword as endpoint_password, baseUrlEmail as endpoint_email } from '../app/shop/routes.config'
 import { config } from '../app/common/config'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
 import { ClientsService, CredentialsService, EncryptionService, rewriteTables, TokenModel, TokensService, TokensServiceError } from 'pizzi-db'
@@ -73,10 +74,6 @@ beforeEach(async () => {
 })
 
 describe('Shop endpoint', () => {
-  const endpoint = '/shops'
-  const endpoint_password = '/shop/password'
-  const endpoint_email = '/user/email'
-
   describe('POST request', () => {
     it('should allow the creation of a valid shop', async () => {
       const res = await request(App).post(endpoint).set(client_header).send(shop)
@@ -228,66 +225,66 @@ describe('Shop endpoint', () => {
       expect(put_res.statusCode).toEqual(403)
     })
 
-  describe('PATCH request', () => {
-    describe(endpoint_email, () => {
-      const body = {
-        password: shop.password,
-        new_email: 'f.n@example.com',
-      }
+    describe('PATCH request', () => {
+      describe(endpoint_email, () => {
+        const body = {
+          password: shop.password,
+          new_email: 'f.n@example.com',
+        }
 
-      it("should allow the modification of a user's email", async () => {
-        const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+        it("should allow the modification of a user's email", async () => {
+          const create_res = await request(App).post(endpoint).set(client_header).send(shop)
 
-        expect(create_res.statusCode).toEqual(201)
-        let token = await getShopToken(shop.email, shop.password)
-        const header = createBearerHeader(token.access_token)
+          expect(create_res.statusCode).toEqual(201)
+          let token = await getShopToken(shop.email, shop.password)
+          const header = createBearerHeader(token.access_token)
 
-        const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
+          const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
 
-        expect(patch_res.statusCode).toEqual(204)
+          expect(patch_res.statusCode).toEqual(204)
 
-        TokensService.getTokenFromId(token.id)
-        await getShopToken(body.new_email, shop.password)
-      })
+          TokensService.getTokenFromId(token.id)
+          await getShopToken(body.new_email, shop.password)
+        })
 
-      it("should not allow the modification of a user's email with an invalid token", async () => {
-        const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+        it("should not allow the modification of a user's email with an invalid token", async () => {
+          const create_res = await request(App).post(endpoint).set(client_header).send(shop)
 
-        expect(create_res.statusCode).toEqual(201)
-        let token = createRandomToken((await getShopToken(shop.email, shop.password)).access_token)
-        const header = createBearerHeader(token)
+          expect(create_res.statusCode).toEqual(201)
+          let token = createRandomToken((await getShopToken(shop.email, shop.password)).access_token)
+          const header = createBearerHeader(token)
 
-        const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
+          const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
 
-        expect(patch_res.statusCode).toEqual(401)
-      })
+          expect(patch_res.statusCode).toEqual(401)
+        })
 
-      it("should not allow the modification of a user's email with an invalid password", async () => {
-        const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+        it("should not allow the modification of a user's email with an invalid password", async () => {
+          const create_res = await request(App).post(endpoint).set(client_header).send(shop)
 
-        expect(create_res.statusCode).toEqual(201)
-        let token = (await getShopToken(shop.email, shop.password)).access_token
-        const header = createBearerHeader(token)
+          expect(create_res.statusCode).toEqual(201)
+          let token = (await getShopToken(shop.email, shop.password)).access_token
+          const header = createBearerHeader(token)
 
-        body.password = '!nvalid_Passw0rd'
-        const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
+          body.password = '!nvalid_Passw0rd'
+          const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
 
-        expect(patch_res.statusCode).toEqual(403)
-      })
+          expect(patch_res.statusCode).toEqual(403)
+        })
 
-      it("should not allow the modification of a user's email with an invalid new email", async () => {
-        const create_res = await request(App).post(endpoint).set(client_header).send(shop)
+        it("should not allow the modification of a user's email with an invalid new email", async () => {
+          const create_res = await request(App).post(endpoint).set(client_header).send(shop)
 
-        expect(create_res.statusCode).toEqual(201)
-        let token = (await getShopToken(shop.email, shop.password)).access_token
-        const header = createBearerHeader(token)
+          expect(create_res.statusCode).toEqual(201)
+          let token = (await getShopToken(shop.email, shop.password)).access_token
+          const header = createBearerHeader(token)
 
-        body.new_email = 'invalid.emaile@'
-        const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
+          body.new_email = 'invalid.emaile@'
+          const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
 
-        expect(patch_res.statusCode).toEqual(400)
+          expect(patch_res.statusCode).toEqual(400)
+        })
       })
     })
   })
-})
 })
