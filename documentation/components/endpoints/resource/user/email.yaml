@@ -1,0 +1,21 @@
+patch:
+  operationId: "change_user_email"
+  tags:
+    - User
+  summary: Change email
+  description: Change shop's email.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: User's new email
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/_index.yaml#/ChangeUserEmail'
+  responses:
+    '204':
+      description: NO CONTENT
+    '401':
+      description: UNAUTORIZED
+    '500':
+      description: INTERNAL SERVER ERROR

@@ -34,12 +34,12 @@ async function getUser(email: string, password: string): Promise<UserModel> {
   return (await UsersServices.getUserFromId(credentials.user_id))._unsafeUnwrap()
 }
 
-async function getUserToken(email: string, password: string): Promise<string> {
+async function getUserToken(email: string, password: string): Promise<TokenModel> {
   let client_handle = (await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()
   let credentials = await getUserCredentials(email, password)
   let token = (await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials))._unsafeUnwrap()
 
-  return token.access_token
+  return token
 }
 
 function randomString(length: number): string {
@@ -86,6 +86,7 @@ beforeEach(async () => {
 describe('User endpoint', () => {
   const endpoint = '/users'
   const endpoint_password = '/user/password'
+  const endpoint_email = '/user/email'
 
   describe('POST request', () => {
     it('should allow the creation of a valid user', async () => {
@@ -144,7 +145,7 @@ describe('User endpoint', () => {
 
       expect(create_res.statusCode).toEqual(201)
 
-      const header = createBearerHeader(await getUserToken(user.email, user.password))
+      const header = createBearerHeader((await getUserToken(user.email, user.password)).access_token)
       const res = await request(App).delete(endpoint).set(header).send({ password: user.password })
 
       expect(res.statusCode).toEqual(204)
@@ -155,7 +156,7 @@ describe('User endpoint', () => {
 
       expect(create_res.statusCode).toEqual(201)
 
-      const token = await getUserToken(user.email, user.password)
+      const token = (await getUserToken(user.email, user.password)).access_token
       const header = createBearerHeader(createRandomToken(token))
       const res = await request(App).delete(endpoint).set(header).send({ password: user.password })
 
@@ -168,7 +169,7 @@ describe('User endpoint', () => {
 
       expect(create_res.statusCode).toEqual(201)
 
-      const header = createBearerHeader(await getUserToken(user.email, user.password))
+      const header = createBearerHeader((await getUserToken(user.email, user.password)).access_token)
       const res = await request(App).delete(endpoint).set(header).send({ password: invalid_password })
 
       expect(res.statusCode).toEqual(403)
@@ -179,7 +180,7 @@ describe('User endpoint', () => {
 
       expect(create_res.statusCode).toEqual(201)
 
-      const header = createBearerHeader(await getUserToken(user.email, user.password))
+      const header = createBearerHeader((await getUserToken(user.email, user.password)).access_token)
       const res = await request(App).delete(endpoint).set(header).send({})
 
       expect(res.statusCode).toEqual(400)
@@ -195,7 +196,7 @@ describe('User endpoint', () => {
       expect(user_data.firstname).toEqual(user.name)
 
       const name = 'woop'
-      const header = createBearerHeader(await getUserToken(user.email, user.password))
+      const header = createBearerHeader((await getUserToken(user.email, user.password)).access_token)
       const patch_res = await request(App).patch(endpoint).set(header).send({ name })
 
       expect(patch_res.statusCode).toEqual(200)
@@ -211,7 +212,7 @@ describe('User endpoint', () => {
       expect(user_data.surname).toEqual(user.surname)
 
       const surname = 'woop'
-      const header = createBearerHeader(await getUserToken(user.email, user.password))
+      const header = createBearerHeader((await getUserToken(user.email, user.password)).access_token)
       const patch_res = await request(App).patch(endpoint).set(header).send({ surname })
 
       expect(patch_res.statusCode).toEqual(200)
@@ -232,7 +233,7 @@ describe('User endpoint', () => {
         city: 'Paville',
         zipcode: 25620,
       }
-      const header = createBearerHeader(await getUserToken(user.email, user.password))
+      const header = createBearerHeader((await getUserToken(user.email, user.password)).access_token)
       const patch_res = await request(App).patch(endpoint).set(header).send({ place })
 
       expect(patch_res.statusCode).toEqual(200)
@@ -247,7 +248,7 @@ describe('User endpoint', () => {
       expect(create_res.statusCode).toEqual(201)
 
       const name = 'woop'
-      const token = await getUserToken(user.email, user.password)
+      const token = (await getUserToken(user.email, user.password)).access_token
       const header = createBearerHeader(createRandomToken(token))
       const patch_res = await request(App).patch(endpoint).set(header).send({ name })
 
@@ -264,6 +265,66 @@ describe('User endpoint', () => {
 
       expect(patch_res.statusCode).toEqual(400)
     })
+
+    describe(endpoint_email, () => {
+      const body = {
+        password: user.password,
+        new_email: 'f.n@example.com',
+      }
+
+      it("should allow the modification of a user's email", async () => {
+        const create_res = await request(App).post(endpoint).set(client_header).send(user)
+
+        expect(create_res.statusCode).toEqual(201)
+        let token = await getUserToken(user.email, user.password)
+        const header = createBearerHeader(token.access_token)
+
+        const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
+
+        expect(patch_res.statusCode).toEqual(204)
+
+        TokensService.getTokenFromId(token.id)
+        await getUserToken(body.new_email, user.password)
+      })
+
+      it("should not allow the modification of a user's email with an invalid token", async () => {
+        const create_res = await request(App).post(endpoint).set(client_header).send(user)
+
+        expect(create_res.statusCode).toEqual(201)
+        let token = createRandomToken((await getUserToken(user.email, user.password)).access_token)
+        const header = createBearerHeader(token)
+
+        const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
+
+        expect(patch_res.statusCode).toEqual(401)
+      })
+
+      it("should not allow the modification of a user's email with an invalid password", async () => {
+        const create_res = await request(App).post(endpoint).set(client_header).send(user)
+
+        expect(create_res.statusCode).toEqual(201)
+        let token = (await getUserToken(user.email, user.password)).access_token
+        const header = createBearerHeader(token)
+
+        body.password = '!nvalid_Passw0rd'
+        const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
+
+        expect(patch_res.statusCode).toEqual(403)
+      })
+
+      it("should not allow the modification of a user's email with an invalid new email", async () => {
+        const create_res = await request(App).post(endpoint).set(client_header).send(user)
+
+        expect(create_res.statusCode).toEqual(201)
+        let token = (await getUserToken(user.email, user.password)).access_token
+        const header = createBearerHeader(token)
+
+        body.new_email = 'invalid.emaile@'
+        const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
+
+        expect(patch_res.statusCode).toEqual(400)
+      })
+    })
   })
 
   describe('PUT request', () => {
@@ -277,7 +338,7 @@ describe('User endpoint', () => {
         new_password: 'New_passw0rd!',
       }
 
-      let token = await getUserToken(user.email, user.password)
+      let token = (await getUserToken(user.email, user.password)).access_token
       const header = createBearerHeader(token)
 
       const put_res = await request(App).put(endpoint_password).set(header).send(body)
@@ -300,7 +361,7 @@ describe('User endpoint', () => {
         new_password: 'New_passw0rd!',
       }
 
-      const token = await getUserToken(user.email, user.password)
+      const token = (await getUserToken(user.email, user.password)).access_token
       const header = createBearerHeader(createRandomToken(token))
 
       const put_res = await request(App).put(endpoint_password).set(header).send(body)
@@ -317,7 +378,7 @@ describe('User endpoint', () => {
         new_password: 'New_passw0rd!',
       }
 
-      const token = await getUserToken(user.email, user.password)
+      const token = (await getUserToken(user.email, user.password)).access_token
       const header = createBearerHeader(token)
 
       const put_res = await request(App).put(endpoint_password).set(header).send(body)
