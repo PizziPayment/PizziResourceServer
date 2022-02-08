@@ -24,16 +24,16 @@ tags:
 paths:
   /users:
     $ref: './components/endpoints/resource/user.yaml'
-  /user/email:
+  /users/me/email:
     $ref: './components/endpoints/resource/user/email.yaml'
-  /user/password:
+  /users/me/password:
     $ref: './components/endpoints/resource/user/password.yaml'
 
   /shops:
     $ref: './components/endpoints/resource/shop.yaml'
-  /shop/email:
+  /shops/me/email:
     $ref: './components/endpoints/resource/shop/email.yaml'
-  /shop/password:
+  /shops/me/password:
     $ref: './components/endpoints/resource/shop/password.yaml'
 
 components:

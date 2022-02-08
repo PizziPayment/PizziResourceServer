@@ -1,4 +1,5 @@
 import { App } from '../app/api'
+import { baseUrl as endpoint, baseUrlPassword as endpoint_password, baseUrlEmail as endpoint_email } from '../app/user/routes.config'
 import { config } from '../app/common/config'
 import * as request from 'supertest'
 import { CredentialModel, rewriteTables, TokenModel, TokensServiceError, UserModel, UsersServices } from 'pizzi-db'
@@ -84,10 +85,6 @@ beforeEach(async () => {
 })
 
 describe('User endpoint', () => {
-  const endpoint = '/users'
-  const endpoint_password = '/user/password'
-  const endpoint_email = '/user/email'
-
   describe('POST request', () => {
     it('should allow the creation of a valid user', async () => {
       const res = await request(App).post(endpoint).set(client_header).send(user)
