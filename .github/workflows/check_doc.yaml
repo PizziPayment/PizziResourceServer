@@ -2,7 +2,7 @@ name: Check doc
 on:
   push:
     paths:
-      - .github/workflows/**
+      - documentation/**
 
 jobs:
   check-doc:
