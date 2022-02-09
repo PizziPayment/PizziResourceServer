@@ -28,6 +28,10 @@ paths:
     $ref: './components/endpoints/resource/user/email.yaml'
   /users/me/password:
     $ref: './components/endpoints/resource/user/password.yaml'
+  /users/me/receipts:
+    $ref: './components/endpoints/resource/user/receipts.yaml'
+  /users/me/receipts/{id}:
+    $ref: './components/endpoints/resource/user/receipt.yaml'
 
   /shops:
     $ref: './components/endpoints/resource/shop.yaml'
@@ -35,6 +39,7 @@ paths:
     $ref: './components/endpoints/resource/shop/email.yaml'
   /shops/me/password:
     $ref: './components/endpoints/resource/shop/password.yaml'
+
 
 components:
   securitySchemes:

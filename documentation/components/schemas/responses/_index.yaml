@@ -3,3 +3,9 @@ Token:
 
 UsersInfo:
   $ref: "./users_info.yaml"
+
+Receipts:
+  $ref: "./receipts.yaml"
+
+Receipt:
+  $ref: "./receipt.yaml"

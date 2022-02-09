@@ -1,0 +1,139 @@
+type: object
+properties:
+  shop:
+    description: Shop where the receipt has been emitted.
+    type: object
+    properties:
+      name:
+        type: string
+        description: Shop's name.
+      logo:
+        type: string
+        description: Shop's logo url.
+      siret:
+        type: number
+        description: Shop's siret number (14 digits).
+      phone_number:
+        type: string
+        description: Shop's phone number.
+      location:
+        type: object
+        description: Shop's location.
+        properties:
+          street: 
+            type: string
+            description: Street's name.
+          city: 
+            type: string
+            description: City's name.
+          postal_code:
+            type: string
+            description: Postal Code.
+      socials:
+        type: object
+        description: Shop's social networks.
+        properties:
+          website:
+            type: string
+            description: Shop's website.
+          instagram:
+            type: string
+            description: Shop's instagram.
+          linkedin:
+            type: string
+            description: Shop's linkedin.
+          snapchat:
+            type: string
+            description: Shop's snapchat.
+          tiktok:
+            type: string
+            description: Shop's tiktok.
+          facebook:
+            type: string
+            description: Shop's facebook.
+          twitter:
+            type: string
+            description: Shop's twitter.
+  products:
+    description: Receipt's product array.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Product's name.
+        quantity:
+          type: number
+          description: Product's quantity.
+        price_unit:
+          type: number
+          description: Product's price (unit).
+        warranty:
+          type: string
+          format: date
+          description: Product's warranty.
+        eco_tax:
+          type: number
+          description: Product's eco tax.
+        reduction:
+          type: number
+          description: Product's applied reduction on price.
+  payment_type:
+    type: string
+    enum: [cash, card]
+    description: Receipt's payment type.
+  date:
+    type: string
+    format: date-time
+    description: Receipt's emission date.
+  tva_percentage: 
+    type: number
+    description: Applied TVA (percentage).
+  total_ht:
+    type: number
+    description: Receipt's HT total.
+  total_ttc:
+    type: number
+    description: Receipt's TTC total.
+example:
+  {
+    "shop":
+      {
+        "name": "Lidl",
+        "logo": "https://lidl/logo.svg",
+        "location":
+          {
+            "street": "rue Constantin",
+            "city": "Bordeaux",
+            "postalCode": "33000"
+          },
+        "siret": 12345678912345,
+        "phone_number": "",
+        "socials": 
+          {
+            "website": "",
+            "instagram": "",
+            "linkedin": "",
+            "snapchat": "",
+            "tiktok": "",
+            "facebook": "",
+            "twitter": ""
+          }
+      },
+    "products": [
+      {
+        "name": "",
+        "quantity": 3,
+        "price_unit": 0,
+        "warranty": "2020-02-21",
+        "eco_tax": 0,
+        "reduction": 0
+      }
+    ],
+    "date": "2022-02-08T19:31:30.791Z",
+    "payment_type": "cash",
+    "tva_percentage": 20,
+    "total_ht": 0,
+    "total_ttc": 0
+  }

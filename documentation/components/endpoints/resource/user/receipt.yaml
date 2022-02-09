@@ -1,0 +1,26 @@
+get:
+  operationId: "get_user_receipt"
+  tags:
+    - User
+  summary: Get receipt detail
+  description: Get a user's receipt detail.
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      description: Id of the user's receipt.
+      required: true
+      schema:
+        type: number
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/_index.yaml#/Receipt'
+    '401':
+      description: UNAUTORIZED
+    '500':
+      description: INTERNAL SERVER ERROR

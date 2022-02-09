@@ -1,0 +1,43 @@
+type: object
+properties:
+  receipts:
+    description: Receipts array.
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Receipt's id.
+        shop:
+          type: object
+          description: Shop where the receipt has been emitted.
+          properties:
+            name:
+              type: string
+              description: Shop's name.
+            logo:
+              type: string
+              description: Shop's logo url.
+        date:
+          type: string
+          format: date-time
+          description: Receipt's emission date.
+        total_ttc:
+          type: number
+          description: Receipt's TTC total.
+
+example:
+  {
+    "receipts": [
+      {
+        "id": 1,
+        "shop": {
+          "name": "Lidl",
+          "logo": "https://lidl/logo.svg"
+        },
+        "date": "2022-02-08T19:31:30.791Z",
+        total_ttc: 10.40
+      }
+    ]
+  }
