@@ -12,3 +12,9 @@ UsersInfo:
 
 ShopInfo:
   $ref: "./shop_info.yaml"
+
+Receipts:
+  $ref: "./receipts.yaml"
+
+Receipt:
+  $ref: "./receipt.yaml"
