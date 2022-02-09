@@ -1,0 +1,72 @@
+type: object
+properties:
+  buyer:
+    type: object
+    description: Person that buyed the products.
+    properties:
+      name:
+        type: string
+        description: Person's name.
+  products:
+    description: Receipt's product array.
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Product's name.
+        quantity:
+          type: number
+          description: Product's quantity.
+        price_unit:
+          type: number
+          description: Product's price (unit).
+        warranty:
+          type: string
+          format: date
+          description: Product's warranty.
+        eco_tax:
+          type: number
+          description: Product's eco tax.
+        reduction:
+          type: number
+          description: Product's applied reduction on price.
+  payment_type:
+    type: string
+    enum: [cash, card]
+    description: Receipt's payment type.
+  date:
+    type: string
+    format: date-time
+    description: Receipt's emission date.
+  tva_percentage: 
+    type: number
+    description: Applied TVA (percentage).
+  total_ht:
+    type: number
+    description: Receipt's HT total.
+  total_ttc:
+    type: number
+    description: Receipt's TTC total.
+example:
+  {
+    "buyer": {
+      "name": "Prune Delamarre",
+    },
+    "products": [
+      {
+        "name": "",
+        "quantity": 3,
+        "price_unit": 0,
+        "warranty": "2020-02-21",
+        "eco_tax": 0,
+        "reduction": 0
+      }
+    ],
+    "date": "2022-02-08T19:31:30.791Z",
+    "payment_type": "cash",
+    "tva_percentage": 20,
+    "total_ht": 0,
+    "total_ttc": 0
+  }
