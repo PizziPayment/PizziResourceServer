@@ -48,7 +48,10 @@ paths:
     $ref: './components/endpoints/resource/shop/item.yaml'
   /shops/me/items/{id}:
     $ref: './components/endpoints/resource/shop/item/id.yaml'
-
+  /shops/me/receipts:
+    $ref: './components/endpoints/resource/shop/receipts.yaml'
+  /shops/me/receipts/{id}:
+    $ref: './components/endpoints/resource/shop/receipt.yaml'
 
 components:
   securitySchemes:

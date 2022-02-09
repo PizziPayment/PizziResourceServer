@@ -18,3 +18,9 @@ Receipts:
 
 Receipt:
   $ref: "./receipt.yaml"
+
+ShopReceipts:
+  $ref: "./shop_receipts.yaml"
+
+ShopReceipt:
+  $ref: "./shop_receipt.yaml"

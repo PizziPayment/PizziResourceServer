@@ -1,0 +1,39 @@
+type: object
+properties:
+  receipts:
+    description: Receipts array.
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Receipt's id.
+        buyer:
+          type: object
+          description: Person that buyed the products.
+          properties:
+            name:
+              type: string
+              description: Person's name.
+        date:
+          type: string
+          format: date-time
+          description: Receipt's emission date.
+        total_ttc:
+          type: number
+          description: Receipt's TTC total.
+
+example:
+  {
+    "receipts": [
+      {
+        "id": 1,
+        "buyer": {
+          "name": "Prune Delamarre",
+        },
+        "date": "2022-02-08T19:31:30.791Z",
+        total_ttc: 10.40
+      }
+    ]
+  }
