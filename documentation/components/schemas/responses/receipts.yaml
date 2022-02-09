@@ -34,7 +34,7 @@ example:
         "id": 1,
         "shop": {
           "name": "Lidl",
-          "logo": "https://lidl/logo.svg"
+          "logo": "https://lidl.fr/logo.svg"
         },
         "date": "2022-02-08T19:31:30.791Z",
         total_ttc: 10.40
