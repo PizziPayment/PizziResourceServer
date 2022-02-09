@@ -101,7 +101,7 @@ example:
     "shop":
       {
         "name": "Lidl",
-        "logo": "https://lidl/logo.svg",
+        "logo": "https://lidl.fr/logo.svg",
         "location":
           {
             "street": "rue Constantin",
