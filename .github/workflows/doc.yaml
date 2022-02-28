@@ -24,11 +24,11 @@ jobs:
 
   trigger-doc-build:
     runs-on: ubuntu-latest
-    if:  github.ref_name == 'master' || github.ref_name == 'develop'
-    needs: check-doc
     steps:
-      - name: Trigger documentation build
+      - name: 'Dispatch action to deploy the documentation'
         uses: peter-evans/repository-dispatch@v1
         with:
+          repository: PizziPayment/PizziPayment.github.io
           token: ${{ secrets.ACCESS_TOKEN }}
-          event-type: Trigger documentation build workflow
+          event-type: Trigger resource-server documentation build workflow
+          client-payload: '{ "repo": "resource-server", "branch": "${{ github.ref_name }}" }'
