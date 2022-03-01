@@ -20,16 +20,21 @@ jobs:
             gh release list --repo $REPOSITORY | \
             grep 'ResourceServer.PR${{ github.event.number }}' | \
             cut -f 1)
-
           # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
           echo "TAGS<<EOF" >> $GITHUB_ENV
           echo "$TAGS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
       - name: Delete list of release
         run: echo ${{ env.TAGS }} | xargs -I {} gh release delete {} --repo $REPOSITORY --yes
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Install xargs
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install findutils -y
       - name: Delete tags from BackDocumentation repo
         run: echo ${{ env.TAGS }} | xargs -I {} git push https://Pizzi-token:${{ secrets.ACCESS_TOKEN }}@github.com/$REPOSITORY --delete {}
