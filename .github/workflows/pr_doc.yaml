@@ -29,6 +29,6 @@ jobs:
         with:
           repo: BackDocumentation
           artifacts: "documentation/index.html"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
           tag: $PR_NUMBER.$COMMIT_SHA
           omitName: true
