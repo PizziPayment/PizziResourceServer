@@ -8,17 +8,28 @@ on:
 jobs:
   push-temporary-docs:
     runs-on: ubuntu-latest
+    env:
+      REPOSITORY: ${{ github.repository_owner }}/BackDocumentation
     defaults:
       run:
         working-directory: ./documentation
     steps:
-      - name: Get list of temporary documentation
+      - name: Fetch the list of tags related to PR${{ github.event.number}}.
         run: |
-          gh release list --repo $OWNER/$BackDocumentation | \
+          TAGS=$(
+            gh release list --repo $REPOSITORY | \
             grep 'ResourceServer.PR${{ github.event.number }}' | \
-            cut -f 1 | \
-            xargs gh release delete --repo $OWNER/$BackDocumentation
+            cut -f 1)
+
+          # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
+          echo "TAGS<<EOF" >> $GITHUB_ENV
+          echo "$TAGS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          OWNER: ${{ github.repository_owner }}
-          REPO: BackDocumentation
+      - name: Delete list of release
+        run: echo ${{ env.TAGS }} | xargs -I {} gh release delete {} --repo $REPOSITORY --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      - name: Delete tags from BackDocumentation repo
+        run: echo ${{ env.TAGS }} | xargs -I {} git push https://Pizzi-token:${{ secrets.ACCESS_TOKEN }}@github.com/$REPOSITORY --delete {}
