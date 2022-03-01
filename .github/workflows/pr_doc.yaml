@@ -1,0 +1,26 @@
+name: PR Documentation
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  check-doc:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./documentation
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '17'
+      - run: yarn install
+        name: Install documentation tools
+      - run: yarn run builder
+        name: Builder
+      - uses: actions/upload-artifact@v2
+        with:
+          name: documentation-${{ github.sha }}
+          path: documentation/index.html
+          if-no-files-found: error
