@@ -1,0 +1,40 @@
+name: Create temporary PR documentation.
+on:
+  pull_request:
+    paths:
+      - documentation/**
+    branches:
+      - develop
+
+jobs:
+  push-temporary-docs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./documentation
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          cache: 'yarn'
+          node-version: '17'
+      - name: Install documentation tools
+        run: yarn install
+      - name: Build documentation
+        run: yarn run builder
+
+      - name: Create temporary release
+        uses: ncipollo/release-action@v1
+        with:
+          repo: Documentation
+          artifacts: "documentation/index.html"
+          token: ${{ secrets.ACCESS_TOKEN }}
+          tag: ResourceServer.PR${{ github.event.number }}-${{ github.sha }}
+          omitName: true
+
+      - name: Add documentation as comment to PR
+        uses: allthatjazzleo/actions-pull-request-add-comment@master
+        with:
+          message: >
+            Documentation for commit ${{ github.sha }} available [here](https://github.com/PizziPayment/Documentation/releases/download/ResourceServer.PR${{ github.event.number }}-${{ github.sha }}/index.html).
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
