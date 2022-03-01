@@ -10,10 +10,6 @@ jobs:
     defaults:
       run:
         working-directory: ./documentation
-    env:
-      DOC_SUB_FOLDER: ResourceServer/doc
-      PR_NUMBER: ${{ github.event.number }}
-      COMMIT_SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -30,5 +26,5 @@ jobs:
           repo: BackDocumentation
           artifacts: "documentation/index.html"
           token: ${{ secrets.ACCESS_TOKEN }}
-          tag: $PR_NUMBER.$COMMIT_SHA
+          tag: ResourceServer.PR${{ github.event.number }}-${{ github.sha }}
           omitName: true
