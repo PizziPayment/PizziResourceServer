@@ -11,11 +11,6 @@ jobs:
     env:
       REPOSITORY: ${{ github.repository_owner }}/Documentation
     steps:
-      - name: Install xargs
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install findutils -y
-
       - name: Fetch the list of tags related to PR${{ github.event.number}}.
         run: |
           TAGS=$(
