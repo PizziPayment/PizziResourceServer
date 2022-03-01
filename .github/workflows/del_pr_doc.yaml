@@ -14,6 +14,11 @@ jobs:
       run:
         working-directory: ./documentation
     steps:
+      - name: Install xargs
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install findutils -y
+
       - name: Fetch the list of tags related to PR${{ github.event.number}}.
         run: |
           TAGS=$(
@@ -32,9 +37,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: Install xargs
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install findutils -y
       - name: Delete tags from Documentation repo
         run: echo ${{ env.TAGS }} | xargs -I {} git push https://Pizzi-token:${{ secrets.ACCESS_TOKEN }}@github.com/$REPOSITORY --delete {}
