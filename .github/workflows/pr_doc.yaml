@@ -20,11 +20,14 @@ jobs:
       - name: Build documentation
         run: yarn run builder
 
+      - name: Rename documentation with commit sha
+        run: mv index.html 'index-${{ github.sha }}.html'
+
       - name: publish doc
         uses: ncipollo/release-action@v1
         with:
           repo: BackDocumentation
-          artifacts: "documentation/index.html"
+          artifacts: "documentation/index-${{ github.sha }}.html"
           token: ${{ secrets.ACCESS_TOKEN }}
-          tag: ResourceServer.PR${{ github.event.number }}-${{ github.sha }}
+          tag: ResourceServer.PR${{ github.event.number }}
           omitName: true
