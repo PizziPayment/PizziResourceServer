@@ -9,7 +9,7 @@ jobs:
   push-temporary-docs:
     runs-on: ubuntu-latest
     env:
-      REPOSITORY: ${{ github.repository_owner }}/BackDocumentation
+      REPOSITORY: ${{ github.repository_owner }}/Documentation
     defaults:
       run:
         working-directory: ./documentation
@@ -36,5 +36,5 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install findutils -y
-      - name: Delete tags from BackDocumentation repo
+      - name: Delete tags from Documentation repo
         run: echo ${{ env.TAGS }} | xargs -I {} git push https://Pizzi-token:${{ secrets.ACCESS_TOKEN }}@github.com/$REPOSITORY --delete {}

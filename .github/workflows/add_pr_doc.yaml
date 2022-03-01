@@ -23,10 +23,10 @@ jobs:
       - name: Build documentation
         run: yarn run builder
 
-      - name: publish doc
+      - name: Create temporary release
         uses: ncipollo/release-action@v1
         with:
-          repo: BackDocumentation
+          repo: Documentation
           artifacts: "documentation/index.html"
           token: ${{ secrets.ACCESS_TOKEN }}
           tag: ResourceServer.PR${{ github.event.number }}-${{ github.sha }}
@@ -36,5 +36,5 @@ jobs:
         uses: allthatjazzleo/actions-pull-request-add-comment@master
         with:
           message: >
-            Documentation for commit ${{ github.sha }} available [here](https://github.com/PizziPayment/BackDocumentation/releases/download/ResourceServer.PR${{ github.event.number }}-${{ github.sha }}/index.html).
+            Documentation for commit ${{ github.sha }} available [here](https://github.com/PizziPayment/Documentation/releases/download/ResourceServer.PR${{ github.event.number }}-${{ github.sha }}/index.html).
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
