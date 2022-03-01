@@ -23,6 +23,8 @@ jobs:
         name: Builder
 
   trigger-doc-build:
+    if:  github.ref_name == 'master' || github.ref_name == 'develop'
+    needs: check-doc
     runs-on: ubuntu-latest
     steps:
       - name: 'Dispatch action to deploy the documentation'
