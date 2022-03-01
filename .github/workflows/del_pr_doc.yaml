@@ -1,0 +1,24 @@
+name: Remove temporary PR documentation.
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+
+jobs:
+  push-temporary-docs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./documentation
+    steps:
+      - name: Get list of temporary documentation
+        run: |
+          gh release list --repo $OWNER/$BackDocumentation | \
+            grep 'ResourceServer.PR${{ github.event.number }}' | \
+            cut -f 1 | \
+            xargs gh release delete --repo $OWNER/$BackDocumentation
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: BackDocumentation
