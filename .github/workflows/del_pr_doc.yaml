@@ -6,13 +6,10 @@ on:
       - develop
 
 jobs:
-  push-temporary-docs:
+  remove-temporary-docs:
     runs-on: ubuntu-latest
     env:
       REPOSITORY: ${{ github.repository_owner }}/Documentation
-    defaults:
-      run:
-        working-directory: ./documentation
     steps:
       - name: Install xargs
         run: |
