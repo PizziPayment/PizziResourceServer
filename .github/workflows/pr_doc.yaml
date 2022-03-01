@@ -7,40 +7,28 @@ on:
 jobs:
   push-temporary-docs:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./documentation
     env:
       DOC_SUB_FOLDER: ResourceServer/doc
       PR_NUMBER: ${{ github.event.number }}
       COMMIT_SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          path: ResourceServer
       - uses: actions/setup-node@v2
         with:
           node-version: '17'
       - name: Install documentation tools
-        working-directory: ResourceServer/documentation
         run: yarn install
       - name: Build documentation
-        working-directory: ResourceServer/documentation
         run: yarn run builder
 
-      - uses: actions/checkout@v2
+      - name: publish doc
+        uses: ncipollo/release-action@v1
         with:
-          repository: PizziPayment/BackDocumentation
-          path: BackDocumentation
-          token: ${{ secrets.ACCESS_TOKEN }}
-          ref: 'gh-pages'
-      - name: Move documentation to BackDocumentation
-        working-directory: BackDocumentation
-        run: |
-          mkdir -p "$DOC_SUB_FOLDER/$PR_NUMBER"
-          mv '../ResourceServer/documentation/index.html' \
-            "$DOC_SUB_FOLDER/$PR_NUMBER/index-$COMMIT_SHA.html"
-      - working-directory: BackDocumentation
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add "$DOC_SUB_FOLDER/$PR_NUMBER/index-$COMMIT_SHA.html"
-          git commit -m "Add temporary doc for ResourceServer PR $PR_NUMBER ($COMMIT_SHA)."
-          git push origin gh-pages
+          repo: BackDocumentation
+          artifacts: "documentation/index.html"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: $PR_NUMBER.$COMMIT_SHA
+          omitName: true
