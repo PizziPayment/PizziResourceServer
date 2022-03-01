@@ -31,3 +31,11 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           tag: ResourceServer.PR${{ github.event.number }}
           omitName: true
+
+      - name: Add documentation as comment to PR
+        uses: allthatjazzleo/actions-pull-request-add-comment@master
+        with:
+          message: >
+            "Documentation for commit ${{ github.sha }} available [here]
+            (https://github.com/PizziPayment/BackDocumentation/releases/download/ResourceServer.PR${{ github.event.number }}/index-${{ github.sha }}.html)."
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
