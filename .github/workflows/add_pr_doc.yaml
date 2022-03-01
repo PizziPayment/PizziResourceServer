@@ -1,6 +1,8 @@
 name: Create temporary PR documentation.
 on:
   pull_request:
+    paths:
+      - documentation/**
     branches:
       - develop
 

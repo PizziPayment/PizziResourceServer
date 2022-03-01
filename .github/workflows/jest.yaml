@@ -1,6 +1,11 @@
 name: jest
 on:
   pull_request:
+    paths:
+      - tests/**
+      - app/**
+      - jest.config.ts
+      - .github/workflows/jest.yaml
     branches:
       - 'develop'
       - 'master'
