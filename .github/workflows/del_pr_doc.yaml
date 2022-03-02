@@ -11,6 +11,10 @@ jobs:
     env:
       REPOSITORY: ${{ github.repository_owner }}/Documentation
     steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository_owner }}/Documentation
+          ssh-key: ${{ secrets.PIZZI_SSH_KEY }}
       - name: Fetch the list of tags related to PR${{ github.event.number}}.
         run: |
           TAGS=$(
@@ -30,9 +34,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           TAGS: ${{ env.TAGS }}
 
-      - uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.PIZZI_SSH_KEY }}
       - name: Delete tags from Documentation repo
         run: echo "$TAGS" | xargs -I {} git push git@github.com:$REPOSITORY --delete {}
         env:
