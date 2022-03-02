@@ -1,0 +1,13 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Product/service's name.
+  price:
+    type: number
+    description: Product/service's unitary price in euro.
+example:
+  {
+    "name": "Sword",
+    "price": 450
+  }

@@ -1,0 +1,65 @@
+post:
+  operationId: "create_items"
+  tags:
+    - Item
+  summary: Create items
+  description: >
+    Create items from a list of items.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: List of items to create.
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/_index.yaml#/CreateItems'
+  responses:
+    '204':
+      description: NO CONTENT
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR
+
+get:
+  operationId: "retrieve_items"
+  tags:
+    - Item
+  summary: Get items
+  description: >
+    Get a list of item by page.
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: query
+      name: page
+      schema:
+        type: integer
+        default: 1
+      description: Page number.
+    - in: query
+      name: nb_item
+      schema:
+        type: integer
+        default: 25
+      description: Number of item per page
+    - in: query
+      name: order
+      schema:
+        type: string
+        enum:
+          - name
+          - date_asc
+          - date_desc
+        default: name
+      description: >
+        Sort order:
+          * `date_asc` - Ascending by creation date
+          * `date_desc` - Descending by creation date
+  responses:
+    '204':
+      description: NO CONTENT
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR

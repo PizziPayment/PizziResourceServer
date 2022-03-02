@@ -1,0 +1,53 @@
+delete:
+  operationId: "delete_item"
+  tags:
+    - Item
+  summary: Delete item
+  description: Delete an item.
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Item's id.
+  security:
+    - BearerAuth: []
+  responses:
+    '204':
+      description: NO CONTENT
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR
+
+patch:
+  operationId: "updade_item"
+  tags:
+    - Item
+  summary: Update item
+  description: >
+    Update the item related to the id in path. Notice that every fields in the
+    request's body are optionals.
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Item's id.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: Item's information.
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../schemas/requests/_index.yaml#/UpdateItem'
+  responses:
+    '204':
+      description: NO CONTENT
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR
