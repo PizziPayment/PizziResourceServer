@@ -17,12 +17,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           cache: 'npm'
-          cache-dependency-path: documentation/package.json
-          node-version: '16'
+          node-version: '17'
       - name: Install documentation tools
-        run: npm install
+        run: yarn install
       - name: Build documentation
-        run: npm run builder
+        run: yarn run builder
 
       - name: Create temporary release
         uses: ncipollo/release-action@v1
