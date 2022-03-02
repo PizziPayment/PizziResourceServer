@@ -1,6 +1,6 @@
 node_modules/
 
-# ignore list from   https://next.yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+# ignore list from https://next.yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 .pnp.*
 .yarn/*
 !.yarn/patches
