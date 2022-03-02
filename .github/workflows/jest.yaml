@@ -21,7 +21,7 @@ jobs:
           cache: 'yarn'
       - uses: webfactory/ssh-agent@v0.5.4
         with:
-          ssh-private-key: ${{ secrets.DB_DEPLOY_KEY }}
+          ssh-private-key: ${{ secrets.PIZZI_SSH_KEY }}
       - name: Install dependencies.
         run: yarn install
       - uses: actions/checkout@v2

@@ -30,7 +30,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           TAGS: ${{ env.TAGS }}
 
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.PIZZI_SSH_KEY }}
       - name: Delete tags from Documentation repo
-        run: echo "$TAGS" | xargs -I {} git push https://Pizzi-token:${{ secrets.ACCESS_TOKEN }}@github.com/$REPOSITORY --delete {}
+        run: echo "$TAGS" | xargs -I {} git push git@github.com:$REPOSITORY --delete {}
         env:
           TAGS: ${{ env.TAGS }}
