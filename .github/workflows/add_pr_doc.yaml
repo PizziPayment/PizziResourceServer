@@ -17,6 +17,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           cache: 'yarn'
+          cache-dependency-path: documentation/package.json
           node-version: '16'
       - name: Install documentation tools
         run: yarn install
