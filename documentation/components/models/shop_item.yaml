@@ -20,7 +20,7 @@ ShopItemIdModel:
       properties:
         id:
           type: number
-          description: An id's refering to that shop item.
+          description: Id of the shop item.
   example:
     id: 1
     name: "Sword"

@@ -2,9 +2,9 @@ post:
   operationId: "create_shop_items"
   tags:
     - Shop Item
-  summary: Create items
+  summary: Create shop items
   description: >
-    Create items from a list of items.
+    Create shop items from a list of items.
   security:
     - BearerAuth: []
   requestBody:
@@ -25,9 +25,9 @@ get:
   operationId: "list_shop_items"
   tags:
     - Shop Item
-  summary: Get items
+  summary: Get shop items
   description: >
-    Get a list of item by page.
+    Get a list of shop items by page.
   security:
     - BearerAuth: []
   parameters:

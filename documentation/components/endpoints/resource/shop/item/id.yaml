@@ -2,8 +2,8 @@ delete:
   operationId: "delete_shop_item"
   tags:
     - Shop Item
-  summary: Delete item
-  description: Delete an item.
+  summary: Delete shop item
+  description: Delete a shop item.
   parameters:
     - in: path
       name: id
@@ -25,17 +25,17 @@ patch:
   operationId: "update_shop_item"
   tags:
     - Shop Item
-  summary: Update item
+  summary: Update shop item
   description: >
-    Update the item related to the id in path. Notice that every fields in the
-    request's body are optionals.
+    Update the shop item related to the id in path. Notice that every fields in
+    the request's body are optionals.
   parameters:
     - in: path
       name: id
       schema:
         type: integer
       required: true
-      description: Item's id.
+      description: Id of the shop item.
   security:
     - BearerAuth: []
   requestBody:
