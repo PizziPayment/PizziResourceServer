@@ -1,7 +1,7 @@
 post:
-  operationId: "create_items"
+  operationId: "create_shop_items"
   tags:
-    - Item
+    - Shop Item
   summary: Create items
   description: >
     Create items from a list of items.
@@ -22,9 +22,9 @@ post:
       description: INTERNAL SERVER ERROR
 
 get:
-  operationId: "retrieve_items"
+  operationId: "list_shop_items"
   tags:
-    - Item
+    - Shop Item
   summary: Get items
   description: >
     Get a list of item by page.
@@ -57,8 +57,12 @@ get:
           * `date_asc` - Ascending by creation date
           * `date_desc` - Descending by creation date
   responses:
-    '204':
-      description: NO CONTENT
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/_index.yaml#/ShopItems'
     '401':
       description: UNAUTHORIZED
     '500':

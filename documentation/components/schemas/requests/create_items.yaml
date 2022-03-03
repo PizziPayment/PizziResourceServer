@@ -1,34 +1,15 @@
 type: object
+required:
+  - items
 properties:
   items:
     type: array
     description: Array of items to create.
     items:
-      type: object
-      description: Product/service of a shop.
-      properties:
-        name:
-          type: string
-          description: Product/service's name.
-        price:
-          type: number
-          description: Product/service's unitary price in euro.
-       # warranty:
-       #   type: number
-       #   description: A warranty id.
-       # discount:
-       #   type: number
-       #   description: A discount id
+      $ref: '../../models/shop_item.yaml#/ShopItemModel'
 example:
-  {
-    "items": [
-      {
-        "name": "red wheelbarrow",
-        "price": 99.99,
-      },
-      {
-        "name": "cultivator",
-        "price": 346.00
-      }
-    ]
-  }
+  items:
+    - name: "red wheelbarrow"
+      price: 99.99
+    - name: "cultivator"
+      prive: 346.00

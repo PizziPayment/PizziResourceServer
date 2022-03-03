@@ -1,0 +1,27 @@
+ShopItemModel:
+  type: object
+  description: Product/service of a shop.
+  properties:
+    name:
+      type: string
+      description: Product/service's name.
+    price:
+      type: number
+      description: Product/service's unitary price in euro.
+  example:
+    name: "Sword"
+    price: 346
+
+ShopItemIdModel:
+  allOf:
+    - $ref: '#/ShopItemModel'
+    - type: object
+      description: Product/service of a shop.
+      properties:
+        id:
+          type: number
+          description: An id's refering to that shop item.
+  example:
+    id: 1
+    name: "Sword"
+    price: 356

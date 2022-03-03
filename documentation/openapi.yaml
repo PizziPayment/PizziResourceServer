@@ -15,8 +15,9 @@ servers:
     url: http://localhost:5000
 
 tags:
-  - name: Item
-    description: Every route about item. We call item product and service that
+  - name: Shop Item
+    description: >
+      Every route about a shop item. We call shop item product and service that
       a shop can have.
 
   - name: Shop

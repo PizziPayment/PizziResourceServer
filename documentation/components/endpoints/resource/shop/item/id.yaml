@@ -1,7 +1,7 @@
 delete:
-  operationId: "delete_item"
+  operationId: "delete_shop_item"
   tags:
-    - Item
+    - Shop Item
   summary: Delete item
   description: Delete an item.
   parameters:
@@ -22,9 +22,9 @@ delete:
       description: INTERNAL SERVER ERROR
 
 patch:
-  operationId: "updade_item"
+  operationId: "update_shop_item"
   tags:
-    - Item
+    - Shop Item
   summary: Update item
   description: >
     Update the item related to the id in path. Notice that every fields in the
@@ -45,8 +45,12 @@ patch:
         schema:
           $ref: '../../../../schemas/requests/_index.yaml#/UpdateItem'
   responses:
-    '204':
-      description: NO CONTENT
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../schemas/responses/_index.yaml#/ShopItemId'
     '401':
       description: UNAUTHORIZED
     '500':

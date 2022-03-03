@@ -1,3 +1,9 @@
+ShopItemId:
+  $ref: "./shop_item_id.yaml"
+
+ShopItems:
+  $ref: "./shop_items.yaml"
+
 Token:
   $ref: "./token.yaml"
 
