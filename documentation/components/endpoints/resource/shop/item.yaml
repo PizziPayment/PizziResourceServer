@@ -14,8 +14,12 @@ post:
         schema:
           $ref: '../../../schemas/requests/_index.yaml#/CreateItems'
   responses:
-    '204':
-      description: NO CONTENT
+    '201':
+      description: CREATED
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/_index.yaml#/ShopItems'
     '401':
       description: UNAUTHORIZED
     '500':

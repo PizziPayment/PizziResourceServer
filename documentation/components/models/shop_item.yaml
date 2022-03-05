@@ -14,13 +14,13 @@ ShopItemModel:
 
 ShopItemIdModel:
   allOf:
-    - $ref: '#/ShopItemModel'
     - type: object
       description: Product/service of a shop.
       properties:
         id:
           type: number
           description: Id of the shop item.
+    - $ref: '#/ShopItemModel'
   example:
     id: 1
     name: "Sword"
