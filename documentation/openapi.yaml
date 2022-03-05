@@ -18,7 +18,7 @@ tags:
   - name: Shop Item
     description: >
       Every route about a shop item. We call shop item product and service that
-      a shop can have.
+      a shop can sell.
 
   - name: Shop
     description: Everything about shop.
