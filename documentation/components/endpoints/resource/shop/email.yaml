@@ -16,6 +16,6 @@ patch:
     '204':
       description: NO CONTENT
     '401':
-      description: UNAUTORIZED
+      description: UNAUTHORIZED
     '500':
       description: INTERNAL SERVER ERROR
