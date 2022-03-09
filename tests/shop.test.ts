@@ -4,7 +4,7 @@ import { App } from '../app/api'
 import { baseUrl as endpoint, baseUrlPassword as endpoint_password, baseUrlEmail as endpoint_email } from '../app/shop/routes.config'
 import { config } from '../app/common/config'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
-import { ClientsService, CredentialsService, EncryptionService, rewriteTables, TokenModel, TokensService, TokensServiceError } from 'pizzi-db'
+import { ClientsService, CredentialsService, EncryptionService, rewriteTables, ShopsServices, TokenModel, TokensService, TokensServiceError } from 'pizzi-db'
 
 const shop = {
   name: 'toto',
@@ -15,13 +15,19 @@ const shop = {
   place: {
     address: '13 rue de la ville',
     city: 'Ville',
-    zipcode: '25619',
+    zipcode: 25619,
   },
 }
 
 const client = { client_id: 'toto', client_secret: 'tutu' }
 const client_header = {
   Authorization: 'Basic ' + Buffer.from(`${client.client_id}:${client.client_secret}`).toString('base64'),
+}
+
+async function createShop(): Promise<void> {
+  const address = `${shop.place.address} ${shop.place.city}`
+  const shop_handle = (await ShopsServices.createShop(shop.name, shop.phone, address, shop.place.zipcode))._unsafeUnwrap()
+  expect((await CredentialsService.createCredentialWithId('shop', shop_handle.id, shop.email, EncryptionService.encrypt(shop.password))).isOk()).toBeTruthy()
 }
 
 async function getShopToken(email: string, password: string): Promise<TokenModel> {
@@ -74,6 +80,25 @@ beforeEach(async () => {
 })
 
 describe('Shop endpoint', () => {
+  describe('GET request', () => {
+    it("should return a shop's information", async () => {
+      await createShop()
+      const token = await getShopToken(shop.email, shop.password)
+      const res = await request(App).get(endpoint).set(createBearerHeader(token.access_token)).send()
+
+      expect(res.statusCode).toEqual(200)
+    })
+
+    it('should not accept an invalid token', async () => {
+      await createShop()
+      const token = await getShopToken(shop.email, shop.password)
+      const invalid = createRandomToken(token.access_token)
+      const res = await request(App).get(endpoint).set(createBearerHeader(invalid)).send()
+
+      expect(res.statusCode).toEqual(401)
+    })
+  })
+
   describe('POST request', () => {
     it('should allow the creation of a valid shop', async () => {
       const res = await request(App).post(endpoint).set(client_header).send(shop)

@@ -3,3 +3,6 @@ Token:
 
 UsersInfo:
   $ref: "./users_info.yaml"
+
+ShopInfo:
+  $ref: "./shop_info.yaml"
