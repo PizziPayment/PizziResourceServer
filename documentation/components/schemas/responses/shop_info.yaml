@@ -1,0 +1,25 @@
+type: object
+properties:
+  email:
+    type: string
+    description: Shop's email.
+  name:
+    type: string
+    description: Shop's name.
+  phone:
+    type: string
+    description: Shop's phone.
+  address:
+    type: string
+    description: Shop's location.
+  zipcode:
+    type: number
+    description: Shop's location zipcode.
+example:
+  {
+    "email": 'toto@tutu.tata',
+    "name": 'Alaska',
+    "phone": '0652076382',
+    "address": '13 rue de la ville Ville',
+    "zipcode": 25619
+  }
