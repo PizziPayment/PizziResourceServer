@@ -4484,7 +4484,7 @@ __metadata:
     express: ^4.17.2
     jest: ^27.4.5
     neverthrow: ^4.3.1
-    pizzi-db: "git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&tag=v1.2.2"
+    pizzi-db: "git@github.com:PizziPayment/PizziAPIDB.git#commit=9585588b3f18372308f796f0aa146d45ab6b29bd&workspace=pizzi-db"
     prettier: ^2.5.1
     reflect-metadata: ^0.1.13
     source-map-support: ^0.5.21
@@ -4496,17 +4496,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&tag=v1.2.2":
+"pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#commit=9585588b3f18372308f796f0aa146d45ab6b29bd&workspace=pizzi-db":
   version: 1.0.1
-  resolution: "pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&commit=017ca4c495aa8e3faa36d05db6a0ebcb66661f72"
+  resolution: "pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#workspace=pizzi-db&commit=9585588b3f18372308f796f0aa146d45ab6b29bd"
   dependencies:
     neverthrow: ^4.3.1
     pg: ^8.7.1
     prettier: ^2.5.1
     reflect-metadata: ^0.1.13
-    sequelize: ^6.12.4
+    sequelize: =6.12.4
     sequelize-typescript: ^2.1.1
-  checksum: 8ee294d3de57d99c83ae10a594cedf8fde56e73396004e021aaf564edec630ae460d6ae33078fca5f6d62e119bdc589f1c3a8b821e3bc24de9159f638d558f73
+  checksum: 8feba0ef1d318adb38b73a65875fdcf2a764921d38e86bd8581a7b7c2ab89b2f1c671df18a39b06c2497eb472013e9928e5a6b1420a8a4783c84bce5ee18ff51
   languageName: node
   linkType: hard
 
@@ -4922,9 +4922,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sequelize@npm:^6.12.4":
-  version: 6.15.0
-  resolution: "sequelize@npm:6.15.0"
+"sequelize@npm:=6.12.4":
+  version: 6.12.4
+  resolution: "sequelize@npm:6.12.4"
   dependencies:
     "@types/debug": ^4.1.7
     debug: ^4.3.3
@@ -4958,7 +4958,7 @@ __metadata:
       optional: true
     tedious:
       optional: true
-  checksum: 16b17e89596d393dd9fee9c6a73e5cc888921aa32b5ef5fc3da0190af410e2d0eb13de8ab084f8fe98ee36dedb456357e287b2d3537da6d5b15a389f0561949e
+  checksum: bf781ea640627cb8f32bcc3521ad100c98cca0f77ac1f0bffeaaa1bb5f15dff200c5e225d752f9c7fc8824f3f1885d3d4944f5a31b990008684eedc19e805059
   languageName: node
   linkType: hard
 
