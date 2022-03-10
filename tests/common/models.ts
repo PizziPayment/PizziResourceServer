@@ -1,4 +1,7 @@
-export const user = {
+import UserRegisterRequestModel from '../../app/user/models/register.request.model'
+import ShopRegisterRequestModel from '../../app/shop/models/register.request.model'
+
+export const user: UserRegisterRequestModel = {
   name: 'toto',
   surname: 'tutu',
   email: 'toto@tutu.tata',
@@ -10,9 +13,8 @@ export const user = {
   },
 }
 
-export const shop = {
+export const shop: ShopRegisterRequestModel = {
   name: 'toto',
-  surname: 'tutu',
   email: 'toto@tutu.tata',
   password: 'gY@3Cwl4FmLlQ@HycAf',
   phone: '0652076382', // Not in the documentation yet

@@ -9,6 +9,7 @@ import {
   TokenModel,
   UsersServices,
   UserModel,
+  ShopModel,
 } from 'pizzi-db'
 
 async function getUserCredentials(email: string, password: string): Promise<CredentialModel> {
@@ -29,10 +30,12 @@ export async function getUserToken(email: string, password: string): Promise<Tok
   return token
 }
 
-export async function createShop(): Promise<void> {
+export async function createShop(): Promise<ShopModel> {
   const address = `${shop.place.address} ${shop.place.city}`
   const shop_handle = (await ShopsServices.createShop(shop.name, shop.phone, address, shop.place.zipcode))._unsafeUnwrap()
   expect((await CredentialsService.createCredentialWithId('shop', shop_handle.id, shop.email, EncryptionService.encrypt(shop.password))).isOk()).toBeTruthy()
+
+  return shop_handle
 }
 
 export async function getShopToken(email: string, password: string): Promise<TokenModel> {
