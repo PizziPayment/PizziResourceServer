@@ -80,7 +80,7 @@ describe('Shop endpoint', () => {
         ['no lowercase character', '@BCD3FGH1JKLMNOP'],
       ]
 
-      it.each(passwords)('%s: %s', async (password) => {
+      it.each(passwords)('%s: %s', async (_, password) => {
         const res = await request(App)
           .post(endpoint)
           .set(client_header)
