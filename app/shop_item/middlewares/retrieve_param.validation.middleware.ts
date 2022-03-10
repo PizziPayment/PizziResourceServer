@@ -14,7 +14,7 @@ export async function validShopItemsRetrieval(
 
     if (req.query.sort_by !== undefined) {
       if (Object.values(SortBy).includes(req.query.sort_by as SortBy) == false) {
-        errors.push('invalud query sort_by value')
+        errors.push('invalid value for sort_by query parameter ')
       }
     } else {
       req.query.sort_by = default_filter.sort_by
@@ -22,7 +22,7 @@ export async function validShopItemsRetrieval(
 
     if (req.query.order !== undefined) {
       if (Object.values(Order).includes(req.query.order as Order) == false) {
-        errors.push('invalud query sort_by value')
+        errors.push('invalid value for order query parameter')
       }
     } else {
       req.query.order = default_filter.order
@@ -32,8 +32,8 @@ export async function validShopItemsRetrieval(
       req.query.page = default_filter.page
     }
 
-    if (req.query.nm_items === undefined) {
-      req.query.nm_items = default_filter.nm_items
+    if (req.query.nb_items === undefined) {
+      req.query.nb_items = default_filter.nb_items
     }
 
     if (errors.length === 0) {

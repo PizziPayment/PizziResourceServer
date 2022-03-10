@@ -42,7 +42,7 @@ get:
         default: 1
       description: Page number.
     - in: query
-      name: nb_item
+      name: nb_items
       schema:
         type: integer
         default: 25

@@ -37,7 +37,7 @@ export class Filter {
       sort_by: SortBy.NAME,
       order: Order.ASC,
       page: 1,
-      nm_items: 25,
+      nb_items: 25,
       query: '',
     }
   }
@@ -45,6 +45,6 @@ export class Filter {
   sort_by?: SortBy
   order?: Order
   page?: number
-  nm_items?: number
+  nb_items?: number
   query?: string
 }

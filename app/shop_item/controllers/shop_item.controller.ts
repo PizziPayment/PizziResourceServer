@@ -22,10 +22,10 @@ export async function retrieveShopItems(req: Request<unknown, unknown, unknown, 
   await ShopItemsService.retrieveShopItemPage(
     credentials.shop_id,
     filter.page,
-    filter.nm_items,
-    filter.query,
+    filter.nb_items,
     intoDBSortBy(filter.sort_by),
     intoDBOrder(filter.order),
+    filter.query,
   ).match(
     (items) => res.status(200).send(new ShopItemsResponseModel(items)),
     () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
