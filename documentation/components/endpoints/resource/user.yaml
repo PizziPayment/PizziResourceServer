@@ -1,3 +1,22 @@
+get:
+  operationId: "info_user"
+  tags:
+    - User
+  summary: Get user infos
+  description: Returns the informations related to the given token. 
+  security:
+    - BearerAuth: [ ]
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/responses/_index.yaml#/UsersInfo'
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR
 post:
   operationId: "create_user"
   tags:

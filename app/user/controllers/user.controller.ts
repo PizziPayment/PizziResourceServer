@@ -3,6 +3,16 @@ import RegisterRequestModel from '../models/register.request.model'
 import { ApiFailure } from '../../common/models/api.response.model'
 import { CredentialModel, CredentialsService, EncryptionService, TokenModel, UsersServices } from 'pizzi-db'
 import PatchRequestModel from '../models/patch.request.model'
+import InfosResponseModel from '../models/infos.response'
+
+export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
+  const credentials = res.locals.credential as CredentialModel
+
+  await UsersServices.getUserFromId(credentials.user_id).match(
+    (user) => res.status(200).send(new InfosResponseModel(user)),
+    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+  )
+}
 
 export async function register(req: Request<unknown, unknown, RegisterRequestModel>, res: Response): Promise<void> {
   await UsersServices.createUser(req.body.name, req.body.surname, `${req.body.place.address}, ${req.body.place.city}`, req.body.place.zipcode)
@@ -11,7 +21,7 @@ export async function register(req: Request<unknown, unknown, RegisterRequestMod
         UsersServices.deleteUserById(user.id).match(
           () => null,
           // TODO Should be replace by a custom file logger or anything
-          (e) => console.log(`Error when trying to delete Shop ID ${user.id}: ${e}`),
+          (e) => console.log(`Error when trying to delete User ID ${user.id}: ${e}`),
         ),
       ),
     )

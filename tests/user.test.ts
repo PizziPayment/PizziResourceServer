@@ -25,6 +25,12 @@ const client_header = {
   Authorization: 'Basic ' + Buffer.from(`${client.client_id}:${client.client_secret}`).toString('base64'),
 }
 
+async function createUser(): Promise<void> {
+  const address = `${user.place.address} ${user.place.city}`
+  const user_handle = (await UsersServices.createUser(user.name, user.surname, address, user.place.zipcode))._unsafeUnwrap()
+  expect((await CredentialsService.createCredentialWithId('user', user_handle.id, user.email, EncryptionService.encrypt(user.password))).isOk()).toBeTruthy()
+}
+
 async function getUserCredentials(email: string, password: string): Promise<CredentialModel> {
   return (await CredentialsService.getCredentialFromMailAndPassword(email, EncryptionService.encrypt(password)))._unsafeUnwrap()
 }
@@ -85,6 +91,31 @@ beforeEach(async () => {
 })
 
 describe('User endpoint', () => {
+  describe('GET request', () => {
+    it('should return a user\'s information', async () => {
+      await createUser()
+      const token = await getUserToken(user.email, user.password)
+      const address = `${user.place.address} ${user.place.city}`
+      const res = await request(App).get(endpoint).set(createBearerHeader(token.access_token)).send()
+
+      expect(res.statusCode).toEqual(200)
+      expect(typeof res.body.id).toEqual('number')
+      expect(res.body.firstname).toEqual(user.name)
+      expect(res.body.surname).toEqual(user.surname)
+      expect(res.body.address).toEqual(address)
+      expect(res.body.zipcode).toEqual(user.place.zipcode)
+    })
+
+    it('should not accept an invalid token', async () => {
+      await createUser()
+      const token = await getUserToken(user.email, user.password)
+      const invalid = createRandomToken(token.access_token)
+      const res = await request(App).get(endpoint).set(createBearerHeader(invalid)).send()
+
+      expect(res.statusCode).toEqual(401)
+    })
+  })
+
   describe('POST request', () => {
     it('should allow the creation of a valid user', async () => {
       const res = await request(App).post(endpoint).set(client_header).send(user)
@@ -113,7 +144,7 @@ describe('User endpoint', () => {
       expect(second_res.statusCode).toEqual(400)
     })
 
-    describe('should not allow the creation of a shop with a password which has', () => {
+    describe('should not allow the creation of a user with a password which has', () => {
       const passwords: Array<Array<String>> = [
         ['not at least 12 characters', '@Bcd3'],
         ['no special character', 'Abcd3fgh1jklmnOp'],
