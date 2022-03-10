@@ -84,9 +84,15 @@ describe('Shop endpoint', () => {
     it("should return a shop's information", async () => {
       await createShop()
       const token = await getShopToken(shop.email, shop.password)
+      const address = `${shop.place.address} ${shop.place.city}`
       const res = await request(App).get(endpoint).set(createBearerHeader(token.access_token)).send()
 
       expect(res.statusCode).toEqual(200)
+      expect(res.body.email).toEqual(shop.email)
+      expect(res.body.name).toEqual(shop.name)
+      expect(res.body.phone).toEqual(shop.phone)
+      expect(res.body.address).toEqual(address)
+      expect(res.body.zipcode).toEqual(shop.place.zipcode)
     })
 
     it('should not accept an invalid token', async () => {
@@ -257,7 +263,7 @@ describe('Shop endpoint', () => {
           new_email: 'f.n@example.com',
         }
 
-        it("should allow the modification of a user's email", async () => {
+        it("should allow the modification of a shop's email", async () => {
           const create_res = await request(App).post(endpoint).set(client_header).send(shop)
 
           expect(create_res.statusCode).toEqual(201)
@@ -272,7 +278,7 @@ describe('Shop endpoint', () => {
           await getShopToken(body.new_email, shop.password)
         })
 
-        it("should not allow the modification of a user's email with an invalid token", async () => {
+        it("should not allow the modification of a shop's email with an invalid token", async () => {
           const create_res = await request(App).post(endpoint).set(client_header).send(shop)
 
           expect(create_res.statusCode).toEqual(201)
@@ -284,7 +290,7 @@ describe('Shop endpoint', () => {
           expect(patch_res.statusCode).toEqual(401)
         })
 
-        it("should not allow the modification of a user's email with an invalid password", async () => {
+        it("should not allow the modification of a shop's email with an invalid password", async () => {
           const create_res = await request(App).post(endpoint).set(client_header).send(shop)
 
           expect(create_res.statusCode).toEqual(201)
@@ -297,7 +303,7 @@ describe('Shop endpoint', () => {
           expect(patch_res.statusCode).toEqual(403)
         })
 
-        it("should not allow the modification of a user's email with an invalid new email", async () => {
+        it("should not allow the modification of a shop's email with an invalid new email", async () => {
           const create_res = await request(App).post(endpoint).set(client_header).send(shop)
 
           expect(create_res.statusCode).toEqual(201)

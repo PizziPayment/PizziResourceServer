@@ -1,5 +1,5 @@
 import { Application } from 'express'
-import { register, deleteAccount, changeUserInformation } from './controllers/user.controller'
+import { register, deleteAccount, changeUserInformation, info } from './controllers/user.controller'
 import validBasicAuth from '../common/middlewares/basic_auth.validation.middleware'
 import validRegisterRequest from './middlewares/register.request.validation.middleware'
 import validDeleteRequest from './middlewares/delete.request.validation.middleware'
@@ -17,6 +17,7 @@ export const baseUrlPassword = `${baseUrl}/me/password`
 export const baseUrlEmail = `${baseUrl}/me/email`
 
 export default function UserRouter(app: Application): void {
+  app.get(`${baseUrl}/`, [validToken, validUserTokenAffiliation, info])
   app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])
   app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
   app.patch(`${baseUrl}/`, [validToken, validUserTokenAffiliation, changeUserInformation])
