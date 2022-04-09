@@ -30,10 +30,18 @@ export async function validShopItemsRetrieval(
 
     if (req.query.page === undefined) {
       req.query.page = default_filter.page
+    } else {
+      if (req.query.page < 1) {
+        errors.push('invalid value for page query parameter')
+      }
     }
 
     if (req.query.nb_items === undefined) {
       req.query.nb_items = default_filter.nb_items
+    } else {
+      if (req.query.nb_items < 1) {
+        errors.push('invalid value for nb_items query parameter')
+      }
     }
 
     if (errors.length === 0) {
