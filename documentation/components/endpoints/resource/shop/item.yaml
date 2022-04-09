@@ -48,7 +48,7 @@ get:
         default: 25
       description: Number of item(s) per page
     - in: query
-      name: filter
+      name: query
       schema:
         type: string
       description: >
