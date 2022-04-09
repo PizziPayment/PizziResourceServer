@@ -27,8 +27,8 @@ patch:
     - Shop Item
   summary: Update shop item
   description: >
-    Update the shop item related to the id in path. Notice that every fields in
-    the request's body are optionals.
+    Update the shop item related to the id in path. Notice that every field in
+    the request's body are optional.
   parameters:
     - in: path
       name: id
