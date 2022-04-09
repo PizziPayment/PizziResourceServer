@@ -285,6 +285,110 @@ describe('Shop item endpoint', () => {
           .send(new_item_properties)
         expect(res.statusCode).toBe(400)
       })
+
+      it('that is deleted', async () => {
+        const [_, token, created_items] = await setupShopItem()
+        const shop_item = created_items[0]
+        const new_item_properties: ShopItemUpdateRequestModel = { name: 'Toto', price: '23.00' }
+        const bearer_header = createBearerHeader(token.access_token)
+
+        expect(
+          (
+            await request(App)
+              .delete(endpoint + `/${shop_item.id}`)
+              .set(bearer_header)
+          ).statusCode,
+        ).toBe(204)
+        expect(
+          (
+            await request(App)
+              .patch(endpoint + `/${shop_item.id}`)
+              .set(bearer_header)
+              .send(new_item_properties)
+          ).statusCode,
+        ).toBe(403)
+      })
+    })
+  })
+
+  describe('DELETE request', () => {
+    it('should allow the deletion of a shop item', async () => {
+      const [_, token, created_items] = await setupShopItem()
+      const shop_item = created_items[0]
+
+      expect(
+        (
+          await request(App)
+            .delete(endpoint + `/${shop_item.id}`)
+            .set(createBearerHeader(token.access_token))
+        ).statusCode,
+      ).toBe(204)
+
+      expect((await ShopItemsService.retrieveShopItemFromIdAndEnable(shop_item.id, false)).isOk()).toBeTruthy()
+    })
+
+    describe('should not allow the deletion of a shop item', () => {
+      it('with an invalid token', async () => {
+        const [_, token, created_items] = await setupShopItem()
+        const shop_item = created_items[0]
+
+        expect(
+          (
+            await request(App)
+              .delete(endpoint + `/${shop_item.id}`)
+              .set(createBearerHeader(createRandomToken(token.access_token)))
+          ).statusCode,
+        ).toBe(401)
+      })
+
+      it("with an invalid shop item's id", async () => {
+        const [_, token, __] = await setupShopItem()
+
+        expect(
+          (
+            await request(App)
+              .delete(endpoint + `/2000`)
+              .set(createBearerHeader(createRandomToken(token.access_token)))
+          ).statusCode,
+        ).toBe(401)
+      })
+
+      it('that is already deleted', async () => {
+        const [_, token, created_items] = await setupShopItem()
+        const shop_item = created_items[0]
+        const bearer_header = createBearerHeader(token.access_token)
+
+        expect(
+          (
+            await request(App)
+              .delete(endpoint + `/${shop_item.id}`)
+              .set(bearer_header)
+          ).statusCode,
+        ).toBe(204)
+        expect(
+          (
+            await request(App)
+              .delete(endpoint + `/${shop_item.id}`)
+              .set(bearer_header)
+          ).statusCode,
+        ).toBe(403)
+      })
+
+      it("that doesn't belong to the shop", async () => {
+        const [_, __, created_items] = await setupShopItem()
+        const shop_item = created_items[0]
+
+        await createShop(shops[1])
+        const bearer_header = await createBearerHeaderFromCredential(shops[1].email, shops[1].password)
+
+        expect(
+          (
+            await request(App)
+              .delete(endpoint + `/${shop_item.id}`)
+              .set(bearer_header)
+          ).statusCode,
+        ).toBe(404)
+      })
     })
   })
 })

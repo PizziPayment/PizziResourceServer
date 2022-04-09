@@ -42,3 +42,12 @@ export async function updateShopItem(req: Request<ShopItemUpdateParamModel, unkn
     () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
   )
 }
+
+export async function deleteShopItem(req: Request<ShopItemUpdateParamModel, unknown, unknown>, res: Response): Promise<void> {
+  const shop_item_id = req.params.id
+
+  await ShopItemsService.deleteShopItemById(shop_item_id).match(
+    () => res.status(204).send(),
+    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+  )
+}
