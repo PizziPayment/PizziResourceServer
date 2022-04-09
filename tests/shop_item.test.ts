@@ -4,15 +4,16 @@ import { App } from '../app/api'
 import { baseUrl as endpoint } from '../app/shop_item/routes.config'
 import { config } from '../app/common/config'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
-import { ClientsService, rewriteTables, ShopItemsService, ShopItemModel } from 'pizzi-db'
+import { ClientsService, rewriteTables, ShopItemsService, ShopItemModel, TokenModel, ShopModel } from 'pizzi-db'
 import { client, shops } from './common/models'
 import { createBearerHeader, createRandomToken, createShop, getShopToken, createBearerHeaderFromCredential } from './common/services'
 import { ShopItemCreationRequestModel } from '../app/shop_item/models/create.request.model'
 import { ShopItemResponseModel, ShopItemsResponseModel } from '../app/shop_item/models/response.model'
 import { intoDBOrder, intoDBSortBy, Order, SortBy } from '../app/shop_item/models/retrieve.request.model'
 import { ShopItemUpdateRequestModel } from '../app/shop_item/models/update.request.model'
+import RegisterRequestModel from '../app/shop/models/register.request.model'
 
-const shop = shops[0]
+const default_shop = shops[0]
 const shop_items: ShopItemCreationRequestModel = {
   items: [
     {
@@ -54,6 +55,18 @@ async function retrieveAllShopItems(shop_id: number): Promise<Array<ShopItemMode
   return (await ShopItemsService.retrieveShopItemPage(shop_id, 1, 9999, intoDBSortBy(SortBy.NAME), intoDBOrder(Order.ASC)))._unsafeUnwrap()
 }
 
+async function setupShopItem(
+  items: ShopItemCreationRequestModel = shop_items,
+  shop: RegisterRequestModel = default_shop,
+): Promise<[ShopModel, TokenModel, Array<ShopItemResponseModel>]> {
+  const created_shop = await createShop(shop)
+  const token = await getShopToken(shop.email, shop.password)
+  const res_shop_items = await request(App).post(endpoint).set(createBearerHeader(token.access_token)).send(items)
+
+  expect(res_shop_items.statusCode).toBe(201)
+  return [created_shop, token, (res_shop_items.body as ShopItemsResponseModel).items]
+}
+
 beforeEach(async () => {
   const database = config.database
   const orm_config: OrmConfig = {
@@ -72,21 +85,16 @@ beforeEach(async () => {
 describe('Shop item endpoint', () => {
   describe('POST request', () => {
     it('should allow the creation of valid shop items', async () => {
-      const shop_id = (await createShop()).id
-      const token = await getShopToken(shop.email, shop.password)
-      const res = await request(App).post(endpoint).set(createBearerHeader(token.access_token)).send(shop_items)
+      const [shop, _, created_items] = await setupShopItem()
 
-      expect(res.statusCode).toEqual(201)
-      const created_items = (res.body as ShopItemsResponseModel).items
-      const retrieved_items = await retrieveAllShopItems(shop_id)
-
+      const retrieved_items = await retrieveAllShopItems(shop.id)
       expect(created_items.length).toBe(shop_items.items.length)
       expect(retrieved_items.length).toBe(shop_items.items.length)
 
       for (let i = 0; i < shop_items.items.length; i++) {
         expect(created_items[i].name).toBe(shop_items.items[i].name)
         expect(parseFloat(created_items[i].price)).toBe(parseFloat(shop_items.items[i].price))
-        expect(retrieved_items[i].shop_id).toBe(shop_id)
+        expect(retrieved_items[i].shop_id).toBe(shop.id)
         expect(retrieved_items[i].name).toBe(shop_items.items[i].name)
         expect(parseFloat(retrieved_items[i].price)).toBe(parseFloat(shop_items.items[i].price))
       }
@@ -102,7 +110,7 @@ describe('Shop item endpoint', () => {
       ]
       it.each(bodies)('%s: %o', async (_, body) => {
         const shop_id = (await createShop()).id
-        const token = await getShopToken(shop.email, shop.password)
+        const token = await getShopToken(default_shop.email, default_shop.password)
         const res = await request(App).post(endpoint).set(createBearerHeader(token.access_token)).send(body)
 
         expect(res.statusCode).toEqual(400)
@@ -113,8 +121,7 @@ describe('Shop item endpoint', () => {
 
   describe('GET request', () => {
     it('should not allow the retrieval of shop item with an invalid token', async () => {
-      await createShop()
-      const token = await getShopToken(shop.email, shop.password)
+      const [shop, token, _] = await setupShopItem()
       const res = await request(App)
         .post(endpoint)
         .set(createBearerHeader(createRandomToken(token.access_token)))
@@ -142,12 +149,8 @@ describe('Shop item endpoint', () => {
       ]
 
       it.each(params)('Test n%#', async (param) => {
+        const [_, token, __] = await setupShopItem()
         const { page, nb_items, sort_by, order, query, expected_si } = param
-
-        await createShop()
-        const token = await getShopToken(shop.email, shop.password)
-
-        expect((await request(App).post(endpoint).set(createBearerHeader(token.access_token)).send(shop_items)).statusCode).toBe(201)
 
         const res = await request(App)
           .get(endpoint)
@@ -195,13 +198,9 @@ describe('Shop item endpoint', () => {
             },
           ],
         }
-
-        await createShop()
-        const bearer_header = await createBearerHeaderFromCredential(shop.email, shop.password)
-
-        const maybe_shop_item = await request(App).post(endpoint).set(bearer_header).send(shop_item_req)
-        expect(maybe_shop_item.statusCode).toBe(201)
-        const shop_item = (maybe_shop_item.body as ShopItemsResponseModel).items[0]
+        const [_, token, created_items] = await setupShopItem(shop_item_req)
+        const bearer_header = createBearerHeader(token.access_token)
+        const shop_item = created_items[0]
 
         const res = await request(App)
           .patch(endpoint + `/${shop_item.id}`)
@@ -228,76 +227,53 @@ describe('Shop item endpoint', () => {
 
     describe('should not allow the modification of a shop item', () => {
       it('with an invalid token', async () => {
-        await createShop()
-        const new_item: ShopItemUpdateRequestModel = { name: 'Toto', price: '23.00' }
-
-        const token = (await getShopToken(shop.email, shop.password)).access_token
-        const header = createBearerHeader(token)
-
-        const maybe_shop_item = await request(App).post(endpoint).set(header).send(shop_items)
-        expect(maybe_shop_item.statusCode).toBe(201)
-        const shop_item = (maybe_shop_item.body as ShopItemsResponseModel).items[0]
+        const [_, token, created_items] = await setupShopItem()
+        const new_item_propertoes: ShopItemUpdateRequestModel = { name: 'Toto', price: '23.00' }
+        const shop_item = created_items[0]
 
         const res = await request(App)
           .patch(endpoint + `/${shop_item.id}`)
-          .set(createBearerHeader(createRandomToken(token)))
-          .send(new_item)
+          .set(createBearerHeader(createRandomToken(token.access_token)))
+          .send(new_item_propertoes)
         expect(res.statusCode).toBe(401)
       })
 
       it("that doesn't belong to the shop", async () => {
-        await createShop()
+        const [_, __, created_items] = await setupShopItem()
+        const shop_item = created_items[0]
+
         await createShop(shops[1])
-        const new_item: ShopItemUpdateRequestModel = { name: 'Toto', price: '23.00' }
-
-        const token = (await getShopToken(shop.email, shop.password)).access_token
-        const header = createBearerHeader(token)
-
-        const maybe_shop_item = await request(App).post(endpoint).set(header).send(shop_items)
-        expect(maybe_shop_item.statusCode).toBe(201)
-        const shop_item = (maybe_shop_item.body as ShopItemsResponseModel).items[0]
-
         const bearer_header = await createBearerHeaderFromCredential(shops[1].email, shops[1].password)
+
+        const new_item_properties: ShopItemUpdateRequestModel = { name: 'Toto', price: '23.00' }
+
         const res = await request(App)
           .patch(endpoint + `/${shop_item.id}`)
           .set(bearer_header)
-          .send(new_item)
+          .send(new_item_properties)
         expect(res.statusCode).toBe(404)
       })
 
       it('with no property', async () => {
-        await createShop()
+        const [_, token, created_items] = await setupShopItem()
+        const shop_item = created_items[0]
 
-        const token = (await getShopToken(shop.email, shop.password)).access_token
-        const header = createBearerHeader(token)
-
-        const maybe_shop_item = await request(App).post(endpoint).set(header).send(shop_items)
-        expect(maybe_shop_item.statusCode).toBe(201)
-        const shop_item = (maybe_shop_item.body as ShopItemsResponseModel).items[0]
-
-        const bearer_header = await createBearerHeaderFromCredential(shop.email, shop.password)
         const res = await request(App)
           .patch(endpoint + `/${shop_item.id}`)
-          .set(bearer_header)
+          .set(createBearerHeader(token.access_token))
           .send({})
         expect(res.statusCode).toBe(400)
       })
 
       it('with the same properties', async () => {
-        await createShop()
+        const [_, token, created_items] = await setupShopItem()
+        const shop_item = created_items[0]
+        const new_item_properties: ShopItemUpdateRequestModel = { name: shop_item.name, price: shop_item.price }
 
-        const token = (await getShopToken(shop.email, shop.password)).access_token
-        const header = createBearerHeader(token)
-
-        const maybe_shop_item = await request(App).post(endpoint).set(header).send(shop_items)
-        expect(maybe_shop_item.statusCode).toBe(201)
-        const shop_item = (maybe_shop_item.body as ShopItemsResponseModel).items[0]
-
-        const new_item: ShopItemUpdateRequestModel = { name: shop_item.name, price: shop_item.price }
         const res = await request(App)
           .patch(endpoint + `/${shop_item.id}`)
-          .set(header)
-          .send(new_item)
+          .set(createBearerHeader(token.access_token))
+          .send(new_item_properties)
         expect(res.statusCode).toBe(400)
       })
     })
