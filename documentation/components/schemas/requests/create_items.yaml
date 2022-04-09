@@ -10,6 +10,6 @@ properties:
 example:
   items:
     - name: "red wheelbarrow"
-      price: 99.99
+      price: '99.99'
     - name: "cultivator"
-      prive: 346.00
+      prive: '346.00'

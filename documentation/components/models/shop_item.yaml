@@ -11,7 +11,7 @@ ShopItemModel:
         Product/service's unitary price in euro (Max value: 999 999 999 999.99).
   example:
     name: "Sword"
-    price: 346
+    price: '346'
 
 ShopItemIdModel:
   allOf:
@@ -25,4 +25,4 @@ ShopItemIdModel:
   example:
     id: 1
     name: "Sword"
-    price: 356
+    price: '356'

@@ -9,7 +9,7 @@ example:
   items:
     - id: 1
       name: "red wheelbarrow"
-      price: 99.99
+      price: '99.99'
     - id: 2
       name: "cultivator"
-      price: 346.00
+      price: '346.00'
