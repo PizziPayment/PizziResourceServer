@@ -6,8 +6,9 @@ ShopItemModel:
       type: string
       description: Product/service's name.
     price:
-      type: number
-      description: Product/service's unitary price in euro.
+      type: string
+      description: >
+        Product/service's unitary price in euro (Max value: 999 999 999 999.99).
   example:
     name: "Sword"
     price: 346

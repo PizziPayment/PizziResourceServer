@@ -5,8 +5,10 @@ import { baseUrl as endpoint, baseUrlPassword as endpoint_password, baseUrlEmail
 import { config } from '../app/common/config'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
 import { ClientsService, rewriteTables, TokensService, TokensServiceError } from 'pizzi-db'
-import { client, client_header, shop } from './common/models'
+import { client, client_header, shops } from './common/models'
 import { createShop, getShopToken, createRandomToken, createBearerHeader } from './common/services'
+
+const shop = shops[0]
 
 beforeEach(async () => {
   const database = config.database

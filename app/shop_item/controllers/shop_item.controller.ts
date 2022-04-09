@@ -1,10 +1,11 @@
 import { Request, Response } from 'express'
 import { ShopItemCreationRequestModel } from '../models/create.request.model'
-import { ShopItemsResponseModel } from '../models/response.model'
+import { ShopItemResponseModel, ShopItemsResponseModel } from '../models/response.model'
 import { ShopItemsService } from 'pizzi-db'
 import { CredentialModel } from 'pizzi-db'
 import { ApiFailure } from '../../common/models/api.response.model'
 import { Filter, intoDBOrder, intoDBSortBy } from '../models/retrieve.request.model'
+import { ShopItemUpdateParamModel, ShopItemUpdateRequestModel } from '../models/update.request.model'
 
 export async function createShopItems(req: Request<unknown, unknown, ShopItemCreationRequestModel>, res: Response): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -28,6 +29,16 @@ export async function retrieveShopItems(req: Request<unknown, unknown, unknown, 
     filter.query,
   ).match(
     (items) => res.status(200).send(new ShopItemsResponseModel(items)),
+    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+  )
+}
+
+export async function updateShopItem(req: Request<ShopItemUpdateParamModel, unknown, ShopItemUpdateRequestModel>, res: Response): Promise<void> {
+  const shop_item_id = req.params.id
+  const shop_item = req.body
+
+  await ShopItemsService.updateShopItemFromId(shop_item_id, shop_item.name, shop_item.price).match(
+    (new_shop_item) => res.status(200).send(new ShopItemResponseModel(new_shop_item)),
     () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
   )
 }

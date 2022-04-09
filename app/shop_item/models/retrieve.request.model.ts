@@ -1,4 +1,4 @@
-import { SortBy as DBSortBy, Order as DBOrder } from 'pizzi-db'
+import { ShopItemSortBy as DBSortBy, Order as DBOrder } from 'pizzi-db'
 
 export enum SortBy {
   DATE = 'date',

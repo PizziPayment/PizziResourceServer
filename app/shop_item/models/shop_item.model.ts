@@ -1,9 +1,6 @@
 export class ShopItemModel {
-  name: string
-  price: number
-  created_at: Date
-}
-
-export class ShopItemModelId extends ShopItemModel {
   id: number
+  name: string
+  price: string
+  created_at: Date
 }

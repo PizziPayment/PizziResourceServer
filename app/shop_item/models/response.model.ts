@@ -1,17 +1,24 @@
 import { ShopItemModel } from './shop_item.model'
 import { ShopItemModel as DBShopItemModel } from 'pizzi-db'
 
+export class ShopItemResponseModel implements ShopItemModel {
+  id: number
+  name: string
+  price: string
+  created_at: Date
+
+  constructor(item: DBShopItemModel) {
+    this.id = item.id
+    this.name = item.name
+    this.price = item.price
+    this.created_at = item.created_at
+  }
+}
+
 export class ShopItemsResponseModel {
   constructor(items: Array<DBShopItemModel>) {
-    this.items = items.map((item) => {
-      return {
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        created_at: item.created_at,
-      }
-    })
+    this.items = items.map((item) => new ShopItemResponseModel(item))
   }
 
-  items: Array<ShopItemModel>
+  items: Array<ShopItemResponseModel>
 }

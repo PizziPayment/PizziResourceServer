@@ -1,16 +1,17 @@
-import { shop, client } from './models'
 import {
   ClientsService,
-  CredentialsService,
   CredentialModel,
+  CredentialsService,
   EncryptionService,
-  ShopsServices,
-  TokensService,
-  TokenModel,
-  UsersServices,
-  UserModel,
   ShopModel,
+  ShopsServices,
+  TokenModel,
+  TokensService,
+  UserModel,
+  UsersServices,
 } from 'pizzi-db'
+import ShopRegisterRequestModel from '../../app/shop/models/register.request.model'
+import { shops, client } from './models'
 
 async function getUserCredentials(email: string, password: string): Promise<CredentialModel> {
   return (await CredentialsService.getCredentialFromMailAndPassword(email, EncryptionService.encrypt(password)))._unsafeUnwrap()
@@ -30,7 +31,7 @@ export async function getUserToken(email: string, password: string): Promise<Tok
   return token
 }
 
-export async function createShop(): Promise<ShopModel> {
+export async function createShop(shop: ShopRegisterRequestModel = shops[0]): Promise<ShopModel> {
   const address = `${shop.place.address} ${shop.place.city}`
   const shop_handle = (await ShopsServices.createShop(shop.name, shop.phone, address, shop.place.zipcode))._unsafeUnwrap()
   expect((await CredentialsService.createCredentialWithId('shop', shop_handle.id, shop.email, EncryptionService.encrypt(shop.password))).isOk()).toBeTruthy()
@@ -70,4 +71,8 @@ export function createRandomToken(token: string): string {
 
 export function createBearerHeader(token: string): Object {
   return { Authorization: `Bearer ${token}` }
+}
+
+export async function createBearerHeaderFromCredential(email: string, password: string): Promise<Object> {
+  return createBearerHeader((await getShopToken(email, password)).access_token)
 }

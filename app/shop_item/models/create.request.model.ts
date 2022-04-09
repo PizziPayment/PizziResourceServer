@@ -1,6 +1,6 @@
 export class ShopItemCreationModel {
   name: string
-  price: number
+  price: string
 }
 
 export class ShopItemCreationRequestModel {
