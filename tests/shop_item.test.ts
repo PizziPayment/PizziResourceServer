@@ -238,6 +238,15 @@ describe('Shop item endpoint', () => {
         expect(res.statusCode).toBe(401)
       })
 
+      it("with an invalid shop item's id", async () => {
+        const [_, token, __] = await setupShopItem()
+
+        const res = await request(App)
+          .patch(endpoint + `/2000`)
+          .set(createBearerHeader(createRandomToken(token.access_token)))
+        expect(res.statusCode).toBe(401)
+      })
+
       it("that doesn't belong to the shop", async () => {
         const [_, __, created_items] = await setupShopItem()
         const shop_item = created_items[0]
