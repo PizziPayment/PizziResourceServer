@@ -121,7 +121,7 @@ describe('Shop item endpoint', () => {
 
   describe('GET request', () => {
     it('should not allow the retrieval of shop item with an invalid token', async () => {
-      const [shop, token, _] = await setupShopItem()
+      const [_, token, __] = await setupShopItem()
       const res = await request(App)
         .post(endpoint)
         .set(createBearerHeader(createRandomToken(token.access_token)))
