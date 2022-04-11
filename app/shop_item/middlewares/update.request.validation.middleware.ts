@@ -14,13 +14,17 @@ export async function validShopItemUpdate(
     if (req.body.name === undefined && req.body.price === undefined) {
       errors.push('at least one field is require to update a shop item')
     } else {
-      const shop_item = res.locals.shop_item as ShopItemModel
+      if (req.body.price !== undefined && isNaN(parseFloat(req.body.price))) {
+        errors.push('price needs to be a float')
+      } else {
+        const shop_item = res.locals.shop_item as ShopItemModel
 
-      if (
-        !(req.body.name !== undefined && shop_item.name !== req.body.name) &&
-        !(req.body.price !== undefined && parseFloat(req.body.price) !== parseFloat(shop_item.price))
-      ) {
-        errors.push('at least one field must be different to change an item information')
+        if (
+          !(req.body.name !== undefined && shop_item.name !== req.body.name) &&
+          !(req.body.price !== undefined && parseFloat(req.body.price) !== parseFloat(shop_item.price))
+        ) {
+          errors.push('at least one field must be different to change an item information')
+        }
       }
     }
 

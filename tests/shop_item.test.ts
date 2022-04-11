@@ -51,6 +51,15 @@ const shop_items_missing_name = {
   ],
 }
 
+const shop_items_invalid_price = {
+  items: [
+    {
+      name: 'cultivator',
+      price: 'Not a float',
+    },
+  ],
+}
+
 async function retrieveAllShopItems(shop_id: number): Promise<Array<ShopItemModel>> {
   return (await ShopItemsService.retrieveShopItemPage(shop_id, 1, 9999, intoDBSortBy(SortBy.NAME), intoDBOrder(Order.ASC)))._unsafeUnwrap()
 }
@@ -107,6 +116,7 @@ describe('Shop item endpoint', () => {
         ["with an items which isn't an array", { items: {} }],
         ['with an item without price', shop_items_missing_price],
         ['with an item without name', shop_items_missing_name],
+        ['with an item with an invalid price', shop_items_invalid_price],
       ]
       it.each(bodies)('%s: %o', async (_, body) => {
         const shop_id = (await createShop()).id
@@ -226,6 +236,18 @@ describe('Shop item endpoint', () => {
     })
 
     describe('should not allow the modification of a shop item', () => {
+      it('with an invalid price', async () => {
+        const [_, token, created_items] = await setupShopItem()
+        const new_item_properties: ShopItemUpdateRequestModel = { name: 'Toto', price: 'Not a float' }
+        const shop_item = created_items[0]
+
+        const res = await request(App)
+          .patch(endpoint + `/${shop_item.id}`)
+          .set(createBearerHeader(token.access_token))
+          .send(new_item_properties)
+        expect(res.statusCode).toBe(400)
+      })
+
       it('with an invalid token', async () => {
         const [_, token, created_items] = await setupShopItem()
         const new_item_propertoes: ShopItemUpdateRequestModel = { name: 'Toto', price: '23.00' }
