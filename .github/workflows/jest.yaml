@@ -4,6 +4,7 @@ on:
     paths:
       - tests/**
       - app/**
+      - package.json
       - jest.config.ts
       - .github/workflows/jest.yaml
     branches:
