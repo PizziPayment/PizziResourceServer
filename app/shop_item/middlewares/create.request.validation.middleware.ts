@@ -18,11 +18,17 @@ export async function validShopItemsCreation(
       }
 
       for (const [i, item] of req.body.items.entries()) {
+        const item_errors: Array<string> = []
+
         if (item.name === undefined) {
-          errors.push(`invalid name in item n#${i + 1}`)
+          item_errors.push(`the name (${item.name})`)
         }
-        if (item.price === undefined) {
-          errors.push(`invalid price in item n#${i + 1}`)
+        if (item.price === undefined || isNaN(parseFloat(item.price))) {
+          item_errors.push(`the price (${item.price})`)
+        }
+
+        if (item_errors.length !== 0) {
+          errors.push(`item nº${i + 1} is invalid because of ` + item_errors.join(' and '))
         }
       }
     }
