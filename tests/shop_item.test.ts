@@ -265,8 +265,8 @@ describe('Shop item endpoint', () => {
 
         const res = await request(App)
           .patch(endpoint + `/2000`)
-          .set(createBearerHeader(createRandomToken(token.access_token)))
-        expect(res.statusCode).toBe(401)
+          .set(createBearerHeader(token.access_token))
+        expect(res.statusCode).toBe(404)
       })
 
       it("that doesn't belong to the shop", async () => {
