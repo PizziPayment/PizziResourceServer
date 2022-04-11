@@ -1,0 +1,28 @@
+ShopItemModel:
+  type: object
+  description: Product/service of a shop.
+  properties:
+    name:
+      type: string
+      description: Product/service's name.
+    price:
+      type: string
+      description: >
+        Product/service's unitary price in euro (Max value: 999 999 999 999.99).
+  example:
+    name: "Sword"
+    price: '346'
+
+ShopItemIdModel:
+  allOf:
+    - type: object
+      description: Product/service of a shop.
+      properties:
+        id:
+          type: number
+          description: Id of the shop item.
+    - $ref: '#/ShopItemModel'
+  example:
+    id: 1
+    name: "Sword"
+    price: '356'

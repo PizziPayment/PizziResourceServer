@@ -3,6 +3,7 @@ import * as bodyParser from 'body-parser'
 
 import UserRouter from './user/routes.config'
 import ShopRouter from './shop/routes.config'
+import ShopItemRouter from './shop_item/routes.config'
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -24,5 +25,6 @@ app.use((req, res, next) => {
 
 UserRouter(app)
 ShopRouter(app)
+ShopItemRouter(app)
 
 export const App = app

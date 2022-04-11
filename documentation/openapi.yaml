@@ -15,6 +15,11 @@ servers:
     url: http://localhost:5000
 
 tags:
+  - name: Shop Item
+    description: >
+      Every route about a shop item. We call shop item product and service that
+      a shop can sell.
+
   - name: Shop
     description: Everything about shop.
 
@@ -35,6 +40,10 @@ paths:
     $ref: './components/endpoints/resource/shop/email.yaml'
   /shops/me/password:
     $ref: './components/endpoints/resource/shop/password.yaml'
+  /shops/me/items:
+    $ref: './components/endpoints/resource/shop/item.yaml'
+  /shops/me/items/{id}:
+    $ref: './components/endpoints/resource/shop/item/id.yaml'
 
 components:
   securitySchemes:

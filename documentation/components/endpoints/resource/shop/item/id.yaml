@@ -1,0 +1,57 @@
+delete:
+  operationId: "delete_shop_item"
+  tags:
+    - Shop Item
+  summary: Delete shop item
+  description: Delete a shop item.
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Item's id.
+  security:
+    - BearerAuth: []
+  responses:
+    '204':
+      description: NO CONTENT
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR
+
+patch:
+  operationId: "update_shop_item"
+  tags:
+    - Shop Item
+  summary: Update shop item
+  description: >
+    Update the shop item related to the id in path. Notice that every field in
+    the request's body are optional.
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Id of the shop item.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: Item's information.
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../schemas/requests/_index.yaml#/UpdateItem'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../schemas/responses/_index.yaml#/ShopItemId'
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR

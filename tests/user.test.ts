@@ -2,77 +2,14 @@ import { App } from '../app/api'
 import { baseUrl as endpoint, baseUrlPassword as endpoint_password, baseUrlEmail as endpoint_email } from '../app/user/routes.config'
 import { config } from '../app/common/config'
 import * as request from 'supertest'
-import { CredentialModel, rewriteTables, TokenModel, TokensServiceError, UserModel, UsersServices } from 'pizzi-db'
-import { ClientsService } from 'pizzi-db'
-import { CredentialsService } from 'pizzi-db'
-import { TokensService } from 'pizzi-db'
-import { EncryptionService } from 'pizzi-db'
-
-const user = {
-  name: 'toto',
-  surname: 'tutu',
-  email: 'toto@tutu.tata',
-  password: 'gY@3Cwl4FmLlQ@HycAf',
-  place: {
-    address: '13 rue de la ville',
-    city: 'Ville',
-    zipcode: 25619,
-  },
-}
-
-const client = { client_id: 'toto', client_secret: 'tutu' }
-const client_header = {
-  Authorization: 'Basic ' + Buffer.from(`${client.client_id}:${client.client_secret}`).toString('base64'),
-}
+import { rewriteTables, TokensServiceError, UsersServices, CredentialsService, EncryptionService, ClientsService, TokensService } from 'pizzi-db'
+import { user, client, client_header } from './common/models'
+import { getUser, getUserToken, createRandomToken, createBearerHeader } from './common/services'
 
 async function createUser(): Promise<void> {
   const address = `${user.place.address} ${user.place.city}`
   const user_handle = (await UsersServices.createUser(user.name, user.surname, address, user.place.zipcode))._unsafeUnwrap()
   expect((await CredentialsService.createCredentialWithId('user', user_handle.id, user.email, EncryptionService.encrypt(user.password))).isOk()).toBeTruthy()
-}
-
-async function getUserCredentials(email: string, password: string): Promise<CredentialModel> {
-  return (await CredentialsService.getCredentialFromMailAndPassword(email, EncryptionService.encrypt(password)))._unsafeUnwrap()
-}
-
-async function getUser(email: string, password: string): Promise<UserModel> {
-  const credentials = await getUserCredentials(email, password)
-
-  return (await UsersServices.getUserFromId(credentials.user_id))._unsafeUnwrap()
-}
-
-async function getUserToken(email: string, password: string): Promise<TokenModel> {
-  let client_handle = (await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()
-  let credentials = await getUserCredentials(email, password)
-  let token = (await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials))._unsafeUnwrap()
-
-  return token
-}
-
-function randomString(length: number): string {
-  let ret = ''
-
-  while (ret.length < length) {
-    ret += Math.random()
-      .toString(16)
-      .substring(0, length - ret.length)
-  }
-
-  return ret
-}
-
-function createRandomToken(token: string): string {
-  let ret = token
-
-  while (ret == token) {
-    ret = randomString(token.length)
-  }
-
-  return ret
-}
-
-function createBearerHeader(token: string): Object {
-  return { Authorization: `Bearer ${token}` }
 }
 
 beforeEach(async () => {
@@ -92,7 +29,7 @@ beforeEach(async () => {
 
 describe('User endpoint', () => {
   describe('GET request', () => {
-    it('should return a user\'s information', async () => {
+    it("should return a user's information", async () => {
       await createUser()
       const token = await getUserToken(user.email, user.password)
       const address = `${user.place.address} ${user.place.city}`
@@ -153,7 +90,7 @@ describe('User endpoint', () => {
         ['no lowercase character', '@BCD3FGH1JKLMNOP'],
       ]
 
-      it.each(passwords)('%s: %s', async (password) => {
+      it.each(passwords)('%s: %s', async (_, password) => {
         const res = await request(App)
           .post(endpoint)
           .set(client_header)

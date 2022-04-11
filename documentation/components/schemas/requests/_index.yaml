@@ -1,3 +1,8 @@
+CreateItems:
+  $ref: "./create_items.yaml"
+UpdateItem:
+  $ref: "./update_item.yaml"
+
 RegisterShop:
   $ref: "./register_shop.yaml"
 DeleteShop:

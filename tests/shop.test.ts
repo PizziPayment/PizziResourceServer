@@ -4,65 +4,11 @@ import { App } from '../app/api'
 import { baseUrl as endpoint, baseUrlPassword as endpoint_password, baseUrlEmail as endpoint_email } from '../app/shop/routes.config'
 import { config } from '../app/common/config'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
-import { ClientsService, CredentialsService, EncryptionService, rewriteTables, ShopsServices, TokenModel, TokensService, TokensServiceError } from 'pizzi-db'
+import { ClientsService, rewriteTables, TokensService, TokensServiceError } from 'pizzi-db'
+import { client, client_header, shops } from './common/models'
+import { createShop, getShopToken, createRandomToken, createBearerHeader } from './common/services'
 
-const shop = {
-  name: 'toto',
-  surname: 'tutu',
-  email: 'toto@tutu.tata',
-  password: 'gY@3Cwl4FmLlQ@HycAf',
-  phone: '0652076382', // Not in the documentation yet
-  place: {
-    address: '13 rue de la ville',
-    city: 'Ville',
-    zipcode: 25619,
-  },
-}
-
-const client = { client_id: 'toto', client_secret: 'tutu' }
-const client_header = {
-  Authorization: 'Basic ' + Buffer.from(`${client.client_id}:${client.client_secret}`).toString('base64'),
-}
-
-async function createShop(): Promise<void> {
-  const address = `${shop.place.address} ${shop.place.city}`
-  const shop_handle = (await ShopsServices.createShop(shop.name, shop.phone, address, shop.place.zipcode))._unsafeUnwrap()
-  expect((await CredentialsService.createCredentialWithId('shop', shop_handle.id, shop.email, EncryptionService.encrypt(shop.password))).isOk()).toBeTruthy()
-}
-
-async function getShopToken(email: string, password: string): Promise<TokenModel> {
-  let client_handle = (await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()
-  let credentials = (await CredentialsService.getCredentialFromMailAndPassword(email, EncryptionService.encrypt(password)))._unsafeUnwrap()
-  let token = (await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials))._unsafeUnwrap()
-
-  return token
-}
-
-function randomString(length: number): string {
-  let ret = ''
-
-  while (ret.length < length) {
-    ret += Math.random()
-      .toString(16)
-      .substr(0, length - ret.length)
-  }
-
-  return ret
-}
-
-function createRandomToken(token: string): string {
-  let ret = token
-
-  while (ret == token) {
-    ret = randomString(token.length)
-  }
-
-  return ret
-}
-
-function createBearerHeader(token: string): Object {
-  return { Authorization: `Bearer ${token}` }
-}
+const shop = shops[0]
 
 beforeEach(async () => {
   const database = config.database
@@ -136,7 +82,7 @@ describe('Shop endpoint', () => {
         ['no lowercase character', '@BCD3FGH1JKLMNOP'],
       ]
 
-      it.each(passwords)('%s: %s', async (password) => {
+      it.each(passwords)('%s: %s', async (_, password) => {
         const res = await request(App)
           .post(endpoint)
           .set(client_header)
