@@ -3,7 +3,7 @@ get:
   tags:
     - Shop
   summary: Get shop infos
-  description: Returns the informations related to the given token. 
+  description: Returns the informations related to the given token.
   security:
     - BearerAuth: []
   responses:
