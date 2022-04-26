@@ -1,5 +1,5 @@
 import { Application } from 'express'
-import { register, deleteAccount, shopInfo } from './controllers/shop.controller'
+import { changeShopInformation, deleteAccount, register, shopInfo } from './controllers/shop.controller'
 import validBasicAuth from '../common/middlewares/basic_auth.validation.middleware'
 import validRegisterRequest from './middlewares/register.request.validation.middleware'
 import validUniqueEmail from '../common/middlewares/unique_email.validation.middleware'
@@ -19,7 +19,8 @@ export const baseUrlEmail = `${baseUrl}/me/email`
 export default function ShopRouter(app: Application): void {
   app.get(`${baseUrl}/`, [validToken, validShopTokenAffiliation, shopInfo])
   app.post(`${baseUrl}/`, [validBasicAuth, validRegisterRequest, validUniqueEmail, register])
-  app.delete(`${baseUrl}/`, [validToken, validDeleteRequest, validPassword, deleteAccount])
+  app.delete(`${baseUrl}/`, [validToken, validShopTokenAffiliation, validDeleteRequest, validPassword, deleteAccount])
+  app.patch(`${baseUrl}/`, [validToken, validShopTokenAffiliation, changeShopInformation])
   app.put(`${baseUrlPassword}/`, [validToken, validChangePasswordRequest, validChangePassword, changePassword])
   app.patch(`${baseUrlEmail}/`, [validToken, validChangeEmailRequest, validPassword, changeEmail])
 }

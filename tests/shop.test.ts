@@ -1,10 +1,12 @@
-import { ClientsService, rewriteTables, ShopModel, TokenModel, TokensService, TokensServiceError } from 'pizzi-db'
+import { ClientsService, rewriteTables, ShopModel, ShopsServices, TokenModel, TokensService, TokensServiceError } from 'pizzi-db'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
 import * as request from 'supertest'
 import { App } from '../app/api'
 import { config } from '../app/common/config'
 import ChangeEmailValidationModel from '../app/common/models/email.request.model'
 import RequestPasswordModel from '../app/common/models/password.request.model'
+import InfosResponseModel from '../app/shop/models/infos.response'
+import { PatchRequestModel } from '../app/shop/models/patch.request.model'
 import RegisterRequestModel from '../app/shop/models/register.request.model'
 import { baseUrl as endpoint, baseUrlEmail as endpoint_email, baseUrlPassword as endpoint_password } from '../app/shop/routes.config'
 import { client, client_header, shops } from './common/models'
@@ -102,13 +104,16 @@ describe('Shop endpoint', () => {
 
   describe('DELETE request', () => {
     it('should allow the deletion of a shop using a valid password and token', async () => {
-      const [_, token] = await setupShopAndToken()
+      const [created_shop, token] = await setupShopAndToken()
 
       const header = createBearerHeader(token.access_token)
-      const res = await request(App).delete(endpoint).set(header).send({ password: shop.password })
 
-      expect(res.statusCode).toEqual(204)
+      expect((await request(App).delete(endpoint).set(header).send({ password: shop.password })).statusCode).toEqual(204)
+
       expect((await request(App).get(endpoint).set(header).send()).statusCode).toBe(401)
+      const res = await ShopsServices.getShopFromId(created_shop.id)
+      expect(res.isOk()).toBeTruthy()
+      expect(res._unsafeUnwrap().enabled).toBe(false)
     })
 
     it('should not allow the deletion of a shop using an invalid token', async () => {
@@ -240,6 +245,59 @@ describe('Shop endpoint', () => {
         const patch_res = await request(App).patch(endpoint_email).set(header).send(body)
 
         expect(patch_res.statusCode).toEqual(400)
+      })
+    })
+
+    describe(endpoint, () => {
+      const body: PatchRequestModel = {
+        description: 'Desc',
+        website: 'https://example.com',
+        instagram: 'https://instagram.com',
+        twitter: 'https://twitter.com/Twitter',
+        facebook: 'https://facebook.com',
+      }
+
+      it("should allow the modification of a shop's informations", async () => {
+        const [created_shop, token] = await setupShopAndToken()
+
+        const header = createBearerHeader(token.access_token)
+
+        const patch_res = await request(App).patch(endpoint).set(header).send(body)
+
+        expect(patch_res.statusCode).toEqual(200)
+        const response = patch_res.body as InfosResponseModel
+
+        expect(response.description).toBe(body.description)
+        expect(response.website).toBe(body.website)
+        expect(response.instagram).toBe(body.instagram)
+        expect(response.twitter).toBe(body.twitter)
+        expect(response.facebook).toBe(body.facebook)
+
+        const res = await ShopsServices.getShopFromId(created_shop.id)
+        expect(res.isOk()).toBeTruthy()
+        const modified_shop = res._unsafeUnwrap()
+
+        expect(modified_shop.description).toBe(body.description)
+        expect(modified_shop.website).toBe(body.website)
+        expect(modified_shop.instagram).toBe(body.instagram)
+        expect(modified_shop.twitter).toBe(body.twitter)
+        expect(modified_shop.facebook).toBe(body.facebook)
+      })
+
+      describe("should not allow the modification of a shop's information", () => {
+        it('with an invalid token', async () => {
+          const [_, token] = await setupShopAndToken()
+
+          const header = createBearerHeader(createRandomToken(token.access_token))
+
+          expect((await request(App).patch(endpoint).set(header).send(body)).statusCode).toBe(401)
+        })
+
+        it('without a token', async () => {
+          const [_, __] = await setupShopAndToken()
+
+          expect((await request(App).patch(endpoint).send(body)).statusCode).toBe(400)
+        })
       })
     })
   })

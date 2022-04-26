@@ -17,6 +17,37 @@ get:
       description: UNAUTHORIZED
     '500':
       description: INTERNAL SERVER ERROR
+
+patch:
+  operationId: "update_shop_info"
+  tags:
+    - Shop
+  summary: Update shop infos
+  description: >
+    Update shop information related to the given token. Notice that every
+    fields in the request's body are optionals.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: Update shop body.
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/requests/_index.yaml#/UpdateShop'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/responses/_index.yaml#/ShopInfo'
+    '400':
+      description: BAD REQUEST
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR
+
 post:
   operationId: "create_shop"
   tags:

@@ -11,6 +11,8 @@ ChangeShopPassword:
   $ref: "./change_shop_password.yaml"
 ChangeShopEmail:
   $ref: "./change_shop_email.yaml"
+UpdateShop:
+  $ref: "./update_shop.yaml"
 
 RegisterUser:
   $ref: "./register_user.yaml"
