@@ -1,4 +1,14 @@
-import { ClientsService, rewriteTables, ShopModel, ShopsServices, TokenModel, TokensService, TokensServiceError } from 'pizzi-db'
+import {
+  ClientsService,
+  CredentialsService,
+  CredentialsServiceError,
+  rewriteTables,
+  ShopModel,
+  ShopsServices,
+  TokenModel,
+  TokensService,
+  TokensServiceError,
+} from 'pizzi-db'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
 import * as request from 'supertest'
 import { App } from '../app/api'
@@ -113,7 +123,10 @@ describe('Shop endpoint', () => {
       expect((await request(App).get(endpoint).set(header).send()).statusCode).toBe(401)
       const res = await ShopsServices.getShopFromId(created_shop.id)
       expect(res.isOk()).toBeTruthy()
-      expect(res._unsafeUnwrap().enabled).toBe(false)
+
+      const res_cred = await CredentialsService.getCredentialFromId(token.credential_id)
+      expect(res_cred.isErr()).toBeTruthy()
+      expect(res_cred._unsafeUnwrapErr()).toBe(CredentialsServiceError.OwnerNotFound)
     })
 
     it('should not allow the deletion of a shop using an invalid token', async () => {

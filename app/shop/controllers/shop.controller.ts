@@ -33,17 +33,10 @@ export async function register(req: Request<unknown, unknown, RegisterRequestMod
 export async function deleteAccount(req: Request, res: Response<unknown, Record<string, CredentialModel>>): Promise<void> {
   const credential = res.locals.credential as CredentialModel
 
-  await CredentialsService.deleteCredentialFromId(credential.id)
-    .andThen(() =>
-      ShopsServices.disableShopById(credential.shop_id).mapErr((e) =>
-        // TODO Should be replace by a custom file logger or anything
-        console.log(`Error when trying to disable Shop ID ${credential.shop_id}: ${e}`),
-      ),
-    )
-    .match(
-      () => res.status(204).send(),
-      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-    )
+  await CredentialsService.deleteCredentialFromId(credential.id).match(
+    () => res.status(204).send(),
+    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+  )
 }
 
 export async function changeShopInformation(
