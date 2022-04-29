@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { CredentialModel, CredentialsService, EncryptionService, ShopsServices } from 'pizzi-db'
 import { ApiFailure } from '../../common/models/api.response.model'
-import InfosResponseModel from '../models/infos.response'
+import InfosResponseModel from '../models/infos.response.model'
 import { PatchRequestModel, intoShopUpdateModel } from '../models/patch.request.model'
 import RegisterRequestModel from '../models/register.request.model'
 
