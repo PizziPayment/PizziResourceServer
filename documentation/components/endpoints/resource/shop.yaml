@@ -24,8 +24,8 @@ patch:
     - Shop
   summary: Update shop infos
   description: >
-    Update shop information related to the given token. Notice that every
-    fields in the request's body are optionals.
+    Update shop informations related to the given token. Note that every
+    field in the request's body is optional.
   security:
     - BearerAuth: []
   requestBody:
