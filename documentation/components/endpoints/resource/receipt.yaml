@@ -5,16 +5,16 @@ post:
   summary: Create a return operation
   description: Create a return operation for shop item(s) from a receipt id.
   security:
-    - BearerAut: []
+    - BearerAuth: []
   requestBody:
-    description:
+    description: Shop item product body.
     content:
       application/json:
         schema:
           $ref: '../../schemas/requests/_index.yaml#/ReturnItems'
   responses:
     200:
-      description:
+      description: OK
     400:
       description: BAD REQUEST
     401:

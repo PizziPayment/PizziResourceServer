@@ -1,15 +1,15 @@
 type: object
 required:
   - transaction_id
-  - items
+  - receipt_items
 properties:
   transaction_id:
     type: number
     description: Transaction's id
-  items:
+  receipt_items:
     type: array
     description: Array of shop items to return.
-    receipt_items:
+    items:
       type: object
       properties:
         id:
@@ -21,7 +21,7 @@ properties:
 example:
   {
     "transaction_id": 3,
-    "items": [{
+    "receipt_items": [{
       "id": 3,
       "quantity": 3
     },
