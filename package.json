@@ -51,7 +51,7 @@
     "config": "^3.3.6",
     "express": "^4.17.2",
     "neverthrow": "^4.3.1",
-    "pizzi-db": "git@github.com:PizziPayment/PizziAPIDB.git#42e8cd018564a6dbdec0363dda6d0c3fd15c8cfd",
+    "pizzi-db": "git@github.com:PizziPayment/PizziAPIDB.git#v1.4.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.4.0"
   },
