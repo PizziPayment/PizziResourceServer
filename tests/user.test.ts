@@ -220,7 +220,7 @@ describe('User endpoint', () => {
       expect(patch_res.statusCode).toEqual(401)
     })
 
-    it("should not allow the modification of a user's informations with an invalid token", async () => {
+    it("should not allow the modification of a user's informations without a token", async () => {
       const create_res = await request(App).post(endpoint).set(client_header).send(user)
 
       expect(create_res.statusCode).toEqual(201)
