@@ -1,5 +1,7 @@
 CreateItems:
   $ref: "./create_items.yaml"
+ReturnItems:
+  $ref: "./return_items.yaml"
 UpdateItem:
   $ref: "./update_item.yaml"
 

@@ -1,0 +1,32 @@
+type: object
+required:
+  - transaction_id
+  - items
+properties:
+  transaction_id:
+    type: number
+    description: Transaction's id
+  items:
+    type: array
+    description: Array of shop items to return.
+    receipt_items:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Shop items's id.
+        quantity:
+          type: number
+          description: Number of item(s) to return.
+example:
+  {
+    "transaction_id": 3,
+    "items": [{
+      "id": 3,
+      "quantity": 3
+    },
+    {
+      "id": 59,
+      "quantity": 1
+    }]
+  }

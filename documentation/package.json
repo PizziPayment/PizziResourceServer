@@ -7,7 +7,7 @@
     "builder": "redoc-cli bundle openapi.yaml -o index.html"
   },
   "dependencies": {
-    "redoc-cli": "^0.13.7",
-    "ibm-openapi-validator": "^0.54.0"
+    "ibm-openapi-validator": "^0.54.0",
+    "redoc-cli": "^0.13.7"
   }
 }

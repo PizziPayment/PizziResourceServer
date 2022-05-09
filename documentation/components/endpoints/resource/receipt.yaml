@@ -1,0 +1,23 @@
+post:
+  operationId: "create_return"
+  tags:
+    - Shop
+  summary: Create a return operation
+  description: Create a return operation for shop item(s) from a receipt id.
+  security:
+    - BearerAut: []
+  requestBody:
+    description:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/requests/_index.yaml#/ReturnItems'
+  responses:
+    200:
+      description:
+    400:
+      description: BAD REQUEST
+    401:
+      description: UNAUTHORIZED
+    500:
+      description: INTERNAL SERVER ERROR
