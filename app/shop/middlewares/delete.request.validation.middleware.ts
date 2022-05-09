@@ -19,6 +19,6 @@ export default function validDeleteRequest(
       return res.status(400).send(new ApiFailure(req.url, errors.join(',')))
     }
   } else {
-    return res.status(400).send(new ApiFailure(req.url, 'No login body'))
+    return res.status(400).send(new ApiFailure(req.url, 'No body'))
   }
 }

@@ -1,23 +1,5 @@
 type: object
 properties:
-  id:
-    type: number
-    description: Shop's id.
-  email:
-    type: string
-    description: Shop's email.
-  name:
-    type: string
-    description: Shop's name.
-  phone:
-    type: string
-    description: Shop's phone.
-  address:
-    type: string
-    description: Shop's location.
-  zipcode:
-    type: number
-    description: Shop's location zipcode.
   description:
     type: string
     description: Shop's description.
@@ -35,12 +17,6 @@ properties:
     description: Shop's facebook page.
 example:
   {
-    "id": 2,
-    "email": 'toto@tutu.tata',
-    "name": 'Alaska',
-    "phone": '0652076382',
-    "address": '13 rue de la ville Ville',
-    "zipcode": 25619,
     "description": "New description",
     "website": "https://example.com",
     "instagram": "https://instagram.com",
