@@ -118,7 +118,7 @@ describe('Shop item endpoint', () => {
         ['with an item without name', shop_items_missing_name],
         ['with an item with an invalid price', shop_items_invalid_price],
       ]
-      it.each(bodies)('%s: %o', async (_, body) => {
+      it.each(bodies)('%s', async (_, body) => {
         const shop_id = (await createShop()).id
         const token = await getShopToken(default_shop.email, default_shop.password)
         const res = await request(App).post(endpoint).set(createBearerHeader(token.access_token)).send(body)
