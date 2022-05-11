@@ -2,3 +2,7 @@ password:
   type: string
   description: A string longer than 12 characters with at least a number, an upper case, a lower case and a special character (`@$!%*_?&`).
   minLength: 12
+
+filter:
+  type: string
+  description: One of \'latest\', \'oldest\', \'price_ascending\' or \'price_descending\'

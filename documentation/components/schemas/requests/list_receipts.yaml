@@ -1,0 +1,22 @@
+type: object
+properties:
+  filter:
+    $ref: "../../types.yaml#/filter"
+  query: 
+    type: string
+  time_interval:
+    type: object
+    properties:
+      to:
+        type: number
+      from:
+        type: number
+example:
+  {
+    "filter": "oldest",
+    "query": "steam",
+    "properties": {
+      "from": 1592344800,
+      "to": 1632693600
+    }
+  }
