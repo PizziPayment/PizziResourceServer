@@ -3,7 +3,7 @@ import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response
 import { CredentialModel, CredentialsService, TokenModel } from 'pizzi-db'
 
 export default async function validShopTokenAffiliation(
-  req: Request<unknown, unknown, unknown>,
+  req: Request<unknown, unknown, void>,
   res: Response<ApiResponseWrapper<unknown>, Record<'token' | 'credential', TokenModel | CredentialModel>>,
   next: NextFunction,
 ): Promise<void> {

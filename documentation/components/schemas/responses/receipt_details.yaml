@@ -14,38 +14,38 @@ properties:
             type: string
           city:
             type: string
-          postalCode:
+          postal_code:
             type: string
       siret:
         type: string
-      shopNumber:
+      shop_number:
         type: string
   products:
     type: array
     items:
       type: object
       properties:
-        productName:
+        product_name:
           type: string
         quantity:
           type: number
-        priceUnit:
+        price_unit:
           type: number
         warranty:
           type: string
-        ecoTax:
+        eco_tax:
           type: number
         discount:
           type: number
-  creationDate:
+  creation_date:
     type: string
-  paymentType:
+  payment_type:
     type: string
-  tvaPercentage:
+  tva_percentage:
     type: number
-  totalHt:
+  total_ht:
     type: number
-  totalTtc:
+  total_ttc:
     type: number
 example:
   {
@@ -55,22 +55,22 @@ example:
       "address": {
         "street": "Rue",
         "city": "Ville",
-        "postalCode": "Code postal",
+        "postal_code": "Code postal",
       },
       "siret": "siret",
-      "shopNumber": "00 00 00 00 00"
+      "shop_number": "00 00 00 00 00"
     },
     "products": [{
-      "productName": "Outer Wilds",
+      "product_name": "Outer Wilds",
       "quantity": 1,
-      "priceUnit": 17.4916,
+      "price_unit": 17.4916,
       "warranty": "18/06/2022",
-      "ecoTax": 0,
+      "eco_tax": 0,
       "discount": 0
     }],
-    "paymentType": "card",
-    "tvaPercentage": 20,
-    "creationDate": "18/06/2020",
-    "totalHt": 17.4916,
-    "totalTtc": 20.99
+    "payment_type": "card",
+    "tva_percentage": 20,
+    "creation_date": "18/06/2020",
+    "total_ht": 17.4916,
+    "total_ttc": 20.99
   }

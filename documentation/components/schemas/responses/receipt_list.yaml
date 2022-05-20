@@ -2,22 +2,22 @@ type: array
 items:
   type: object
   properties:
-    receiptId:
+    receipt_id:
       type: number
-    shopName:
+    shop_name:
       type: string
-    shopLogo:
+    shop_logo:
       type: string
     date:
       type: string
       description: Date in the DD/MM/YYYY format.
-    totalTtc:
+    total_ttc:
       type: number
   example:
     {
-      "receiptId": 0,
-      "shopName": "shop",
-      "shopLogo": "http://url/to/image",
+      "receipt_id": 0,
+      "shop_name": "shop",
+      "shop_logo": "http://url/to/image",
       "date": "21/09/2021",
-      "totalTtc": 123.4 
+      "total_ttc": 123.4 
     }

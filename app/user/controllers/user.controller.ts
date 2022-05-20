@@ -1,9 +1,21 @@
 import { Request, Response } from 'express'
 import RegisterRequestModel from '../models/register.request.model'
 import { ApiFailure } from '../../common/models/api.response.model'
-import { CredentialModel, CredentialsService, EncryptionService, TokenModel, UsersServices } from 'pizzi-db'
+import {
+  CredentialModel,
+  CredentialsService,
+  EncryptionService,
+  ReceiptItemsService,
+  TokenModel,
+  TransactionsService,
+  UsersServices,
+  ReceiptsService,
+} from 'pizzi-db'
 import PatchRequestModel from '../models/patch.request.model'
 import InfosResponseModel from '../models/infos.response'
+import { ReceiptsListRequestModel, ReceiptDetailsRequestModel } from '../../common/models/receipts.request.model'
+import { ReceiptListModel } from '../models/receipt_list.model'
+import { DetailedReceiptModel } from '../models/detailed_receipt'
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -54,4 +66,67 @@ export async function changeUserInformation(
     (user) => res.status(200).send(user),
     () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
   )
+}
+
+export async function receipts(
+  req: Request<unknown, unknown, ReceiptsListRequestModel>,
+  res: Response<ReceiptListModel | ApiFailure, { credential: CredentialModel }>,
+): Promise<void> {
+  await TransactionsService.getOwnerTransactionsByState('user', res.locals.credential.user_id, 'validated')
+    .andThen((transactions) =>
+      ReceiptsService.getShortenedReceipts(transactions.map((t) => t.receipt_id)).map((receipts) =>
+        receipts.map((receipt) => {
+          return {
+            receipt_id: receipt.id,
+            shop_name: 'shop',
+            shop_logo: '',
+            date: new Date(),
+            total_ttc: Number((Number(receipt.total_price) * ((100 + receipt.tva_percentage) / 100)).toFixed(2)),
+          }
+        }),
+      ),
+    )
+    .match(
+      (receipts) => res.status(200).send(receipts),
+      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+    )
+}
+
+export async function receipt(
+  req: Request<{ receipt_id: number }, unknown, ReceiptDetailsRequestModel>,
+  res: Response<DetailedReceiptModel | ApiFailure, { credential: CredentialModel }>,
+): Promise<void> {
+  ReceiptsService.getDetailedReceiptById(req.params.receipt_id)
+    .andThen((receipt) =>
+      ReceiptItemsService.getReceiptItems(req.params.receipt_id).map((items) => {
+        return {
+          vendor: {
+            logo: '',
+            name: 'shop',
+            address: { street: '', city: '', postalCode: '' },
+            siret: '',
+            shop_number: '',
+          },
+          products: items.map((product) => {
+            return {
+              product_name: '',
+              quantity: product.quantity,
+              price_unit: 0,
+              warranty: product.warranty,
+              eco_tax: product.eco_tax,
+              discount: product.discount,
+            }
+          }),
+          creation_date: new Date(),
+          payment_type: 'card',
+          tva_percentage: receipt.tva_percentage,
+          total_ht: Number(receipt.total_price),
+          total_ttc: Number((Number(receipt.total_price) * (1 + receipt.tva_percentage / 100)).toFixed(2)),
+        }
+      }),
+    )
+    .match(
+      (receipt) => res.status(200).send(receipt),
+      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+    )
 }

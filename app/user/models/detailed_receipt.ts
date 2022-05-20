@@ -1,13 +1,13 @@
 export class Product {
-  productName: string
+  product_name: string
   quantity: number
-  priceUnit: number
+  price_unit: number
   warranty: string
-  ecoTax: number
+  eco_tax: number
   discount: number
 }
 
-export default class Receipt {
+export class DetailedReceiptModel {
   vendor: {
     logo: string
     name: string
@@ -17,12 +17,12 @@ export default class Receipt {
       postalCode: string
     }
     siret: string
-    shopNumber: string
+    shop_number: string
   }
   products: Array<Product>
-  creationDate: string
-  paymentType: string
-  tvaPercentage: number
-  totalHt: number
-  totalTtc: number
+  creation_date: Date
+  payment_type: string
+  tva_percentage: number
+  total_ht: number
+  total_ttc: number
 }

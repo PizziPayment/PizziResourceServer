@@ -16,7 +16,7 @@ export const user: UserRegisterRequestModel = {
 export const shops: Array<ShopRegisterRequestModel> = [
   {
     name: 'toto',
-    email: 'toto@tutu.tata',
+    email: 'toto@tutu.tete',
     password: 'gY@3Cwl4FmLlQ@HycAf',
     phone: '0652076382', // Not in the documentation yet
     place: {
@@ -27,7 +27,7 @@ export const shops: Array<ShopRegisterRequestModel> = [
   },
   {
     name: 'tutu',
-    email: 'tutu@tutu.tata',
+    email: 'tutu@tutu.tttt',
     password: 'gY@3Cwl4FmLlQ@HycAf',
     phone: '0652076382', // Not in the documentation yet
     place: {
