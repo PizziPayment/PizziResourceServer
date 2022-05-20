@@ -36,7 +36,7 @@
     "@types/validator": "^13.7.1",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
-    "eslint": "^8.6.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "jest": "^27.4.5",
     "prettier": "^2.5.1",
@@ -51,7 +51,7 @@
     "config": "^3.3.6",
     "express": "^4.17.2",
     "neverthrow": "^4.3.1",
-    "pizzi-db": "git@github.com:PizziPayment/PizziAPIDB.git#tag=v1.4.1",
+    "pizzi-db": "git@github.com:PizziPayment/PizziAPIDB.git#commit=3eb4c15111e023b5569d577076866485fa0250dc",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.4.0"
   },

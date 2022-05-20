@@ -9,7 +9,7 @@ import validPassword, { validChangePassword } from '../common/middlewares/passwo
 import changePassword from '../common/controllers/password.controller'
 import { validChangeEmailRequest } from '../common/middlewares/email.request.validation.middleware'
 import validChangePasswordRequest from '../common/middlewares/password.request.validation.middleware'
-import validShopTokenAffiliation from '../shop/middlewares/shop_token_affiliation.validation'
+import validShopTokenAffiliation from '../common/middlewares/shop_token_affiliation.validation.middleware'
 import { changeShopInformation, deleteAccount, register, shopInfo, receipts, receipt } from './controllers/shop.controller'
 import validReceiptsRequest from '../common/middlewares/receipts.validation.middleware'
 
