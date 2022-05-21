@@ -12,10 +12,8 @@ export async function validTransactionRetrievalQuery(
   const queryable_states: Array<TransactionState> = ['pending', 'validated', 'failed']
 
   if (req.query) {
-    if (req.query.state) {
-      if (!queryable_states.includes(req.query.state)) {
+    if (!queryable_states.includes(req.query.state)) {
         errors.push('invalid value for "state" query parameter')
-      }
     }
     if (errors.length === 0) {
       return next()

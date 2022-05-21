@@ -9,6 +9,7 @@ import {
   ShopsServices,
   TokensService,
   TransactionModel,
+  TransactionsService,
   UsersServices,
 } from 'pizzi-db'
 import { user, shops } from './common/models'
@@ -87,6 +88,14 @@ async function setupReceipts(): Promise<number> {
   return receipt.id
 }
 
+async function setupTransaction(receipt_id: number, user_id: number, shop_id: number): Promise<TransactionModel> {
+  const transaction_result = await TransactionsService.createPendingTransaction(receipt_id, user_id, shop_id, 'unassigned')
+  expect(transaction_result.isOk()).toBeTruthy()
+  const transaction = transaction_result._unsafeUnwrap()
+
+  return transaction
+}
+
 function createBearerHeader(token: string): Object {
   return { Authorization: `Bearer ${token}` }
 }
@@ -109,7 +118,6 @@ describe('Transactions endpoint', () => {
       const body: TransactionModel = res.body
       const date = Date.now()
 
-      console.log(body)
       expect(res.statusCode).toEqual(201)
       expect(Math.abs(date - new Date(body.created_at).getTime()) < 60000).toBeTruthy()
       expect(body.receipt_id).toEqual(expected_transaction.receipt_id)
@@ -130,11 +138,64 @@ describe('Transactions endpoint', () => {
       const body: TransactionModel = res.body
       const date = Date.now()
 
-      console.log(body)
       expect(res.statusCode).toEqual(201)
       expect(Math.abs(date - new Date(body.created_at).getTime()) < 60000).toBeTruthy()
       expect(body.receipt_id).toEqual(expected_transaction.receipt_id)
       expect(body.user_id).toBeFalsy()
+    })
+  })
+
+  describe('Get transactions', () => {
+    it('basic test with "pending" sate', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const expected_transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
+
+      const res = await request(App).get(`${endpoint}?state=pending`).set(createBearerHeader(shop_infos.token)).send()
+      const body = res.body
+      const date = Date.now()
+
+      expect(res.statusCode).toEqual(200)
+      expect(body).toHaveLength(1)
+      expect(Math.abs(date - new Date(body[0].created_at).getTime()) < 60000).toBeTruthy()
+      expect(body[0].receipt_id).toEqual(expected_transaction.receipt_id)
+      expect(body[0].user_id).toEqual(expected_transaction.user_id)
+    })
+
+    it('basic test with "validated" state', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const expected_transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
+
+      const res = await request(App).get(`${endpoint}?state=validated`).set(createBearerHeader(shop_infos.token)).send()
+      const body = res.body
+
+      expect(res.statusCode).toEqual(200)
+      expect(body).toHaveLength(0)
+    })
+
+    it('basic test with invalid state', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const expected_transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
+
+      const res = await request(App).get(`${endpoint}?state=invalid_state`).set(createBearerHeader(shop_infos.token)).send()
+
+      expect(res.statusCode).toEqual(400)
+    })
+
+    it('basic test without state', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const expected_transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
+
+      const res = await request(App).get(`${endpoint}`).set(createBearerHeader(shop_infos.token)).send()
+
+      expect(res.statusCode).toEqual(400)
     })
   })
 })
