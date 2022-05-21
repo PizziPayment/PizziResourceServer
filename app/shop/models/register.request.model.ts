@@ -5,4 +5,5 @@ export default class RegisterRequestModel extends CredentialModel {
   name: string
   place: PlaceModel
   phone: string
+  siret: number
 }

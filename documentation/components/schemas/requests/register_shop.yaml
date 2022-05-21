@@ -24,6 +24,9 @@ properties:
     description: Shop's phone number.
   password:
     $ref: '../../types.yaml#/password'
+  siret:
+    type: number
+    description: Shop's siret.
 example:
   {
     "name": "shop",
@@ -35,5 +38,6 @@ example:
       },
     "email": "shop@shop.fr",
     "phone": "+33 6 12 34 56 78",
-    "password": "Testeee8!eee"
+    "password": "Testeee8!eee",
+    "siret": 12345678912345
   }

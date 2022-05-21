@@ -1,5 +1,5 @@
 import { Application } from 'express'
-import { changeUserInformation, deleteAccount, info, receipt, receipts, register } from './controllers/user.controller'
+import { register, deleteAccount, changeUserInformation, info, receipts, receipt } from './controllers/user.controller'
 import validBasicAuth from '../common/middlewares/basic_auth.validation.middleware'
 import validRegisterRequest from './middlewares/register.request.validation.middleware'
 import validDeleteRequest from './middlewares/delete.request.validation.middleware'

@@ -15,9 +15,9 @@ properties:
           city:
             type: string
           postal_code:
-            type: string
+            type: number
       siret:
-        type: string
+        type: number
       shop_number:
         type: string
   products:
@@ -55,9 +55,9 @@ example:
       "address": {
         "street": "Rue",
         "city": "Ville",
-        "postal_code": "Code postal",
+        "postal_code": 12345,
       },
-      "siret": "siret",
+      "siret": 12345678912345,
       "shop_number": "00 00 00 00 00"
     },
     "products": [{

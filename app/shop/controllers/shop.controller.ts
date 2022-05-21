@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { ApiFailure } from '../../common/models/api.response.model'
-import { CredentialsService, ReceiptItemsService, EncryptionService, ShopsServices, CredentialModel, TransactionsService, ReceiptsService } from 'pizzi-db'
+import { CredentialsService, EncryptionService, ShopsServices, CredentialModel, TransactionsService, ReceiptsService } from 'pizzi-db'
 import InfosResponseModel from '../models/infos.response.model'
 import { ReceiptDetailsRequestModel, ReceiptsListRequestModel } from '../../common/models/receipts.request.model'
 import { ReceiptListModel } from '../models/receipt_list.model'
@@ -18,7 +18,7 @@ export async function shopInfo(req: Request, res: Response): Promise<void> {
 }
 
 export async function register(req: Request<unknown, unknown, RegisterRequestModel>, res: Response): Promise<void> {
-  await ShopsServices.createShop(req.body.name, req.body.phone, `${req.body.place.address} ${req.body.place.city}`, req.body.place.zipcode)
+  await ShopsServices.createShop(req.body.name, req.body.phone, req.body.siret, req.body.place.address, req.body.place.city, req.body.place.zipcode)
     .andThen((shop) =>
       CredentialsService.createCredentialWithId('shop', shop.id, req.body.email, EncryptionService.encrypt(req.body.password)).mapErr(() =>
         ShopsServices.deleteShopById(shop.id).mapErr(
