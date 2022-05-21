@@ -48,6 +48,8 @@ paths:
     $ref: './components/endpoints/receipts/list.yaml'
   /receipts/{receipt_id}:
     $ref: './components/endpoints/receipts/details.yaml'
+  /transactions:
+    $ref: './components/endpoints/transactions/init.yaml'
 
 components:
   securitySchemes:

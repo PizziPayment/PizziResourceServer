@@ -1,0 +1,29 @@
+type: object
+properties:
+  id:
+    type: number
+  receipt_id:
+    type: number
+  user_id:
+    type: number
+    optional: true
+  shop_id:
+    type: number
+  state:
+    type: string
+    description: A newly created transaction is always "pending"
+  payment_method:
+    type: string
+    enum:
+      - unassigned
+      - cash
+      - card
+example:
+  {
+    "id": 21344,
+    "receipt_id": 1203,
+    "user_id": null,
+    "shop_id": 12323,
+    "state": "pending",
+    "payment_method": "unassigned"
+  }

@@ -1,0 +1,27 @@
+post:
+  operationId: "create_transaction"
+  tags:
+    - Transactions
+  summary: Init transaction
+  description: Create a pending transaction
+  security:
+    - BearerAuth: [ ]
+  requestBody:
+    description: Transaction's informations.
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/requests/_index.yaml#/InitTransaction'
+  response:
+    '201':
+      description: CREATED
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/responses/_index.yaml#/Transaction'
+    '400':
+      description: BAD REQUEST
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR

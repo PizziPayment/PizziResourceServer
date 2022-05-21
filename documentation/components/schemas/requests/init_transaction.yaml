@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: number
+  receipt_id:
+    type: number
+  user_id:
+    type: number
+  shop_id:
+    type: number
+  payment_method:
+    type: string
+    enum:
+      - unassigned
+      - cash
+      - card
+example:
+  {
+    "receipt_id": 1203,
+    "user_id": null,
+    "shop_id": 12323,
+    "payment_method": "unassigned"
+  }
