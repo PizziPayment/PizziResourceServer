@@ -18,6 +18,12 @@ properties:
       - unassigned
       - cash
       - card
+  created_at:
+    type: string
+    format: date
+  updated_at:
+    type: string
+    format: date
 example:
   {
     "id": 21344,
