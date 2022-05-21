@@ -23,6 +23,9 @@ export default function validRegisterRequest(
     if (!req.body.password || !FieldValidationService.isValidPassword(req.body.password)) {
       errors.push('invalid "password"')
     }
+    if (!req.body.siret || !FieldValidationService.isValidSiret(req.body.siret)) {
+      errors.push('invalid "siret"')
+    }
     if (!req.body.place || !req.body.place.address || !req.body.place.city || !req.body.place.zipcode) {
       errors.push('invalid "place"')
     }

@@ -14,7 +14,7 @@ export class DetailedReceiptModel {
     address: {
       street: string
       city: string
-      postalCode: number
+      postal_code: number
     }
     siret: number
     shop_number: string

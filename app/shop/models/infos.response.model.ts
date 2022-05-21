@@ -7,6 +7,7 @@ export default class InfosResponseModel {
     this.name = shop.name
     this.phone = shop.phone
     this.address = shop.address
+    this.city = shop.city
     this.zipcode = shop.zipcode
     this.description = shop.description
     this.website = shop.website
@@ -20,6 +21,7 @@ export default class InfosResponseModel {
   name: string
   phone: string
   address: string
+  city: string
   zipcode: number
   description: string
   website: string

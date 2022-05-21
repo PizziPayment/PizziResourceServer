@@ -47,14 +47,14 @@ describe('Shop endpoint', () => {
   describe('GET request', () => {
     it("should return a shop's information", async () => {
       const [_, token] = await setupShopAndToken()
-      const address = `${shop.place.address} ${shop.place.city}`
       const res = await request(App).get(endpoint).set(createBearerHeader(token.access_token)).send()
 
       expect(res.statusCode).toEqual(200)
       expect(res.body.email).toEqual(shop.email)
       expect(res.body.name).toEqual(shop.name)
       expect(res.body.phone).toEqual(shop.phone)
-      expect(res.body.address).toEqual(address)
+      expect(res.body.address).toEqual(shop.place.address)
+      expect(res.body.city).toEqual(shop.place.city)
       expect(res.body.zipcode).toEqual(shop.place.zipcode)
     })
 

@@ -19,7 +19,7 @@ export const shops: Array<ShopRegisterRequestModel> = [
     email: 'toto@tutu.tete',
     password: 'gY@3Cwl4FmLlQ@HycAf',
     phone: '0652076382', // Not in the documentation yet
-    siret: 12345678912345,
+    siret: 43014643100019,
     place: {
       address: '13 rue de la ville',
       city: 'Ville',
@@ -31,7 +31,7 @@ export const shops: Array<ShopRegisterRequestModel> = [
     email: 'tutu@tutu.tttt',
     password: 'gY@3Cwl4FmLlQ@HycAf',
     phone: '0652076382', // Not in the documentation yet
-    siret: 23456789023456,
+    siret: 50849041400010,
     place: {
       address: '13 rue de la pioche',
       city: 'Town',

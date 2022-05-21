@@ -104,7 +104,7 @@ export async function receipt(
               vendor: {
                 logo: shop.logo?.toString() || '',
                 name: shop.name,
-                address: { street: shop.address, city: shop.city, postalCode: shop.zipcode },
+                address: { street: shop.address, city: shop.city, postal_code: shop.zipcode },
                 siret: shop.siret,
                 shop_number: shop.phone,
               },
