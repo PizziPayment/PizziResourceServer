@@ -12,9 +12,6 @@ export default function validCreateRequest(
   const isValidPaymentMethod = (method: string | PaymentMethod) => method === 'card' || method === 'cash' || method === 'unassigned'
 
   if (req.body) {
-    if (!req.body.shop_id) {
-      errors.push('invalid "shop_id"')
-    }
     if (!req.body.receipt_id) {
       errors.push('invalid "receipt_id"')
     }

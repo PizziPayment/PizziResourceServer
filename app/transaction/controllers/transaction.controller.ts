@@ -6,7 +6,9 @@ import { TransactionResponseModel } from '../models/response.model'
 import { TransactionStateQuery } from '../models/retrieve.request.model'
 
 export async function createTransaction(req: Request<unknown, unknown, TransactionCreationModel>, res: Response): Promise<void> {
-  await TransactionsService.createPendingTransaction(req.body.receipt_id, req.body.user_id, req.body.shop_id, req.body.payment_method).match(
+  const credentials = res.locals.credential as CredentialModel
+
+  await TransactionsService.createPendingTransaction(req.body.receipt_id, req.body.user_id, credentials.shop_id, req.body.payment_method).match(
     (transaction) => res.status(201).send(new TransactionResponseModel(transaction)),
     () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
   )
