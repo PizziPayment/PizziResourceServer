@@ -10,10 +10,7 @@ export async function createTransaction(req: Request<unknown, unknown, Transacti
 
   await TransactionsService.createPendingTransaction(req.body.receipt_id, req.body.user_id, credentials.shop_id, req.body.payment_method).match(
     (transaction) => res.status(201).send(new TransactionResponseModel(transaction)),
-    (e) => {
-      console.log(e)
-      return res.status(500).send(new ApiFailure(req.url, 'Internal error'))
-    },
+    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
   )
 }
 
