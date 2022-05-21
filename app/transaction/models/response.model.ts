@@ -6,7 +6,8 @@ export class TransactionResponseModel {
   receipt_id: number
   shop_id: number
   state: TransactionState
-  user_id: number
+  user_id: number | null
+  created_at: Date
 
   constructor(transaction: TransactionModel) {
     this.id = transaction.id
@@ -14,5 +15,7 @@ export class TransactionResponseModel {
     this.shop_id = transaction.shop_id
     this.state = transaction.state
     this.user_id = transaction.user_id
+    this.created_at = transaction.created_at
+    this.receipt_id = transaction.receipt_id
   }
 }

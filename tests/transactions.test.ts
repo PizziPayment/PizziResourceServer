@@ -60,7 +60,7 @@ async function setupUser(): Promise<{ token: string; id: number }> {
 }
 
 async function setupShop(): Promise<{ id: number; token: string }> {
-  const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, shop.place.address, shop.place.city, shop.place.zipcode)
+  const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, 21, shop.place.address, shop.place.city, shop.place.zipcode)
   expect(shop_handle_result.isOk()).toBeTruthy()
   const shop_handle = shop_handle_result._unsafeUnwrap()
 
