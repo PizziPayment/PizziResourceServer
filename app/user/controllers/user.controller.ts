@@ -17,7 +17,6 @@ import InfosResponseModel from '../models/infos.response'
 import { ReceiptsListRequestModel, ReceiptDetailsRequestModel } from '../../common/models/receipts.request.model'
 import { ReceiptListModel } from '../models/receipt_list.model'
 import { DetailedReceiptModel } from '../models/detailed_receipt'
-import { combine } from 'neverthrow'
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -105,8 +104,8 @@ export async function receipt(
               vendor: {
                 logo: shop.logo?.toString() || '',
                 name: shop.name,
-                address: { street: shop.address, city: '', postalCode: '' },
-                siret: '',
+                address: { street: shop.address, city: shop.city, postalCode: shop.zipcode },
+                siret: shop.siret,
                 shop_number: shop.phone,
               },
               products: items.map((product) => {

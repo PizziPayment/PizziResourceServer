@@ -72,7 +72,7 @@ const total_price = Number(
 )
 
 async function setupShop(): Promise<{ id: number; items: Array<number>; token: string }> {
-  const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, '', shop.place.zipcode)
+  const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, shop.siret, shop.place.address, shop.place.city, shop.place.zipcode)
   expect(shop_handle_result.isOk()).toBeTruthy()
   const shop_handle = shop_handle_result._unsafeUnwrap()
 
@@ -123,6 +123,10 @@ function createBearerHeader(token: string): Object {
   return { Authorization: `Bearer ${token}` }
 }
 
+function approximateDate(date: Date, tolerance: number): boolean {
+  return Math.abs(date.getTime() - new Date().getTime()) < tolerance
+}
+
 describe('User receipts endpoint', () => {
   const endpoint = '/users/receipts'
 
@@ -134,10 +138,9 @@ describe('User receipts endpoint', () => {
 
       const res = await request(App).get(endpoint).set(createBearerHeader(user_infos.token)).send()
       const body: ReceiptModel = res.body[0]
-      const date = Date.now()
 
       expect(res.statusCode).toEqual(200)
-      expect(Math.abs(date - new Date(body.date).getTime()) < 60000).toBeTruthy()
+      expect(approximateDate(new Date(body.date), 60000)).toBeTruthy()
       expect(body.total_ttc).toEqual(Number((total_price * 1.2).toString()))
       expect(body.shop_name).toEqual(shop.name) // Not functionnal
       expect(body.shop_logo !== undefined).toBeTruthy()
@@ -153,12 +156,22 @@ describe('User receipts endpoint', () => {
 
       const res = await request(App).get(`${endpoint}/${receipt_id}`).set(createBearerHeader(user_infos.token)).send()
       const body: DetailedReceiptModel = res.body
+      const vendor = body.vendor
 
       expect(res.statusCode).toEqual(200)
       expect(body.total_ht).toEqual(total_price)
       expect(body.total_ttc).toEqual(Number((total_price * 1.2).toString()))
       expect(body.tva_percentage).toEqual(20)
       expect(body.payment_type).toEqual('card')
+      expect(approximateDate(new Date(body.creation_date), 60000))
+
+      expect(vendor.name).toEqual(shop.name)
+      expect(vendor.shop_number).toEqual(shop.phone)
+      expect(vendor.address.street).toEqual(shop.place.address)
+      expect(vendor.address.city).toEqual(shop.place.city)
+      expect(vendor.address.postalCode).toEqual(shop.place.zipcode)
+
+      expect(vendor.siret)
     })
   })
 })
