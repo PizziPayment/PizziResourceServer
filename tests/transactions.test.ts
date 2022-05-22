@@ -277,6 +277,25 @@ describe('Transactions endpoint', () => {
       expect(updated_transaction.isOk()).toBeTruthy()
       expect(updated_transaction._unsafeUnwrap().user_id).toEqual(user_infos.id)
     })
+    it('basic test with validated transaction', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const transaction = await setupTransaction(receipt_id, null, shop_infos.id)
+
+      ;(await TransactionsService.updateTransactionStateFromId(transaction.id, "validated"))._unsafeUnwrap()
+
+      expect(transaction.payment_method).toBe("unassigned")
+      const res = await request(App).patch(`${endpoint}/${transaction.id}/user`).set(createBearerHeader(shop_infos.token)).send({
+        user_id: user_infos.id
+      })
+
+      expect(res.statusCode).toBe(403)
+
+      const updated_transaction = await TransactionsService.getTransactionById(transaction.id)
+      expect(updated_transaction.isOk()).toBeTruthy()
+      expect(updated_transaction._unsafeUnwrap().user_id).toBeFalsy()
+    })
     it('basic test with invalid "user_id"', async () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
