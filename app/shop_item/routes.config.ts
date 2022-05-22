@@ -5,7 +5,7 @@ import validShopTokenAffiliation from '../common/middlewares/shop_token_affiliat
 import { createShopItems, retrieveShopItems, updateShopItem, deleteShopItem } from './controllers/shop_item.controller'
 import { validShopItemsCreation } from './middlewares/create.request.validation.middleware'
 import { validShopItemsRetrieval } from './middlewares/retrieve_param.validation.middleware'
-import { validShopItemOwnership } from './middlewares/validOwnership.validation.middleware'
+import { validShopItemOwnership } from './middlewares/valid_ownership.validation.middleware'
 import { validShopItemUpdate } from './middlewares/update.request.validation.middleware'
 
 export const baseUrl = `${shopBaseUrl}/me/items`

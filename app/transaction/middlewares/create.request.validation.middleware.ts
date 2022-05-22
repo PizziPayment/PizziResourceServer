@@ -3,13 +3,14 @@ import { TransactionCreationModel } from '../models/create.request.model'
 import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response.model'
 import { PaymentMethod } from 'pizzi-db'
 
+export const isValidPaymentMethod = (method: string | PaymentMethod) => method === 'card' || method === 'cash' || method === 'unassigned'
+
 export default function validCreateRequest(
   req: Request<unknown, unknown, TransactionCreationModel>,
   res: Response<ApiResponseWrapper<unknown>>,
   next: NextFunction,
 ): Response | void {
   const errors: Array<string> = []
-  const isValidPaymentMethod = (method: string | PaymentMethod) => method === 'card' || method === 'cash' || method === 'unassigned'
 
   if (req.body) {
     if (!req.body.receipt_id) {
