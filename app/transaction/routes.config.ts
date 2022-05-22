@@ -4,7 +4,7 @@ import validToken from '../common/middlewares/token.validation.middleware'
 import validShopTokenAffiliation from '../common/middlewares/shop_token_affiliation.validation.middleware'
 import validCreateRequest from './middlewares/create.request.validation.middleware'
 import { validTransactionRetrievalQuery } from './middlewares/retrieve_param.validation.middlewares'
-import { validTransactionOwnership } from './middlewares/valid_ownershop.validation.middleware'
+import { validTransactionOwnership } from './middlewares/valid_ownership.validation.middleware'
 import { validUpdateRequestForPaymentMethod, validUpdateRequestForUser } from './middlewares/update.request.validation.middleware'
 
 export const baseUrl = `/transactions`
