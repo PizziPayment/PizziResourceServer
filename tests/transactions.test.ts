@@ -259,6 +259,7 @@ describe('Transactions endpoint', () => {
       expect(updated_transaction._unsafeUnwrap().payment_method).toEqual(transaction.payment_method)
     })
   })
+
   describe("Update transaction's user_id", () => {
     it('basic test', async () => {
       const user_infos = await setupUser()
