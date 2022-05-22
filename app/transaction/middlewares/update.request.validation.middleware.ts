@@ -5,7 +5,7 @@ import { UsersServices } from 'pizzi-db'
 import { isValidPaymentMethod } from './create.request.validation.middleware'
 
 async function isValidUserId(user_id: number): Promise<boolean> {
-  return (await UsersServices.getUserFromId(user_id)).isErr()
+  return (await UsersServices.getUserFromId(user_id)).isOk()
 }
 
 export async function validUpdateRequestForUser(

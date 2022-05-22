@@ -13,7 +13,7 @@ export async function validTransactionOwnership(
   if (maybe_transaction.isOk() && maybe_transaction.value.shop_id == shop_id) {
     const transaction = maybe_transaction.value
 
-    if (transaction.state !== 'validated') {
+    if (transaction.state === 'validated') {
       res.status(403).send(new ApiFailure(req.url, `A validated transaction can't be modified`))
     } else {
       res.locals.transaction = transaction

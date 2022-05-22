@@ -4,6 +4,7 @@ import {
   ClientsService,
   CredentialsService,
   EncryptionService,
+  PaymentMethod,
   ReceiptsService,
   rewriteTables,
   ShopsServices,
@@ -196,6 +197,102 @@ describe('Transactions endpoint', () => {
       const res = await request(App).get(`${endpoint}`).set(createBearerHeader(shop_infos.token)).send()
 
       expect(res.statusCode).toEqual(400)
+    })
+  })
+
+  describe("Update transaction's payment method", () => {
+    it('basic test', async () => {
+      const new_payment_method: PaymentMethod = "card"
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
+
+      expect(transaction.payment_method).toBe("unassigned")
+      const res = await request(App).patch(`${endpoint}/${transaction.id}/payment_method`).set(createBearerHeader(shop_infos.token)).send({
+        payment_method: new_payment_method
+      })
+
+      expect(res.statusCode).toBe(204)
+
+      const updated_transaction = await TransactionsService.getTransactionById(transaction.id)
+      expect(updated_transaction.isOk()).toBeTruthy()
+      expect(updated_transaction._unsafeUnwrap().payment_method).toEqual(new_payment_method)
+    })
+    it('basic test with invalid "payment_method"', async () => {
+      const new_payment_method = "invalid_payment_method"
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
+
+      expect(transaction.payment_method).toBe("unassigned")
+      const res = await request(App).patch(`${endpoint}/${transaction.id}/payment_method`).set(createBearerHeader(shop_infos.token)).send({
+        payment_method: new_payment_method
+      })
+
+      expect(res.statusCode).toBe(400)
+
+      const updated_transaction = await TransactionsService.getTransactionById(transaction.id)
+      expect(updated_transaction.isOk()).toBeTruthy()
+      expect(updated_transaction._unsafeUnwrap().payment_method).toEqual(transaction.payment_method)
+    })
+    it('basic test with validated transaction', async () => {
+      const new_payment_method: PaymentMethod = "card"
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
+
+      ;(await TransactionsService.updateTransactionStateFromId(transaction.id, "validated"))._unsafeUnwrap()
+
+      expect(transaction.payment_method).toBe("unassigned")
+
+      const res = await request(App).patch(`${endpoint}/${transaction.id}/payment_method`).set(createBearerHeader(shop_infos.token)).send({
+        payment_method: new_payment_method
+      })
+
+      expect(res.statusCode).toBe(403)
+
+      const updated_transaction = await TransactionsService.getTransactionById(transaction.id)
+      expect(updated_transaction.isOk()).toBeTruthy()
+      expect(updated_transaction._unsafeUnwrap().payment_method).toEqual(transaction.payment_method)
+    })
+  })
+  describe("Update transaction's user_id", () => {
+    it('basic test', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const transaction = await setupTransaction(receipt_id, null, shop_infos.id)
+
+      expect(transaction.payment_method).toBe("unassigned")
+      const res = await request(App).patch(`${endpoint}/${transaction.id}/user`).set(createBearerHeader(shop_infos.token)).send({
+        user_id: user_infos.id
+      })
+
+      expect(res.statusCode).toBe(204)
+
+      const updated_transaction = await TransactionsService.getTransactionById(transaction.id)
+      expect(updated_transaction.isOk()).toBeTruthy()
+      expect(updated_transaction._unsafeUnwrap().user_id).toEqual(user_infos.id)
+    })
+    it('basic test with invalid "user_id"', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts()
+      const transaction = await setupTransaction(receipt_id, null, shop_infos.id)
+
+      expect(transaction.payment_method).toBe("unassigned")
+      const res = await request(App).patch(`${endpoint}/${transaction.id}/user`).set(createBearerHeader(shop_infos.token)).send({
+        user_id: Number.MAX_VALUE
+      })
+
+      expect(res.statusCode).toBe(400)
+
+      const updated_transaction = await TransactionsService.getTransactionById(transaction.id)
+      expect(updated_transaction.isOk()).toBeTruthy()
+      expect(updated_transaction._unsafeUnwrap().user_id).toBeFalsy()
     })
   })
 })
