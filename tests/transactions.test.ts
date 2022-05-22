@@ -298,6 +298,7 @@ describe('Transactions endpoint', () => {
       expect(updated_transaction.isOk()).toBeTruthy()
       expect(updated_transaction._unsafeUnwrap().user_id).toBeFalsy()
     })
+
     it('basic test with invalid "user_id"', async () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
