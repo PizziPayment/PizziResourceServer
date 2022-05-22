@@ -18,7 +18,7 @@ export async function validShopItemOwnership(
       res.status(403).send(new ApiFailure(req.url, `Shop ${shop_id} can't modify shop item ${shop_item.name} (${shop_item.id})`))
     } else {
       res.locals.shop_item = shop_item
-      next()
+      return next()
     }
   } else {
     res.status(404).send(new ApiFailure(req.url, `Shop item ${req.params.id} doesn't exist`))

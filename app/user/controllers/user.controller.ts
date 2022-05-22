@@ -1,9 +1,23 @@
 import { Request, Response } from 'express'
 import RegisterRequestModel from '../models/register.request.model'
 import { ApiFailure } from '../../common/models/api.response.model'
-import { CredentialModel, CredentialsService, EncryptionService, TokenModel, UsersServices } from 'pizzi-db'
+import {
+  CredentialModel,
+  CredentialsService,
+  EncryptionService,
+  ReceiptItemsService,
+  TokenModel,
+  TransactionsService,
+  UsersServices,
+  ReceiptsService,
+  ShopsServices,
+} from 'pizzi-db'
 import PatchRequestModel from '../models/patch.request.model'
 import InfosResponseModel from '../models/infos.response'
+import { ReceiptsListRequestModel, ReceiptDetailsRequestModel } from '../../common/models/receipts.request.model'
+import { ReceiptListModel } from '../models/receipt_list.model'
+import { DetailedReceiptModel } from '../models/detailed_receipt'
+import { siretLength } from '../../common/constants'
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -54,4 +68,73 @@ export async function changeUserInformation(
     (user) => res.status(200).send(user),
     () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
   )
+}
+
+export async function receipts(
+  req: Request<unknown, unknown, ReceiptsListRequestModel>,
+  res: Response<ReceiptListModel | ApiFailure, { credential: CredentialModel }>,
+): Promise<void> {
+  await TransactionsService.getOwnerExpandedTransactionsByState('user', res.locals.credential.user_id, 'validated')
+    .map((transactions) =>
+      transactions.map((transaction) => {
+        return {
+          receipt_id: transaction.receipt.id,
+          shop_name: transaction.shop.name,
+          shop_logo: transaction.shop.logo?.toString() || '',
+          date: transaction.created_at,
+          total_ttc: compute_tax(transaction.receipt.total_ht, transaction.receipt.tva_percentage),
+        }
+      }),
+    )
+    .match(
+      (receipts) => res.status(200).send(receipts),
+      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+    )
+}
+
+export async function receipt(
+  req: Request<{ receipt_id: number }, unknown, ReceiptDetailsRequestModel>,
+  res: Response<DetailedReceiptModel | ApiFailure, { credential: CredentialModel }>,
+): Promise<void> {
+  ReceiptsService.getDetailedReceiptById(req.params.receipt_id)
+    .andThen((receipt) => {
+      return TransactionsService.getTransactionByReceiptId(receipt.id).andThen((transaction) => {
+        return ShopsServices.getShopFromId(transaction.shop_id).andThen((shop) => {
+          return ReceiptItemsService.getDetailedReceiptItems(req.params.receipt_id).map((items) => {
+            return {
+              vendor: {
+                logo: shop.logo?.toString() || '',
+                name: shop.name,
+                address: { street: shop.address, city: shop.city, postal_code: shop.zipcode },
+                siret: String(shop.siret).padStart(siretLength, '0'),
+                shop_number: shop.phone,
+              },
+              products: items.map((product) => {
+                return {
+                  product_name: product.name,
+                  quantity: product.quantity,
+                  price_unit: Number(product.price),
+                  warranty: product.warranty,
+                  eco_tax: product.eco_tax,
+                  discount: product.discount,
+                }
+              }),
+              creation_date: transaction.created_at,
+              payment_type: transaction.payment_method,
+              tva_percentage: receipt.tva_percentage,
+              total_ht: Number(receipt.total_price),
+              total_ttc: compute_tax(receipt.total_price, receipt.tva_percentage),
+            }
+          })
+        })
+      })
+    })
+    .match(
+      (receipt) => res.status(200).send(receipt),
+      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+    )
+}
+
+function compute_tax(price: string, tax_percentage: number): number {
+  return Number((Number(price) * (1 + tax_percentage / 100)).toFixed(2))
 }

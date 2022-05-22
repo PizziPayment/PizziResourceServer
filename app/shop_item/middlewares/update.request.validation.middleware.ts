@@ -29,7 +29,7 @@ export async function validShopItemUpdate(
     }
 
     if (errors.length === 0) {
-      next()
+      return next()
     } else {
       res.status(400).send(new ApiFailure(req.url, errors.join(',')))
     }

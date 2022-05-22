@@ -44,14 +44,14 @@
     "supertest": "^6.1.6",
     "ts-jest": "^27.1.2",
     "tsc-watch": "^4.6.0",
-    "typescript": "^4.5.4"
+    "typescript": "=4.5.5"
   },
   "dependencies": {
     "body-parser": "^1.19.1",
     "config": "^3.3.6",
     "express": "^4.17.2",
     "neverthrow": "^4.3.1",
-    "pizzi-db": "git@github.com:PizziPayment/PizziAPIDB.git#v1.4.0",
+    "pizzi-db": "git@github.com:PizziPayment/PizziAPIDB.git#tag=v1.5.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.4.0"
   },

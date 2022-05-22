@@ -24,3 +24,5 @@ ChangeUserPassword:
   $ref: "./change_user_password.yaml"
 ChangeUserEmail:
   $ref: "./change_user_email.yaml"
+ListReceipts:
+  $ref: "./list_receipts.yaml"
