@@ -1,6 +1,6 @@
 import { App } from '../app/api'
 import { config } from '../app/common/config'
-import { user, shops } from './common/models'
+import { users, shops } from './common/models'
 import * as request from 'supertest'
 import { TransactionCreationModel } from '../app/transaction/models/create.request.model'
 import {
@@ -18,6 +18,7 @@ import {
 
 const client = { client_id: 'toto', client_secret: 'tutu' }
 const shop = shops[0]
+const user = users[0]
 
 // @ts-ignore
 let sequelize: Sequelize = undefined

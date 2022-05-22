@@ -7,7 +7,7 @@ export async function validShopItemUpdate(
   req: Request<ShopItemUpdateParamModel, unknown, ShopItemUpdateRequestModel>,
   res: Response<ApiResponseWrapper<unknown>>,
   next: NextFunction,
-): Promise<void> {
+): Promise<Response | void> {
   const errors: Array<string> = []
 
   if (req.body) {
@@ -31,9 +31,9 @@ export async function validShopItemUpdate(
     if (errors.length === 0) {
       return next()
     } else {
-      res.status(400).send(new ApiFailure(req.url, errors.join(',')))
+      return res.status(400).send(new ApiFailure(req.url, errors.join(',')))
     }
   } else {
-    res.status(400).send(new ApiFailure(req.url, 'No body'))
+    return res.status(400).send(new ApiFailure(req.url, 'No body'))
   }
 }

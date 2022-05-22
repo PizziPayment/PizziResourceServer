@@ -7,13 +7,13 @@ export default async function validUserTokenAffiliation(
   req: Request<unknown, unknown, PatchRequestModel>,
   res: Response<ApiResponseWrapper<unknown>, Record<'token' | 'credential', TokenModel | CredentialModel>>,
   next: NextFunction,
-): Promise<void> {
+): Promise<Response | void> {
   const maybe_credential = await CredentialsService.getCredentialFromId((res.locals.token as TokenModel).credential_id)
 
   if (maybe_credential.isOk() && maybe_credential.value.user_id) {
     res.locals.credential = maybe_credential.value
     return next()
   } else {
-    res.status(400).send(new ApiFailure(req.url, 'Token not affiliated to a user'))
+    return res.status(400).send(new ApiFailure(req.url, 'Token not affiliated to a user'))
   }
 }
