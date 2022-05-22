@@ -5,4 +5,9 @@ password:
 
 filter:
   type: string
-  description: One of \'latest\', \'oldest\', \'price_ascending\' or \'price_descending\'
+  enum:
+    - latest
+    - oldest
+    - price_ascending
+    - price_descending
+  description: The order in which the elements should be returned.

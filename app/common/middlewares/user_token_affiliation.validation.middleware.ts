@@ -12,7 +12,7 @@ export default async function validUserTokenAffiliation(
 
   if (maybe_credential.isOk() && maybe_credential.value.user_id) {
     res.locals.credential = maybe_credential.value
-    next()
+    return next()
   } else {
     res.status(400).send(new ApiFailure(req.url, 'Token not affiliated to a user'))
   }

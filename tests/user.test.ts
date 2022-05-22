@@ -3,8 +3,10 @@ import { baseUrl as endpoint, baseUrlPassword as endpoint_password, baseUrlEmail
 import { config } from '../app/common/config'
 import * as request from 'supertest'
 import { rewriteTables, TokensServiceError, UsersServices, CredentialsService, EncryptionService, ClientsService, TokensService } from 'pizzi-db'
-import { user, client, client_header } from './common/models'
+import { users, client, client_header } from './common/models'
 import { getUser, getUserToken, createRandomToken, createBearerHeader } from './common/services'
+
+const user = users[0]
 
 async function createUser(): Promise<void> {
   const address = `${user.place.address} ${user.place.city}`
@@ -66,15 +68,8 @@ describe('User endpoint', () => {
         .post(endpoint)
         .set(client_header)
         .send({
-          name: 'titi',
-          surname: 'toto',
+          ...users[1],
           email: user.email,
-          password: 'gY@3Cwl4FmLlQ@HycAf',
-          place: {
-            address: 'Somewhere',
-            city: 'Over the rainbow',
-            zipcode: '12345',
-          },
         })
 
       expect(first_res.statusCode).toEqual(201)

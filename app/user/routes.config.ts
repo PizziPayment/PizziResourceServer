@@ -12,10 +12,12 @@ import validChangePasswordRequest from '../common/middlewares/password.request.v
 import { validChangeEmailRequest } from '../common/middlewares/email.request.validation.middleware'
 import changeEmail from '../common/controllers/email.controller'
 import validReceiptsRequest from '../common/middlewares/receipts.validation.middleware'
+import validUserReceiptAffiliation from './middlewares/receipt_affiliation.validation.middleware'
 
 export const baseUrl = '/users'
 export const baseUrlPassword = `${baseUrl}/me/password`
 export const baseUrlEmail = `${baseUrl}/me/email`
+export const baseUrlReceipts = `${baseUrl}/me/receipts`
 
 export default function UserRouter(app: Application): void {
   app.get(`${baseUrl}/`, [validToken, validUserTokenAffiliation, info])
@@ -24,6 +26,6 @@ export default function UserRouter(app: Application): void {
   app.patch(`${baseUrl}/`, [validToken, validUserTokenAffiliation, changeUserInformation])
   app.put(`${baseUrlPassword}/`, [validToken, validChangePasswordRequest, validChangePassword, changePassword])
   app.patch(`${baseUrlEmail}/`, [validToken, validChangeEmailRequest, validPassword, changeEmail])
-  app.get(`${baseUrl}/receipts/:receipt_id`, [validToken, validUserTokenAffiliation, receipt])
-  app.get(`${baseUrl}/receipts`, [validToken, validUserTokenAffiliation, validReceiptsRequest, receipts])
+  app.get(`${baseUrlReceipts}/:receipt_id`, [validToken, validUserTokenAffiliation, validUserReceiptAffiliation, receipt])
+  app.get(`${baseUrlReceipts}/`, [validToken, validUserTokenAffiliation, validReceiptsRequest, receipts])
 }

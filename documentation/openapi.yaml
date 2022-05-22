@@ -39,6 +39,10 @@ paths:
     $ref: './components/endpoints/resource/user/email.yaml'
   /users/me/password:
     $ref: './components/endpoints/resource/user/password.yaml'
+  /users/me/receipt:
+    $ref: './components/endpoints/resource/user/receipts.yaml'
+  /users/me/receipts/{receipt_id}:
+    $ref: './components/endpoints/resource/user/receipt.yaml'
 
   /shops:
     $ref: './components/endpoints/resource/shop.yaml'
@@ -50,12 +54,10 @@ paths:
     $ref: './components/endpoints/resource/shop/item.yaml'
   /shops/me/items/{id}:
     $ref: './components/endpoints/resource/shop/item/id.yaml'
-  /receipts:
-    $ref: './components/endpoints/receipts/list.yaml'
-  /receipts/{receipt_id}:
-    $ref: './components/endpoints/receipts/details.yaml'
-  /transactions:
-    $ref: './components/endpoints/transactions/transactions.yaml'
+  /shops/me/receipts:
+    $ref: './components/endpoints/resource/shop/receipts.yaml'
+  /shops/me/receipts/{receipt_id}:
+    $ref: './components/endpoints/resource/shop/receipt.yaml'
 
 components:
   securitySchemes:

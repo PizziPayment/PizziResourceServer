@@ -8,15 +8,17 @@ properties:
     type: object
     properties:
       to:
-        type: number
+        type: string
+        format: date-time
       from:
-        type: number
+        type: string
+        format: date-time
 example:
   {
     "filter": "oldest",
     "query": "steam",
     "properties": {
-      "from": 1592344800,
-      "to": 1632693600
+      "from": '2018-03-20T09:12:28Z',
+      "to": '2018-03-25T09:12:28Z'
     }
   }
