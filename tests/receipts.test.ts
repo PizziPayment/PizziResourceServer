@@ -84,7 +84,7 @@ const total_price = Number(
 
 async function setupShop(id?: number): Promise<{ id: number; items: Array<CompleteItem>; token: string }> {
   const shop = shops[id || 0]
-  const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, shop.siret, shop.place.address, shop.place.city, shop.place.zipcode)
+  const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, Number(shop.siret), shop.place.address, shop.place.city, shop.place.zipcode)
   expect(shop_handle_result.isOk()).toBeTruthy()
   const shop_handle = shop_handle_result._unsafeUnwrap()
 
@@ -195,7 +195,7 @@ describe('User receipts endpoint', () => {
       }
     })
 
-    it('should not allow a user to access another user\'s receipt', async () => {
+    it("should not allow a user to access another user's receipt", async () => {
       const user_infos = await setupUser(0)
       const second_user_infos = await setupUser(1)
       const shop_infos = await setupShop()
@@ -256,7 +256,7 @@ describe('Shop receipts endpoint', () => {
       }
     })
 
-    it('should not allow a shop to access another shop\'s receipt', async () => {
+    it("should not allow a shop to access another shop's receipt", async () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop(0)
       const second_shop_infos = await setupShop(1)

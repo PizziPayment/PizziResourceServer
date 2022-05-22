@@ -33,7 +33,7 @@ export async function getUserToken(email: string, password: string): Promise<Tok
 
 export async function createShop(shop: ShopRegisterRequestModel = shops[0]): Promise<ShopModel> {
   const shop_handle = (
-    await ShopsServices.createShop(shop.name, shop.phone, shop.siret, shop.place.address, shop.place.city, shop.place.zipcode)
+    await ShopsServices.createShop(shop.name, shop.phone, Number(shop.siret), shop.place.address, shop.place.city, shop.place.zipcode)
   )._unsafeUnwrap()
   expect((await CredentialsService.createCredentialWithId('shop', shop_handle.id, shop.email, EncryptionService.encrypt(shop.password))).isOk()).toBeTruthy()
 

@@ -18,7 +18,7 @@ export async function shopInfo(req: Request, res: Response): Promise<void> {
 }
 
 export async function register(req: Request<unknown, unknown, RegisterRequestModel>, res: Response): Promise<void> {
-  await ShopsServices.createShop(req.body.name, req.body.phone, req.body.siret, req.body.place.address, req.body.place.city, req.body.place.zipcode)
+  await ShopsServices.createShop(req.body.name, req.body.phone, Number(req.body.siret), req.body.place.address, req.body.place.city, req.body.place.zipcode)
     .andThen((shop) =>
       CredentialsService.createCredentialWithId('shop', shop.id, req.body.email, EncryptionService.encrypt(req.body.password)).mapErr(() =>
         ShopsServices.deleteShopById(shop.id).mapErr(

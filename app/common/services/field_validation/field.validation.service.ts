@@ -17,9 +17,8 @@ export default class FieldValidationService {
     return rule.test(phone)
   }
 
-  static isValidSiret(siret: number): boolean {
+  static isValidSiret(siret: string): boolean {
     const rule = /^[0-9]{14}$/
-    const string = String(siret)
     const checksum = (str: String) => {
       let sum = 0
       const digits = [...str.slice(0, -1)].reverse()
@@ -39,6 +38,6 @@ export default class FieldValidationService {
       return sum == validator
     }
 
-    return rule.test(string) && checksum(string)
+    return rule.test(siret) && checksum(siret)
   }
 }
