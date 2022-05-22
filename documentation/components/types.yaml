@@ -10,4 +10,4 @@ filter:
     - oldest
     - price_ascending
     - price_descending
-  description: The order in which the elements should be returned
+  description: The order in which the elements should be returned.
