@@ -1,7 +1,7 @@
 import UserRegisterRequestModel from '../../app/user/models/register.request.model'
 import ShopRegisterRequestModel from '../../app/shop/models/register.request.model'
 
-export const user: UserRegisterRequestModel = {
+export const users: Array<UserRegisterRequestModel> = [{
   name: 'toto',
   surname: 'tutu',
   email: 'toto@tutu.tata',
@@ -11,7 +11,19 @@ export const user: UserRegisterRequestModel = {
     city: 'Ville',
     zipcode: 25619,
   },
-}
+},
+{
+  name: 'tutu',
+  surname: 'tete',
+  email: 'tete@tutu.tttt',
+  password: 'gY@3Cwl4FmLlQ@HycAf',
+  place: {
+    address: '13 rue de la pioche',
+    city: 'Town',
+    zipcode: 91652,
+  },
+},
+]
 
 export const shops: Array<ShopRegisterRequestModel> = [
   {

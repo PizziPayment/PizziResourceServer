@@ -14,14 +14,11 @@ import {
   ReceiptsService,
 } from 'pizzi-db'
 import * as request from 'supertest'
-import { user, shops } from './common/models'
-import { ReceiptListModel, ReceiptModel } from '../app/user/models/receipt_list.model'
+import { users, shops } from './common/models'
+import { ReceiptModel } from '../app/user/models/receipt_list.model'
 import { DetailedReceiptModel } from '../app/user/models/detailed_receipt'
 
 const client = { client_id: 'toto', client_secret: 'tutu' }
-const client_header = {
-  Authorization: 'Basic ' + Buffer.from(`${client.client_id}:${client.client_secret}`).toString('base64'),
-}
 
 const shop = shops[0]
 
@@ -40,7 +37,8 @@ beforeEach(async () => {
   await ClientsService.createClientFromIdAndSecret(client.client_id, client.client_secret)
 })
 
-async function setupUser(): Promise<{ token: string; id: number }> {
+async function setupUser(id?: number): Promise<{ token: string; id: number }> {
+  const user = users[id || 0]
   const user_handle_result = await UsersServices.createUser(user.name, user.surname, '', user.place.zipcode)
   expect(user_handle_result.isOk())
   const user_handle = user_handle_result._unsafeUnwrap()
@@ -84,7 +82,8 @@ const total_price = Number(
     .toFixed(2),
 )
 
-async function setupShop(): Promise<{ id: number; items: Array<CompleteItem>; token: string }> {
+async function setupShop(id?: number): Promise<{ id: number; items: Array<CompleteItem>; token: string }> {
+  const shop = shops[id || 0]
   const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, shop.siret, shop.place.address, shop.place.city, shop.place.zipcode)
   expect(shop_handle_result.isOk()).toBeTruthy()
   const shop_handle = shop_handle_result._unsafeUnwrap()
@@ -195,6 +194,17 @@ describe('User receipts endpoint', () => {
         expect(products[i].price_unit).toEqual(Number(items[i].price))
       }
     })
+
+    it('should not allow a user to access another user\'s receipt', async () => {
+      const user_infos = await setupUser(0)
+      const second_user_infos = await setupUser(1)
+      const shop_infos = await setupShop()
+      const receipt_id = await setupReceipts(user_infos.id, shop_infos.id, shop_infos.items)
+
+      const res = await request(App).get(`${endpoint}/${receipt_id}`).set(createBearerHeader(second_user_infos.token)).send()
+
+      expect(res.statusCode).toEqual(403)
+    })
   })
 })
 
@@ -244,6 +254,17 @@ describe('Shop receipts endpoint', () => {
         expect(products[i].product_name).toEqual(items[i].name)
         expect(products[i].price_unit).toEqual(Number(items[i].price))
       }
+    })
+
+    it('should not allow a shop to access another shop\'s receipt', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop(0)
+      const second_shop_infos = await setupShop(1)
+      const receipt_id = await setupReceipts(user_infos.id, shop_infos.id, shop_infos.items)
+
+      const res = await request(App).get(`${endpoint}/${receipt_id}`).set(createBearerHeader(second_shop_infos.token)).send()
+
+      expect(res.statusCode).toEqual(403)
     })
   })
 })
