@@ -5,8 +5,8 @@ export class ReceiptsListRequestModel {
   filter: FilterModel
   query: string
   time_interval: {
-    from: number
-    to: number
+    from: string
+    to: string
   }
 }
 
