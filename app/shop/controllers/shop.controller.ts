@@ -1,12 +1,14 @@
 import { Request, Response } from 'express'
 import { ApiFailure } from '../../common/models/api.response.model'
-import { CredentialsService, EncryptionService, ShopsServices, CredentialModel, TransactionsService, ReceiptsService } from 'pizzi-db'
+import { CredentialsService, EncryptionService, ShopsServices, CredentialModel, TransactionsService, ReceiptsService, ReceiptItemsService } from 'pizzi-db'
 import InfosResponseModel from '../models/infos.response.model'
 import { ReceiptDetailsRequestModel, ReceiptsListRequestModel } from '../../common/models/receipts.request.model'
 import { ReceiptListModel } from '../models/receipt_list.model'
 import { DetailedReceiptModel } from '../models/detailed_receipt.model'
 import RegisterRequestModel from '../models/register.request.model'
 import { intoShopUpdateModel, PatchRequestModel } from '../models/patch.request.model'
+import CreateTransactionRequestModel from '../models/create_transaction.request.model'
+import { combine } from 'neverthrow'
 
 export async function shopInfo(req: Request, res: Response): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -80,7 +82,7 @@ export async function receipt(
   req: Request<{ receipt_id: number }, unknown, ReceiptDetailsRequestModel>,
   res: Response<DetailedReceiptModel | ApiFailure, { credential: CredentialModel }>,
 ): Promise<void> {
-  ReceiptsService.getDetailedReceiptById(req.params.receipt_id)
+  await ReceiptsService.getDetailedReceiptById(req.params.receipt_id)
     .map((receipt) => {
       return {
         products: receipt.items.map((product) => {
@@ -102,6 +104,24 @@ export async function receipt(
     })
     .match(
       (receipt) => res.status(200).send(receipt),
+      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+    )
+}
+
+export async function createTransaction(
+  req: Request<void, void, CreateTransactionRequestModel>,
+  res: Response<CreateTransactionRequestModel | ApiFailure, { credential: CredentialModel }>,
+): Promise<void> {
+  const body = req.body
+
+  await ReceiptsService.createReceipt(body.tva_percentage, body.total_price)
+    .andThen((receipt) =>
+      combine(
+        body.items.map((item) => ReceiptItemsService.createReceiptItem(receipt.id, item.id, item.discount, item.eco_tax, item.quantity, item.warranty)),
+      ).andThen((items) => TransactionsService.createPendingTransaction(receipt.id, null, res.locals.credential.id, body.payment_method)),
+    )
+    .match(
+      (transaction) => res.status(201).send(),
       () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
     )
 }

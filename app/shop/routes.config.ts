@@ -10,14 +10,16 @@ import changePassword from '../common/controllers/password.controller'
 import { validChangeEmailRequest } from '../common/middlewares/email.request.validation.middleware'
 import validChangePasswordRequest from '../common/middlewares/password.request.validation.middleware'
 import validShopTokenAffiliation from '../shop/middlewares/shop_token_affiliation.validation'
-import { changeShopInformation, deleteAccount, register, shopInfo, receipts, receipt } from './controllers/shop.controller'
+import { changeShopInformation, deleteAccount, register, shopInfo, receipts, receipt, createTransaction } from './controllers/shop.controller'
 import validReceiptsRequest from '../common/middlewares/receipts.validation.middleware'
 import validShopReceiptAffiliation from './middlewares/receipt_affiliation.validation.middleware'
+import validCreateTransactionRequest from './middlewares/create_transaction.request.validation.middleware'
 
 export const baseUrl = '/shops'
 export const baseUrlPassword = `${baseUrl}/me/password`
 export const baseUrlEmail = `${baseUrl}/me/email`
 export const baseUrlReceipts = `${baseUrl}/me/receipts`
+export const baseUrlTransactions = `${baseUrl}/me/transactions`
 
 export default function ShopRouter(app: Application): void {
   app.get(`${baseUrl}/`, [validToken, validShopTokenAffiliation, shopInfo])
@@ -28,4 +30,5 @@ export default function ShopRouter(app: Application): void {
   app.patch(`${baseUrlEmail}/`, [validToken, validChangeEmailRequest, validPassword, changeEmail])
   app.get(`${baseUrlReceipts}/:receipt_id`, [validToken, validShopTokenAffiliation, validShopReceiptAffiliation, receipt])
   app.get(`${baseUrlReceipts}/`, [validToken, validShopTokenAffiliation, validReceiptsRequest, receipts])
+  app.post(`${baseUrlTransactions}/`, [validToken, validShopTokenAffiliation, validCreateTransactionRequest, createTransaction])
 }
