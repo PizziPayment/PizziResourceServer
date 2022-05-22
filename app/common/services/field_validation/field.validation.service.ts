@@ -1,3 +1,5 @@
+import { siretLength } from '../../constants'
+
 export default class FieldValidationService {
   static isValidEmail(email: string): boolean {
     const rule = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
@@ -18,7 +20,7 @@ export default class FieldValidationService {
   }
 
   static isValidSiret(siret: string): boolean {
-    const rule = /^[0-9]{14}$/
+    const rule = new RegExp(`^[0-9]{${siretLength}}$`)
     const checksum = (str: String) => {
       let sum = 0
       const digits = [...str.slice(0, -1)].reverse()

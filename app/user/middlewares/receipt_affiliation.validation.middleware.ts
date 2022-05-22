@@ -13,9 +13,9 @@ export default async function validUserReceiptAffiliation(
       (transaction) => {
         if (transaction.user_id && transaction.user_id == res.locals.credential.user_id) {
           res.locals.receipt = receipt
-          next()
+          return next()
         } else {
-          return res.status(403).send(new ApiFailure(req.url, 'Receipt not affiliated to this user'))
+          return res.status(404).send(new ApiFailure(req.url, 'Receipt not found'))
         }
       },
       () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),

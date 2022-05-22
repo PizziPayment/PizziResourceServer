@@ -14,11 +14,9 @@ import {
   ReceiptsService,
 } from 'pizzi-db'
 import * as request from 'supertest'
-import { users, shops } from './common/models'
+import { users, shops, client } from './common/models'
 import { ReceiptModel } from '../app/user/models/receipt_list.model'
 import { DetailedReceiptModel } from '../app/user/models/detailed_receipt'
-
-const client = { client_id: 'toto', client_secret: 'tutu' }
 
 const shop = shops[0]
 
@@ -203,7 +201,7 @@ describe('User receipts endpoint', () => {
 
       const res = await request(App).get(`${endpoint}/${receipt_id}`).set(createBearerHeader(second_user_infos.token)).send()
 
-      expect(res.statusCode).toEqual(403)
+      expect(res.statusCode).toEqual(404)
     })
   })
 })
@@ -264,7 +262,7 @@ describe('Shop receipts endpoint', () => {
 
       const res = await request(App).get(`${endpoint}/${receipt_id}`).set(createBearerHeader(second_shop_infos.token)).send()
 
-      expect(res.statusCode).toEqual(403)
+      expect(res.statusCode).toEqual(404)
     })
   })
 })

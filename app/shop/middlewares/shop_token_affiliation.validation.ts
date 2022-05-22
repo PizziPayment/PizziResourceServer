@@ -11,7 +11,7 @@ export default async function validShopTokenAffiliation(
 
   if (maybe_credential.isOk() && maybe_credential.value.shop_id) {
     res.locals.credential = maybe_credential.value
-    next()
+    return next()
   } else {
     res.status(400).send(new ApiFailure(req.url, 'Token not affiliated to a shop'))
   }
