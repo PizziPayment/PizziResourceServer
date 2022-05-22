@@ -56,6 +56,7 @@ describe('Shop endpoint', () => {
       expect(res.body.address).toEqual(shop.place.address)
       expect(res.body.city).toEqual(shop.place.city)
       expect(res.body.zipcode).toEqual(shop.place.zipcode)
+      expect(res.body.siret).toEqual(shop.siret)
     })
 
     it('should not accept an invalid token', async () => {

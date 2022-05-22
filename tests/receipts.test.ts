@@ -141,7 +141,7 @@ function approximateDate(date: Date, tolerance: number): boolean {
 }
 
 describe('User receipts endpoint', () => {
-  const endpoint = '/users/receipts'
+  const endpoint = '/users/me/receipts'
 
   describe('List request', () => {
     it('basic test', async () => {
@@ -199,7 +199,7 @@ describe('User receipts endpoint', () => {
 })
 
 describe('Shop receipts endpoint', () => {
-  const endpoint = '/shops/receipts'
+  const endpoint = '/shops/me/receipts'
 
   describe('List request', () => {
     it('basic test', async () => {

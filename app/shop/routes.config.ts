@@ -16,6 +16,7 @@ import validReceiptsRequest from '../common/middlewares/receipts.validation.midd
 export const baseUrl = '/shops'
 export const baseUrlPassword = `${baseUrl}/me/password`
 export const baseUrlEmail = `${baseUrl}/me/email`
+export const baseUrlReceipts = `${baseUrl}/me/receipts`
 
 export default function ShopRouter(app: Application): void {
   app.get(`${baseUrl}/`, [validToken, validShopTokenAffiliation, shopInfo])
@@ -24,6 +25,6 @@ export default function ShopRouter(app: Application): void {
   app.patch(`${baseUrl}/`, [validToken, validShopTokenAffiliation, changeShopInformation])
   app.put(`${baseUrlPassword}/`, [validToken, validChangePasswordRequest, validChangePassword, changePassword])
   app.patch(`${baseUrlEmail}/`, [validToken, validChangeEmailRequest, validPassword, changeEmail])
-  app.get(`${baseUrl}/receipts/:receipt_id`, [validToken, validShopTokenAffiliation, receipt])
-  app.get(`${baseUrl}/receipts`, [validToken, validShopTokenAffiliation, validReceiptsRequest, receipts])
+  app.get(`${baseUrlReceipts}/:receipt_id`, [validToken, validShopTokenAffiliation, receipt])
+  app.get(`${baseUrlReceipts}/`, [validToken, validShopTokenAffiliation, validReceiptsRequest, receipts])
 }

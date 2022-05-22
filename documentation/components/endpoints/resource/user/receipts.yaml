@@ -1,0 +1,29 @@
+get:
+  operationId: "user_list_receipts"
+  tags:
+    - User
+  summary: List receipts
+  description: List the user's receipts
+  security:
+    - BearerAuth: [ ]
+  requestBody:
+    description: >
+      Filters.
+      Every field is optional.
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/_index.yaml#/ListReceipts'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/_index.yaml#/UserReceiptList'
+    '400':
+      description: BAD REQUEST
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR
