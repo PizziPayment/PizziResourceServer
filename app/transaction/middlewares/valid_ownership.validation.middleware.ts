@@ -6,7 +6,7 @@ export async function validTransactionOwnership(
   req: Request<{ id: number }, unknown, unknown>,
   res: Response<ApiResponseWrapper<unknown>>,
   next: NextFunction,
-): Promise<void> {
+): Promise<Response | void> {
   const shop_id = (res.locals.credential as CredentialModel).shop_id
   const maybe_transaction = await TransactionsService.getTransactionById(req.params.id)
 
@@ -14,12 +14,12 @@ export async function validTransactionOwnership(
     const transaction = maybe_transaction.value
 
     if (transaction.state === 'validated') {
-      res.status(403).send(new ApiFailure(req.url, `A validated transaction can't be modified`))
+      return res.status(403).send(new ApiFailure(req.url, `A validated transaction can't be modified`))
     } else {
       res.locals.transaction = transaction
-      next()
+      return next()
     }
   } else {
-    res.status(404).send(new ApiFailure(req.url, `Transaction ${req.params.id} doesn't exist`))
+    return res.status(404).send(new ApiFailure(req.url, `Transaction ${req.params.id} doesn't exist`))
   }
 }
