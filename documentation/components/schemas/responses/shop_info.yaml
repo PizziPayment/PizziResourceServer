@@ -18,6 +18,9 @@ properties:
   zipcode:
     type: number
     description: Shop's location zipcode.
+  siret:
+    type: number
+    description: Shop's siret.
   description:
     type: string
     description: Shop's description.
@@ -41,6 +44,7 @@ example:
     "phone": '0652076382',
     "address": '13 rue de la ville Ville',
     "zipcode": 25619,
+    "siret": 32974655600060,
     "description": "New description",
     "website": "https://example.com",
     "instagram": "https://instagram.com",

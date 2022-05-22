@@ -34,7 +34,7 @@ export default class FieldValidationService {
         }
       }
 
-      sum = 10 - sum % 10
+      sum = 10 - (sum % 10)
 
       return sum == validator
     }
