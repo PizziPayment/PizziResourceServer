@@ -17,7 +17,7 @@ export default function validCreateRequest(
       errors.push('invalid "receipt_id"')
     }
     if (!req.body.payment_method || !isValidPaymentMethod(req.body.payment_method)) {
-      errors.push('invalid "receipt_id"')
+      errors.push('invalid "payment_method"')
     }
     if (errors.length === 0) {
       return next()
