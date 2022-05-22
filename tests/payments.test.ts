@@ -3,7 +3,18 @@ import { config } from '../app/common/config'
 import { user, shops } from './common/models'
 import * as request from 'supertest'
 import { TransactionCreationModel } from '../app/transaction/models/create.request.model'
-import { ClientsService, CredentialsService, EncryptionService, ReceiptsService, rewriteTables, ShopsServices, TokensService, TransactionModel, TransactionsService, UsersServices } from 'pizzi-db'
+import {
+  ClientsService,
+  CredentialsService,
+  EncryptionService,
+  ReceiptsService,
+  rewriteTables,
+  ShopsServices,
+  TokensService,
+  TransactionModel,
+  TransactionsService,
+  UsersServices,
+} from 'pizzi-db'
 
 const client = { client_id: 'toto', client_secret: 'tutu' }
 const shop = shops[0]
@@ -89,23 +100,23 @@ function createBearerHeader(token: string): Object {
   return { Authorization: `Bearer ${token}` }
 }
 
-describe("Payment endpoints", () => {
+describe('Payment endpoints', () => {
   const endpoint = '/payments'
 
   it('basic test', async () => {
-      const user_infos = await setupUser()
-      const shop_infos = await setupShop()
-      const receipt_id = await setupReceipts()
-      const transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
+    const user_infos = await setupUser()
+    const shop_infos = await setupShop()
+    const receipt_id = await setupReceipts()
+    const transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
 
-      expect(transaction.state).toBe("pending")
-      const res = await request(App).post(`${endpoint}`).set(createBearerHeader(shop_infos.token)).send({
-        transaction_id: transaction.id
-      })
+    expect(transaction.state).toBe('pending')
+    const res = await request(App).post(`${endpoint}`).set(createBearerHeader(shop_infos.token)).send({
+      transaction_id: transaction.id,
+    })
 
-      expect(res.statusCode).toBe(204)
-      const updated_transaction = await TransactionsService.getTransactionById(transaction.id)
-      expect(updated_transaction.isOk()).toBeTruthy()
-      expect(updated_transaction._unsafeUnwrap().state).toBe("validated")
+    expect(res.statusCode).toBe(204)
+    const updated_transaction = await TransactionsService.getTransactionById(transaction.id)
+    expect(updated_transaction.isOk()).toBeTruthy()
+    expect(updated_transaction._unsafeUnwrap().state).toBe('validated')
   })
 })
