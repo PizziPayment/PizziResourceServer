@@ -13,12 +13,13 @@ import {
   TransactionsService,
   UsersServices,
 } from 'pizzi-db'
-import { user, shops } from './common/models'
+import { users, shops } from './common/models'
 import * as request from 'supertest'
 import { TransactionCreationModel } from '../app/transaction/models/create.request.model'
 
 const client = { client_id: 'toto', client_secret: 'tutu' }
 const shop = shops[0]
+const user = users[0]
 
 // @ts-ignore
 let sequelize: Sequelize = undefined
