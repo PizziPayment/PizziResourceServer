@@ -239,6 +239,7 @@ describe('Transactions endpoint', () => {
       expect(updated_transaction.isOk()).toBeTruthy()
       expect(updated_transaction._unsafeUnwrap().payment_method).toEqual(transaction.payment_method)
     })
+
     it('basic test with validated transaction', async () => {
       const new_payment_method: PaymentMethod = "card"
       const user_infos = await setupUser()
