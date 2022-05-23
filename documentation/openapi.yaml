@@ -43,6 +43,8 @@ paths:
     $ref: './components/endpoints/resource/user/receipts.yaml'
   /users/me/receipts/{receipt_id}:
     $ref: './components/endpoints/resource/user/receipt.yaml'
+  /users/me/transactions:
+    $ref: './components/endpoints/resource/user/take_transaction.yaml'
 
   /shops:
     $ref: './components/endpoints/resource/shop.yaml'
@@ -58,6 +60,8 @@ paths:
     $ref: './components/endpoints/resource/shop/receipts.yaml'
   /shops/me/receipts/{receipt_id}:
     $ref: './components/endpoints/resource/shop/receipt.yaml'
+  /shops/me/transactions:
+    $ref: './components/endpoints/resource/shop/transactions.yaml'
 
   /transactions:
     $ref: './components/endpoints/transactions/transactions.yaml'

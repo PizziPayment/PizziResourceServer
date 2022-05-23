@@ -26,6 +26,11 @@ ChangeUserEmail:
   $ref: "./change_user_email.yaml"
 ListReceipts:
   $ref: "./list_receipts.yaml"
+TakeTransaction:
+  $ref: "./take_transaction.yaml"
 
 InitTransaction:
   $ref: "./init_transaction.yaml"
+
+ShopCreateTransaction:
+  $ref: "./create_transaction.yaml"

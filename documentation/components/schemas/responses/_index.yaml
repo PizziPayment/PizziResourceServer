@@ -25,3 +25,6 @@ ShopReceiptList:
   $ref: "./shop_receipt_list.yaml"
 ShopReceiptDetails:
   $ref: "./shop_receipt_details.yaml"
+
+ShopCreateTransaction:
+  $ref: "./create_transaction.yaml"

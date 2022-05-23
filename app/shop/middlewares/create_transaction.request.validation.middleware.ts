@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { ShopItemsService } from 'pizzi-db'
 import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response.model'
 import FieldValidationService from '../../common/services/field_validation/field.validation.service'
 import CreateTransactionRequestModel from '../models/create_transaction.request.model'
@@ -23,7 +22,8 @@ export default function validCreateTransactionRequest(
     }
     if (Array.isArray(req.body.items)) {
       req.body.items.map((item) => {
-        if (typeof item.id !== 'number') { //TODO: Validate the ids
+        //TODO: Validate the ids
+        if (typeof item.shop_item_id !== 'number') {
           errors.push('invalid "items[].id"')
         }
         if (typeof item.discount !== 'number') {

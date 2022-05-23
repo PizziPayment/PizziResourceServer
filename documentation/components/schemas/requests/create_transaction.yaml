@@ -1,0 +1,51 @@
+type: object
+properties:
+  tva_percentage:
+    type: number
+    description: The sales tax percentage
+  total_price:
+    type: number
+    description: The transaction's total price (no tax)
+  payment_method:
+    $ref: '../../types.yaml#/payment_method'
+  items:
+    type: array
+    description: The transaction's shop items
+    items:
+      type: object
+      properties:
+        shop_item_id:
+          type: number
+          description: The shop item's id
+        discount:
+          type: number
+          description: The discount applied to the shop item's price
+        eco_tax:
+          type: number
+          description: The eco tax applied to the shop item's price
+        quantity:
+          type: number
+          description: The amount of this item in the transaction
+        warranty:
+          type: string
+          description: The item's warranty
+example:
+  {
+    "tva_percentage": 20,
+    "total_price": 27.89,
+    "payment_method": 'card',
+    "items": [{
+        "shop_item_id": 0,
+        "discount": 0,
+        "eco_tax": 0,
+        "quantity": 1,
+        "warranty": "non"
+      }, {
+        "shop_item_id": 1,
+        "discount": 0,
+        "eco_tax": 0,
+        "quantity": 1,
+        "warranty": "non"
+      }
+    ]
+  }

@@ -3,7 +3,7 @@ import { TransactionCreationModel } from '../models/create.request.model'
 import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response.model'
 import { PaymentMethod } from 'pizzi-db'
 
-export const isValidPaymentMethod = (method: string | PaymentMethod) => ["card", "cash", "unassigned"].includes(method)
+export const isValidPaymentMethod = (method: string | PaymentMethod) => ['card', 'cash', 'unassigned'].includes(method)
 
 export default function validCreateRequest(
   req: Request<unknown, unknown, TransactionCreationModel>,

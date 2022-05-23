@@ -1,6 +1,15 @@
 import { Request, Response } from 'express'
 import { ApiFailure } from '../../common/models/api.response.model'
-import { CredentialsService, EncryptionService, ShopsServices, CredentialModel, TransactionsService, ReceiptsService, ReceiptItemsService } from 'pizzi-db'
+import {
+  CredentialsService,
+  EncryptionService,
+  ShopsServices,
+  CredentialModel,
+  TransactionsService,
+  ReceiptsService,
+  ReceiptItemsService,
+  TransactionTokensService,
+} from 'pizzi-db'
 import InfosResponseModel from '../models/infos.response.model'
 import { ReceiptDetailsRequestModel, ReceiptsListRequestModel } from '../../common/models/receipts.request.model'
 import { ReceiptListModel } from '../models/receipt_list.model'
@@ -9,6 +18,7 @@ import RegisterRequestModel from '../models/register.request.model'
 import { intoShopUpdateModel, PatchRequestModel } from '../models/patch.request.model'
 import CreateTransactionRequestModel from '../models/create_transaction.request.model'
 import { combine } from 'neverthrow'
+import CreateTransactionResponseModel from '../models/create_transaction.response.model'
 
 export async function shopInfo(req: Request, res: Response): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -110,18 +120,22 @@ export async function receipt(
 
 export async function createTransaction(
   req: Request<void, void, CreateTransactionRequestModel>,
-  res: Response<CreateTransactionRequestModel | ApiFailure, { credential: CredentialModel }>,
+  res: Response<CreateTransactionResponseModel | ApiFailure, { credential: CredentialModel }>,
 ): Promise<void> {
   const body = req.body
 
   await ReceiptsService.createReceipt(body.tva_percentage, body.total_price)
     .andThen((receipt) =>
-      combine(
-        body.items.map((item) => ReceiptItemsService.createReceiptItem(receipt.id, item.id, item.discount, item.eco_tax, item.quantity, item.warranty)),
-      ).andThen((items) => TransactionsService.createPendingTransaction(receipt.id, null, res.locals.credential.id, body.payment_method)),
+      ReceiptItemsService.createReceiptItems(receipt.id, body.items)
+        .andThen(() => TransactionsService.createPendingTransaction(receipt.id, null, res.locals.credential.shop_id, body.payment_method))
+        .andThen((transaction) =>
+          TransactionTokensService.createTemporaryToken(transaction.id).map((token) => {
+            return { id: receipt.id, token: token.token }
+          }),
+        ),
     )
     .match(
-      (transaction) => res.status(201).send(),
+      (body) => res.status(201).send(body),
       () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
     )
 }

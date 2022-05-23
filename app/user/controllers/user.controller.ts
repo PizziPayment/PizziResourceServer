@@ -18,6 +18,7 @@ import { ReceiptsListRequestModel, ReceiptDetailsRequestModel } from '../../comm
 import { ReceiptListModel } from '../models/receipt_list.model'
 import { DetailedReceiptModel } from '../models/detailed_receipt'
 import { siretLength } from '../../common/constants'
+import TakeTransactionRequestModel from '../models/take_transaction.request.model'
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -131,6 +132,18 @@ export async function receipt(
     })
     .match(
       (receipt) => res.status(200).send(receipt),
+      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+    )
+}
+
+export async function takeTransaction(
+  req: Request<void, void, TakeTransactionRequestModel>,
+  res: Response<DetailedReceiptModel | ApiFailure, { credential: CredentialModel }>,
+): Promise<void> {
+  TransactionsService.updateTransactionUserIdFromId(req.body.id, res.locals.credential.user_id)
+    .andThen(() => TransactionsService.updateTransactionStateFromId(req.body.id, 'validated'))
+    .match(
+      () => res.status(204).send(),
       () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
     )
 }

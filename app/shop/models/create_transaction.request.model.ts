@@ -5,7 +5,7 @@ export default class CreateTransactionRequestModel {
   total_price: string
   payment_method: PaymentMethod
   items: Array<{
-    id: number
+    shop_item_id: number
     discount: number
     eco_tax: number
     quantity: number
