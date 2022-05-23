@@ -1,7 +1,7 @@
 # Contributions
 
-The code of the project is stored in the `app` folder, the Open API v3 documentation in the `documentation`
-folder and the tests in the `tests` folder.
+The code of the project is stored in the `app` folder. As for the documentation of API's routes, it's stored in
+the `documentation` folder and is made thanks to the [OpenAPI specification](https://spec.openapis.org/oas/v3.1.0).
 
 ## Application
 
