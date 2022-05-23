@@ -21,24 +21,24 @@ export default function validCreateTransactionRequest(
       errors.push('invalid "payment_method"')
     }
     if (Array.isArray(req.body.items)) {
-      req.body.items.map((item) => {
+      for (const [index, item] of req.body.items.entries()) {
         //TODO: Validate the ids
         if (typeof item.shop_item_id !== 'number') {
-          errors.push('invalid "items[].id"')
+          errors.push(`invalid "items[${index}].id"`)
         }
         if (typeof item.discount !== 'number') {
-          errors.push('invalid "items[].discount"')
+          errors.push(`invalid "items[${index}].discount"`)
         }
         if (typeof item.eco_tax !== 'number') {
-          errors.push('invalid "items[].eco_tax"')
+          errors.push(`invalid "items[${index}].eco_tax"`)
         }
         if (typeof item.quantity !== 'number') {
-          errors.push('invalid "items[].quantity"')
+          errors.push(`invalid "items[${index}].quantity"`)
         }
         if (typeof item.warranty !== 'string') {
-          errors.push('invalid "items[].warranty"')
+          errors.push(`invalid "items[${index}].warranty"`)
         }
-      })
+      }
     } else {
       errors.push('invalid "items"')
     }

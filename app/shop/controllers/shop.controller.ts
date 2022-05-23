@@ -17,7 +17,6 @@ import { DetailedReceiptModel } from '../models/detailed_receipt.model'
 import RegisterRequestModel from '../models/register.request.model'
 import { intoShopUpdateModel, PatchRequestModel } from '../models/patch.request.model'
 import CreateTransactionRequestModel from '../models/create_transaction.request.model'
-import { combine } from 'neverthrow'
 import CreateTransactionResponseModel from '../models/create_transaction.response.model'
 
 export async function shopInfo(req: Request, res: Response): Promise<void> {
