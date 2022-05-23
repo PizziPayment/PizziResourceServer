@@ -1,4 +1,5 @@
 import { siretLength } from '../../constants'
+import { PaymentMethod } from 'pizzi-db'
 
 export default class FieldValidationService {
   static isValidEmail(email: string): boolean {
@@ -41,5 +42,9 @@ export default class FieldValidationService {
     }
 
     return rule.test(siret) && checksum(siret)
+  }
+
+  static isValidPaymentMethod(method: string | PaymentMethod): boolean {
+    return ['card', 'cash', 'unassigned'].includes(method)
   }
 }

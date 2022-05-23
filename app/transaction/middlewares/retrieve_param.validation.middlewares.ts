@@ -13,7 +13,7 @@ export async function validTransactionRetrievalQuery(
 
   if (req.query) {
     if (!queryable_states.includes(req.query.state)) {
-        errors.push('invalid value for "state" query parameter')
+      errors.push('invalid value for "state" query parameter')
     }
     if (errors.length === 0) {
       return next()

@@ -16,6 +16,7 @@ properties:
       - card
 example:
   {
+    "id": 124,
     "receipt_id": 1203,
     "user_id": null,
     "shop_id": 12323,

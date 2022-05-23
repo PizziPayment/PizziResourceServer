@@ -1,0 +1,27 @@
+post:
+  operationId: "shop_create_transaction"
+  tags:
+    - Shop
+  summary: Create transaction
+  description: Create a transaction.
+  security:
+    - BearerAuth: [ ]
+  requestBody:
+    description: The transaction's contents.
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/requests/_index.yaml#/ShopCreateTransaction'
+  responses:
+    '201':
+      description: CREATED
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/responses/_index.yaml#/ShopCreateTransaction'
+    '400':
+      description: BAD REQUEST
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR

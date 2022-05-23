@@ -181,15 +181,15 @@ describe('Transactions endpoint', () => {
 
   describe("Update transaction's payment method", () => {
     it('basic test', async () => {
-      const new_payment_method: PaymentMethod = "card"
+      const new_payment_method: PaymentMethod = 'card'
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
       const receipt_id = await setupReceipts()
       const transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
 
-      expect(transaction.payment_method).toBe("unassigned")
+      expect(transaction.payment_method).toBe('unassigned')
       const res = await request(App).patch(`${endpoint}/${transaction.id}/payment_method`).set(createBearerHeader(shop_infos.token)).send({
-        payment_method: new_payment_method
+        payment_method: new_payment_method,
       })
 
       expect(res.statusCode).toBe(204)
@@ -200,15 +200,15 @@ describe('Transactions endpoint', () => {
     })
 
     it('basic test with invalid "payment_method"', async () => {
-      const new_payment_method = "invalid_payment_method"
+      const new_payment_method = 'invalid_payment_method'
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
       const receipt_id = await setupReceipts()
       const transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
 
-      expect(transaction.payment_method).toBe("unassigned")
+      expect(transaction.payment_method).toBe('unassigned')
       const res = await request(App).patch(`${endpoint}/${transaction.id}/payment_method`).set(createBearerHeader(shop_infos.token)).send({
-        payment_method: new_payment_method
+        payment_method: new_payment_method,
       })
 
       expect(res.statusCode).toBe(400)
@@ -219,18 +219,18 @@ describe('Transactions endpoint', () => {
     })
 
     it('basic test with validated transaction', async () => {
-      const new_payment_method: PaymentMethod = "card"
+      const new_payment_method: PaymentMethod = 'card'
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
       const receipt_id = await setupReceipts()
       const transaction = await setupTransaction(receipt_id, user_infos.id, shop_infos.id)
 
-      ;(await TransactionsService.updateTransactionStateFromId(transaction.id, "validated"))._unsafeUnwrap()
+      ;(await TransactionsService.updateTransactionStateFromId(transaction.id, 'validated'))._unsafeUnwrap()
 
-      expect(transaction.payment_method).toBe("unassigned")
+      expect(transaction.payment_method).toBe('unassigned')
 
       const res = await request(App).patch(`${endpoint}/${transaction.id}/payment_method`).set(createBearerHeader(shop_infos.token)).send({
-        payment_method: new_payment_method
+        payment_method: new_payment_method,
       })
 
       expect(res.statusCode).toBe(403)
@@ -248,9 +248,9 @@ describe('Transactions endpoint', () => {
       const receipt_id = await setupReceipts()
       const transaction = await setupTransaction(receipt_id, null, shop_infos.id)
 
-      expect(transaction.payment_method).toBe("unassigned")
+      expect(transaction.payment_method).toBe('unassigned')
       const res = await request(App).patch(`${endpoint}/${transaction.id}/user`).set(createBearerHeader(shop_infos.token)).send({
-        user_id: user_infos.id
+        user_id: user_infos.id,
       })
 
       expect(res.statusCode).toBe(204)
@@ -266,11 +266,11 @@ describe('Transactions endpoint', () => {
       const receipt_id = await setupReceipts()
       const transaction = await setupTransaction(receipt_id, null, shop_infos.id)
 
-      ;(await TransactionsService.updateTransactionStateFromId(transaction.id, "validated"))._unsafeUnwrap()
+      ;(await TransactionsService.updateTransactionStateFromId(transaction.id, 'validated'))._unsafeUnwrap()
 
-      expect(transaction.payment_method).toBe("unassigned")
+      expect(transaction.payment_method).toBe('unassigned')
       const res = await request(App).patch(`${endpoint}/${transaction.id}/user`).set(createBearerHeader(shop_infos.token)).send({
-        user_id: user_infos.id
+        user_id: user_infos.id,
       })
 
       expect(res.statusCode).toBe(403)
@@ -286,9 +286,9 @@ describe('Transactions endpoint', () => {
       const receipt_id = await setupReceipts()
       const transaction = await setupTransaction(receipt_id, null, shop_infos.id)
 
-      expect(transaction.payment_method).toBe("unassigned")
+      expect(transaction.payment_method).toBe('unassigned')
       const res = await request(App).patch(`${endpoint}/${transaction.id}/user`).set(createBearerHeader(shop_infos.token)).send({
-        user_id: Number.MAX_VALUE
+        user_id: Number.MAX_VALUE,
       })
 
       expect(res.statusCode).toBe(400)

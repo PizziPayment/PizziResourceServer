@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response.model'
 import { TransactionPaymentMethodUpdateModel, TransactionUserUpdateModel } from '../models/update.request.model'
 import { UsersServices } from 'pizzi-db'
-import { isValidPaymentMethod } from './create.request.validation.middleware'
+import FieldValidationService from '../../common/services/field_validation/field.validation.service'
 
 async function isValidUserId(user_id: number): Promise<boolean> {
   return (await UsersServices.getUserFromId(user_id)).isOk()
@@ -38,7 +38,7 @@ export function validUpdateRequestForPaymentMethod(
   const errors: Array<string> = []
 
   if (req.body) {
-    if (!req.body.payment_method || !isValidPaymentMethod(req.body.payment_method)) {
+    if (!req.body.payment_method || !FieldValidationService.isValidPaymentMethod(req.body.payment_method)) {
       errors.push('invalid "payment_method"')
     }
 

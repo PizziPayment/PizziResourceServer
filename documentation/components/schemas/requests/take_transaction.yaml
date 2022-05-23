@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: number
+  token:
+    type: string
+example:
+  {
+    "id": 1324,
+    "token": "Cesttoujoursuntoken"
+  }

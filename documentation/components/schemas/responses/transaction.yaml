@@ -13,11 +13,7 @@ properties:
     type: string
     description: A newly created transaction is always "pending"
   payment_method:
-    type: string
-    enum:
-      - unassigned
-      - cash
-      - card
+    $ref: '../../types.yaml#/payment_method'
   created_at:
     type: string
     format: date

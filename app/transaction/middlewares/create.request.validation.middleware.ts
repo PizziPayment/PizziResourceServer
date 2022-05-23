@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { TransactionCreationModel } from '../models/create.request.model'
 import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response.model'
-import { PaymentMethod } from 'pizzi-db'
-
-export const isValidPaymentMethod = (method: string | PaymentMethod) => ["card", "cash", "unassigned"].includes(method)
+import FieldValidationService from '../../common/services/field_validation/field.validation.service'
 
 export default function validCreateRequest(
   req: Request<unknown, unknown, TransactionCreationModel>,
@@ -16,7 +14,7 @@ export default function validCreateRequest(
     if (!req.body.receipt_id) {
       errors.push('invalid "receipt_id"')
     }
-    if (!req.body.payment_method || !isValidPaymentMethod(req.body.payment_method)) {
+    if (!req.body.payment_method || !FieldValidationService.isValidPaymentMethod(req.body.payment_method)) {
       errors.push('invalid "payment_method"')
     }
     if (errors.length === 0) {

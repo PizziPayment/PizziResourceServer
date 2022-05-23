@@ -11,3 +11,11 @@ filter:
     - price_ascending
     - price_descending
   description: The order in which the elements should be returned.
+
+payment_method:
+  type: string
+  enum:
+    - unassigned
+    - cash
+    - card
+  description: The payment method
