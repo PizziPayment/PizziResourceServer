@@ -1,0 +1,40 @@
+patch:
+  operationId: "patch_transaction_payment_method"
+  tags:
+    - Transactions
+  summary: Update payment method
+  description: Update payment method registered for the transaction.
+  security:
+    - BearerAuth: [ ]
+  parameter:
+    - in: path
+      name: id
+      schema:
+        type: number
+      description: Transaction's id
+  requestBody:
+    description: Payment method
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            payment_method:
+              type: string
+              enum:
+                - unassigned
+                - card
+                - cash
+          example:
+            {
+              "payment_method": "card"
+            }
+  responses:
+    '204':
+      description: NO CONTENT
+    '400':
+      description: BAD REQUEST
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR

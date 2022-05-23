@@ -59,6 +59,16 @@ paths:
   /shops/me/receipts/{receipt_id}:
     $ref: './components/endpoints/resource/shop/receipt.yaml'
 
+  /transactions:
+    $ref: './components/endpoints/transactions/transactions.yaml'
+  /transactions/{id}/user:
+    $ref: './components/endpoints/transactions/transaction_user.yaml'
+  /transactions/{id}/payment_method:
+    $ref: './components/endpoints/transactions/transaction_payment_method.yaml'
+  /payments:
+    $ref: './components/endpoints/payments/payments.yaml'
+
+
 components:
   securitySchemes:
     $ref: './components/security/_index.yaml'
