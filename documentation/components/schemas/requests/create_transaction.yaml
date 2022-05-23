@@ -5,7 +5,7 @@ properties:
     description: The sales tax percentage
   total_price:
     type: number
-    description: The transaction's total price (no tax)
+    description: The transaction's total price (without tax)
   payment_method:
     $ref: '../../types.yaml#/payment_method'
   items:
