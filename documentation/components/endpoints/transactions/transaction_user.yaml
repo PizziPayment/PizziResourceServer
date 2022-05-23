@@ -6,8 +6,9 @@ patch:
   description: Link a transaction to a user.
   security:
     - BearerAuth: [ ]
-  parameter:
+  parameters:
     - in: path
+      required: true
       name: id
       schema:
         type: number
