@@ -220,6 +220,7 @@ describe('Transactions endpoint', () => {
       expect(updated_transaction.isOk()).toBeTruthy()
       expect(updated_transaction._unsafeUnwrap().payment_method).toEqual(new_payment_method)
     })
+
     it('basic test with invalid "payment_method"', async () => {
       const new_payment_method = "invalid_payment_method"
       const user_infos = await setupUser()
