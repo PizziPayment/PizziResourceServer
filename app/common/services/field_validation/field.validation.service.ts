@@ -44,7 +44,7 @@ export default class FieldValidationService {
     return rule.test(siret) && checksum(siret)
   }
 
-  static isValidPaymentMethod(method: string): boolean {
-    return method === 'card' || method === 'cash' || method === 'unassigned'
+  static isValidPaymentMethod(method: string | PaymentMethod): boolean {
+    return ['card', 'cash', 'unassigned'].includes(method)
   }
 }
