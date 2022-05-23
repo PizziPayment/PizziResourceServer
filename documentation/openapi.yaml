@@ -39,7 +39,7 @@ paths:
     $ref: './components/endpoints/resource/user/email.yaml'
   /users/me/password:
     $ref: './components/endpoints/resource/user/password.yaml'
-  /users/me/receipt:
+  /users/me/receipts:
     $ref: './components/endpoints/resource/user/receipts.yaml'
   /users/me/receipts/{receipt_id}:
     $ref: './components/endpoints/resource/user/receipt.yaml'
