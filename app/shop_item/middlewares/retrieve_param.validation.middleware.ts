@@ -6,7 +6,7 @@ export async function validShopItemsRetrieval(
   req: Request<unknown, unknown, unknown, Filter>,
   res: Response<ApiResponseWrapper<unknown>>,
   next: NextFunction,
-): Promise<void> {
+): Promise<Response | void> {
   const errors: Array<string> = []
 
   if (req.query) {
@@ -47,9 +47,9 @@ export async function validShopItemsRetrieval(
     if (errors.length === 0) {
       return next()
     } else {
-      res.status(400).send(new ApiFailure(req.url, errors.join(',')))
+      return res.status(400).send(new ApiFailure(req.url, errors.join(',')))
     }
   } else {
-    res.status(400).send(new ApiFailure(req.url, 'No query'))
+    return res.status(400).send(new ApiFailure(req.url, 'No query'))
   }
 }

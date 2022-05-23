@@ -7,7 +7,7 @@ export async function validShopItemOwnership(
   req: Request<ShopItemUpdateParamModel, unknown, ShopItemUpdateRequestModel>,
   res: Response<ApiResponseWrapper<unknown>>,
   next: NextFunction,
-): Promise<void> {
+): Promise<Response | void> {
   const shop_id = (res.locals.credential as CredentialModel).shop_id
   const maybe_shop_item = await ShopItemsService.retrieveShopItemFromId(req.params.id)
 
@@ -15,12 +15,12 @@ export async function validShopItemOwnership(
     const shop_item = maybe_shop_item.value
 
     if (shop_item.enabled == false) {
-      res.status(403).send(new ApiFailure(req.url, `Shop ${shop_id} can't modify shop item ${shop_item.name} (${shop_item.id})`))
+      return res.status(403).send(new ApiFailure(req.url, `Shop ${shop_id} can't modify shop item ${shop_item.name} (${shop_item.id})`))
     } else {
       res.locals.shop_item = shop_item
       return next()
     }
   } else {
-    res.status(404).send(new ApiFailure(req.url, `Shop item ${req.params.id} doesn't exist`))
+    return res.status(404).send(new ApiFailure(req.url, `Shop item ${req.params.id} doesn't exist`))
   }
 }

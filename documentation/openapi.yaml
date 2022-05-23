@@ -26,6 +26,12 @@ tags:
   - name: User
     description: Everything about user.
 
+  - name: Transactions
+    description: >
+      Everything about transactions. We call transaction the virtual object describing
+      a contract between a user and a shop.
+
+
 paths:
   /users:
     $ref: './components/endpoints/resource/user.yaml'
@@ -52,6 +58,16 @@ paths:
     $ref: './components/endpoints/resource/shop/receipts.yaml'
   /shops/me/receipts/{receipt_id}:
     $ref: './components/endpoints/resource/shop/receipt.yaml'
+
+  /transactions:
+    $ref: './components/endpoints/transactions/transactions.yaml'
+  /transactions/{id}/user:
+    $ref: './components/endpoints/transactions/transaction_user.yaml'
+  /transactions/{id}/payment_method:
+    $ref: './components/endpoints/transactions/transaction_payment_method.yaml'
+  /payments:
+    $ref: './components/endpoints/payments/payments.yaml'
+
 
 components:
   securitySchemes:

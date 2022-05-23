@@ -1,0 +1,36 @@
+patch:
+  operationId: "patch_transaction_user"
+  tags:
+    - Transactions
+  summary: Update user
+  description: Link a transaction to a user.
+  security:
+    - BearerAuth: [ ]
+  parameter:
+    - in: path
+      name: id
+      schema:
+        type: number
+      description: Transaction's id
+  requestBody:
+    description: User's id
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            user_id:
+              type: number
+          example:
+            {
+              "user_id": 32
+            }
+  responses:
+    '204':
+      description: NO CONTENT
+    '400':
+      description: BAD REQUEST
+    '401':
+      description: UNAUTHORIZED
+    '500':
+      description: INTERNAL SERVER ERROR
