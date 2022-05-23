@@ -7,6 +7,9 @@ ShopItems:
 Token:
   $ref: "./token.yaml"
 
+Transaction:
+  $ref: "./transaction.yaml"
+
 UsersInfo:
   $ref: "./users_info.yaml"
 

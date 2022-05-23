@@ -6,7 +6,7 @@ import validDeleteRequest from './middlewares/delete.request.validation.middlewa
 import validUniqueEmail from '../common/middlewares/unique_email.validation.middleware'
 import validToken from '../common/middlewares/token.validation.middleware'
 import validPassword, { validChangePassword } from '../common/middlewares/password.validation.middleware'
-import validUserTokenAffiliation from './middlewares/userTokenAffiliation.validation.middleware'
+import validUserTokenAffiliation from '../common/middlewares/user_token_affiliation.validation.middleware'
 import changePassword from '../common/controllers/password.controller'
 import validChangePasswordRequest from '../common/middlewares/password.request.validation.middleware'
 import { validChangeEmailRequest } from '../common/middlewares/email.request.validation.middleware'
