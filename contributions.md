@@ -59,7 +59,7 @@ The `controllers` store the business code of the processes, no checks are made i
 checked before.
 
 The `commons` folder is like a normal domain folder except it contains resources that are used across different domains.
-For example, the middlewares that identify a user with its token is a common `middleware` because user authentication is
+For example, the middleware that identifies a user with its token is a common `middleware` because user authentication is
 used in many domains.
 
 ### Tests
