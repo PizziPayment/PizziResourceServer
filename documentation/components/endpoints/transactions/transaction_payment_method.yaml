@@ -6,8 +6,9 @@ patch:
   description: Update payment method registered for the transaction.
   security:
     - BearerAuth: [ ]
-  parameter:
+  parameters:
     - in: path
+      required: true
       name: id
       schema:
         type: number
