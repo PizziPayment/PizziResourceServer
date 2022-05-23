@@ -140,7 +140,7 @@ export async function takeTransaction(
   req: Request<void, void, TakeTransactionRequestModel>,
   res: Response<DetailedReceiptModel | ApiFailure, { credential: CredentialModel }>,
 ): Promise<void> {
-  TransactionsService.updateTransactionUserIdFromId(req.body.id, res.locals.credential.user_id)
+await TransactionsService.updateTransactionUserIdFromId(req.body.id, res.locals.credential.user_id)
     .andThen(() => TransactionsService.updateTransactionStateFromId(req.body.id, 'validated'))
     .match(
       () => res.status(204).send(),
