@@ -7,17 +7,15 @@ import {
   PaymentMethod,
   ReceiptsService,
   rewriteTables,
-  ShopsServices,
-  TokensService,
   TransactionModel,
   TransactionsService,
   UsersServices,
 } from 'pizzi-db'
-import { users, shops } from './common/models'
+import { users, shops, client } from './common/models'
+import { createBearerHeader, createShop, getShopToken, getUserToken } from './common/services'
 import * as request from 'supertest'
 import { TransactionCreationModel } from '../app/transaction/models/create.request.model'
 
-const client = { client_id: 'toto', client_secret: 'tutu' }
 const shop = shops[0]
 const user = users[0]
 
@@ -49,35 +47,19 @@ async function setupUser(): Promise<{ token: string; id: number }> {
 
   const credentials_result = await CredentialsService.createCredentialWithId('user', user_handle.id, user.email, EncryptionService.encrypt(user.password))
   expect(credentials_result.isOk())
-  const credentials = credentials_result._unsafeUnwrap()
 
-  const client_handle_result = await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret)
-  expect(client_handle_result.isOk()).toBeTruthy()
-  const client_handle = client_handle_result._unsafeUnwrap()
-
-  const token_result = await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials)
-  expect(token_result.isOk()).toBeTruthy()
-  const token = token_result._unsafeUnwrap()
+  const token = await getUserToken(user.email, user.password)
 
   return { token: token.access_token, id: user_handle.id }
 }
 
 async function setupShop(): Promise<{ id: number; token: string }> {
-  const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, 21, shop.place.address, shop.place.city, shop.place.zipcode)
-  expect(shop_handle_result.isOk()).toBeTruthy()
-  const shop_handle = shop_handle_result._unsafeUnwrap()
-
-  const client_handle_result = await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret)
-  expect(client_handle_result.isOk()).toBeTruthy()
-  const client_handle = client_handle_result._unsafeUnwrap()
+  const shop_handle = await createShop(shop)
 
   const credentials_result = await CredentialsService.createCredentialWithId('shop', shop_handle.id, shop.email, EncryptionService.encrypt(shop.password))
   expect(credentials_result.isOk())
-  const credentials = credentials_result._unsafeUnwrap()
 
-  const token_result = await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials)
-  expect(token_result.isOk()).toBeTruthy()
-  const token = token_result._unsafeUnwrap()
+  const token = await getShopToken(shop.email, shop.password)
 
   return { id: shop_handle.id, token: token.access_token }
 }
@@ -96,10 +78,6 @@ async function setupTransaction(receipt_id: number, user_id: number, shop_id: nu
   const transaction = transaction_result._unsafeUnwrap()
 
   return transaction
-}
-
-function createBearerHeader(token: string): Object {
-  return { Authorization: `Bearer ${token}` }
 }
 
 describe('Transactions endpoint', () => {

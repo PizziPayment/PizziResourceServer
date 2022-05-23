@@ -9,8 +9,6 @@ import {
   EncryptionService,
   ReceiptsService,
   rewriteTables,
-  ShopsServices,
-  TokensService,
   TransactionModel,
   TransactionsService,
   UsersServices,
