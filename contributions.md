@@ -1,7 +1,7 @@
 # Contributions
 
 The code of the project is stored in the `app` folder. As for the documentation of API's routes, it's stored in
-the `documentation` folder and is made thanks to the [OpenAPI specification](https://spec.openapis.org/oas/v3.1.0).
+the `documentation` folder and is made using the [OpenAPI specification](https://spec.openapis.org/oas/v3.1.0).
 
 ## Application
 
@@ -19,6 +19,8 @@ The routers are also loaded here.
 ```ts
 UserRouter(app)
 ```
+
+`app` is the actual object that holds all the configuration and business of the API.
 
 ### Architecture
 
@@ -41,7 +43,7 @@ domain_name
 
 The `routes.config.ts` is where the router is stored.
 
-Here's how is defined a router.
+Here's a router how is defined.
 
 ```ts
 export default function Router(app: Application): void {
@@ -66,5 +68,4 @@ used in many domains.
 
 Tests are stored in the `tests` folder, it works basically the same as a domain folder except every file is a test suite
 for a specific domain and `commons` is a folder where utility functions are stored.
-
 
