@@ -4,7 +4,7 @@ properties:
     type: number
     description: The sales tax percentage
   total_price:
-    type: number
+    type: string
     description: The transaction's total price (without tax)
   payment_method:
     $ref: '../../types.yaml#/payment_method'
@@ -32,7 +32,7 @@ properties:
 example:
   {
     "tva_percentage": 20,
-    "total_price": 27.89,
+    "total_price": "27.89",
     "payment_method": 'card',
     "items": [{
         "shop_item_id": 0,
