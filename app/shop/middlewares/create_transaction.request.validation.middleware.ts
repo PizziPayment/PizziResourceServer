@@ -14,7 +14,7 @@ export default function validCreateTransactionRequest(
     if (typeof req.body.tva_percentage !== 'number' || req.body.tva_percentage < 0 || req.body.tva_percentage > 100) {
       errors.push('invalid "tva_percentage"')
     }
-    if (typeof req.body.total_price !== 'string' || isNaN(Number(req.body.total_price))) {
+    if (typeof req.body.total_price !== 'number') {
       errors.push('invalid "total_price"')
     }
     if (typeof req.body.payment_method !== 'string' || !FieldValidationService.isValidPaymentMethod(req.body.payment_method)) {
