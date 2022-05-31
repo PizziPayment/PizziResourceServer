@@ -206,14 +206,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ibm-cloud/openapi-ruleset@npm:0.2.1":
-  version: 0.2.1
-  resolution: "@ibm-cloud/openapi-ruleset@npm:0.2.1"
+"@ibm-cloud/openapi-ruleset@npm:0.27.0":
+  version: 0.27.0
+  resolution: "@ibm-cloud/openapi-ruleset@npm:0.27.0"
   dependencies:
-    "@stoplight/spectral-formats": ^1.0.1
-    "@stoplight/spectral-functions": ^1.4.0
-    "@stoplight/spectral-rulesets": ^1.3.0
-  checksum: 2b3420312154c1230c970be9ef61887f61865e5630d4c94ba63217f8e69bca80c8afbe542bfdea22b77cc50d0a5cea5eafd83f657fe9c499401b0e1d94eaba38
+    "@stoplight/spectral-formats": ^1.1.0
+    "@stoplight/spectral-functions": ^1.6.1
+    "@stoplight/spectral-rulesets": ^1.6.0
+    lodash: ^4.17.21
+  checksum: 1c378bd360c9b933f3bd368d073f38c7537489eb2e596ed1e08900b45f61e05af277da3f27fe4ec21c4e05d389a561f70888ef4795d039877d91079c8ee2ff4b
   languageName: node
   linkType: hard
 
@@ -294,9 +295,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redocly/openapi-core@npm:^1.0.0-beta.88":
-  version: 1.0.0-beta.94
-  resolution: "@redocly/openapi-core@npm:1.0.0-beta.94"
+"@redocly/openapi-core@npm:^1.0.0-beta.97":
+  version: 1.0.0-beta.100
+  resolution: "@redocly/openapi-core@npm:1.0.0-beta.100"
   dependencies:
     "@redocly/ajv": ^8.6.4
     "@types/node": ^14.11.8
@@ -304,22 +305,11 @@ __metadata:
     js-levenshtein: ^1.1.6
     js-yaml: ^4.1.0
     lodash.isequal: ^4.5.0
-    minimatch: ^3.0.4
+    minimatch: ^5.0.1
     node-fetch: ^2.6.1
     pluralize: ^8.0.0
     yaml-ast-parser: 0.0.43
-  checksum: 14b40f87185392c74f4290529c5432d9717a554f720783f903cb05328dfe13dbb93b22746b899c420db4d14a41fc67e0106f060a3bb543a64482fe5068ae9ba8
-  languageName: node
-  linkType: hard
-
-"@redocly/react-dropdown-aria@npm:^2.0.11":
-  version: 2.0.12
-  resolution: "@redocly/react-dropdown-aria@npm:2.0.12"
-  peerDependencies:
-    react: ^16.8.4 || ^17.0.0
-    react-dom: ^16.8.4 || ^17.0.0
-    styled-components: ^5.1.1
-  checksum: 89273a60065515461965fa45a664f6648653c79f037c36cac201eb57e6ceabeb824342d49a9de568eb3ea1552a8e0ce64342ca1607d0b5557f1d6bfde93e5b67
+  checksum: 5da8dd22dd1b875b853a48d44065df17669a69ecee622fbf998dd2310acf1de445403ee73c30f769138f1c3a84267a31cd83eb5076d2f6d37fa444ec01201059
   languageName: node
   linkType: hard
 
@@ -480,7 +470,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stoplight/spectral-cli@npm:^6.1.0":
+"@stoplight/spectral-cli@npm:^6.3.0":
   version: 6.4.0
   resolution: "@stoplight/spectral-cli@npm:6.4.0"
   dependencies:
@@ -513,7 +503,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stoplight/spectral-core@npm:>=1, @stoplight/spectral-core@npm:^1.5.1, @stoplight/spectral-core@npm:^1.6.1, @stoplight/spectral-core@npm:^1.7.0, @stoplight/spectral-core@npm:^1.8.0, @stoplight/spectral-core@npm:^1.8.1":
+"@stoplight/spectral-core@npm:>=1, @stoplight/spectral-core@npm:^1.11.0, @stoplight/spectral-core@npm:^1.5.1, @stoplight/spectral-core@npm:^1.7.0, @stoplight/spectral-core@npm:^1.8.0, @stoplight/spectral-core@npm:^1.8.1":
   version: 1.12.2
   resolution: "@stoplight/spectral-core@npm:1.12.2"
   dependencies:
@@ -542,7 +532,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stoplight/spectral-formats@npm:>=1, @stoplight/spectral-formats@npm:^1.0.0, @stoplight/spectral-formats@npm:^1.0.1, @stoplight/spectral-formats@npm:^1.2.0":
+"@stoplight/spectral-formats@npm:>=1, @stoplight/spectral-formats@npm:^1.0.0, @stoplight/spectral-formats@npm:^1.1.0, @stoplight/spectral-formats@npm:^1.2.0":
   version: 1.2.0
   resolution: "@stoplight/spectral-formats@npm:1.2.0"
   dependencies:
@@ -554,7 +544,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stoplight/spectral-functions@npm:>=1, @stoplight/spectral-functions@npm:^1.0.0, @stoplight/spectral-functions@npm:^1.4.0, @stoplight/spectral-functions@npm:^1.5.1":
+"@stoplight/spectral-functions@npm:>=1, @stoplight/spectral-functions@npm:^1.0.0, @stoplight/spectral-functions@npm:^1.5.1, @stoplight/spectral-functions@npm:^1.6.1":
   version: 1.6.1
   resolution: "@stoplight/spectral-functions@npm:1.6.1"
   dependencies:
@@ -645,7 +635,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stoplight/spectral-rulesets@npm:>=1, @stoplight/spectral-rulesets@npm:^1.3.0":
+"@stoplight/spectral-rulesets@npm:>=1, @stoplight/spectral-rulesets@npm:^1.6.0":
   version: 1.8.0
   resolution: "@stoplight/spectral-rulesets@npm:1.8.0"
   dependencies:
@@ -1159,6 +1149,15 @@ __metadata:
     balanced-match: ^1.0.0
     concat-map: 0.0.1
   checksum: faf34a7bb0c3fcf4b59c7808bc5d2a96a40988addf2e7e09dfbb67a2251800e0d14cd2bfc1aa79174f2f5095c54ff27f46fb1289fe2d77dac755b5eb3434cc07
+  languageName: node
+  linkType: hard
+
+"brace-expansion@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "brace-expansion@npm:2.0.1"
+  dependencies:
+    balanced-match: ^1.0.0
+  checksum: a61e7cd2e8a8505e9f0036b3b6108ba5e926b4b55089eeb5550cd04a471fe216c96d4fe7e4c7f995c728c554ae20ddfc4244cad10aef255e72b62930afd233d1
   languageName: node
   linkType: hard
 
@@ -2086,7 +2085,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-safe-stringify@npm:^2.0.7, fast-safe-stringify@npm:^2.1.1":
+"fast-safe-stringify@npm:^2.0.7":
   version: 2.1.1
   resolution: "fast-safe-stringify@npm:2.1.1"
   checksum: a851cbddc451745662f8f00ddb622d6766f9bd97642dabfd9a405fb0d646d69fc0b9a1243cbf67f5f18a39f40f6fa821737651ff1bceeba06c9992ca2dc5bd3d
@@ -2543,13 +2542,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ibm-openapi-validator@npm:^0.54.0":
-  version: 0.54.1
-  resolution: "ibm-openapi-validator@npm:0.54.1"
+"ibm-openapi-validator@npm:^0.78.0":
+  version: 0.78.0
+  resolution: "ibm-openapi-validator@npm:0.78.0"
   dependencies:
-    "@ibm-cloud/openapi-ruleset": 0.2.1
-    "@stoplight/spectral-cli": ^6.1.0
-    "@stoplight/spectral-core": ^1.6.1
+    "@ibm-cloud/openapi-ruleset": 0.27.0
+    "@stoplight/spectral-cli": ^6.3.0
+    "@stoplight/spectral-core": ^1.11.0
     "@stoplight/spectral-parsers": ^1.0.1
     chalk: ^4.1.1
     commander: ^2.20.3
@@ -2570,7 +2569,7 @@ __metadata:
     yaml-js: ^0.2.3
   bin:
     lint-openapi: src/cli-validator/index.js
-  checksum: 83eee4b7d43e23665fb8d38aa161eca9df566755b13cd4251382b2faab8c619b810f31fa80572424e05b9526cfaa717e6b17c6b1f2fcc3944fa155de8f7fe8a5
+  checksum: 2d8452ad83dcf29037ef972f8d2d69dcfc23c2cdfd3bd9043f7b5bc6e3eb7c42379cf068966434ec17375908e6eec2571c348b18f5242b1f14d9384ada44b716
   languageName: node
   linkType: hard
 
@@ -3164,12 +3163,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^4.0.10":
-  version: 4.0.14
-  resolution: "marked@npm:4.0.14"
+"marked@npm:^4.0.15":
+  version: 4.0.16
+  resolution: "marked@npm:4.0.16"
   bin:
     marked: bin/marked.js
-  checksum: 778bc2fc94c51ae4fbafe5a08bc1f3917799c4dd39e9fccd972a97df4e5bc5aa78664b7143d12d4b4969608fb90c6a2de3f19811a2f9ccf6b7f207022f2842ba
+  checksum: c0ef780bf56c9bb49c15b66683e5648410c924c1d725f1489fc3c7dc3bd01194c50d720052bb0282ad7907f472dfdc8fa278acbc7903c5db3be4b83487e0d684
   languageName: node
   linkType: hard
 
@@ -3258,6 +3257,15 @@ __metadata:
   dependencies:
     brace-expansion: ^1.1.7
   checksum: c154e566406683e7bcb746e000b84d74465b3a832c45d59912b9b55cd50dee66e5c4b1e5566dba26154040e51672f9aa450a9aef0c97cfc7336b78b7afb9540a
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^5.0.1":
+  version: 5.1.0
+  resolution: "minimatch@npm:5.1.0"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: 15ce53d31a06361e8b7a629501b5c75491bc2b59712d53e802b1987121d91b433d73fcc5be92974fde66b2b51d8fb28d75a9ae900d249feb792bb1ba2a4f0a90
   languageName: node
   linkType: hard
 
@@ -3643,13 +3651,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openapi-sampler@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "openapi-sampler@npm:1.2.1"
+"openapi-sampler@npm:^1.2.3":
+  version: 1.3.0
+  resolution: "openapi-sampler@npm:1.3.0"
   dependencies:
     "@types/json-schema": ^7.0.7
     json-pointer: 0.6.2
-  checksum: 831abc601eb3e43539b0716b938f4e78f2ddfdc164bc47590422be435e46fd2b1a82fb5e954978460fc5a0cef14bb232ff07fc2561ab34bdcd45b67beb6d0e58
+  checksum: 5f4e8612ae4d8ffe21f3b0d972879828675c3de812b3c2a0a436c7191847384c888d0ee5812c6aa5318d2a82b102db56b00e9ac06da5e9d290343790c9c93776
   languageName: node
   linkType: hard
 
@@ -3657,12 +3665,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "openapi@workspace:."
   dependencies:
-    call-me-maybe: ^1.0.1
-    fast-safe-stringify: ^2.1.1
-    ibm-openapi-validator: ^0.54.0
-    react-is: ^17.0.2
-    redoc-cli: ^0.13.2
-    yaml: ^1.10.2
+    ibm-openapi-validator: ^0.78.0
+    redoc-cli: ^0.13.14
   languageName: unknown
   linkType: soft
 
@@ -4129,13 +4133,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^17.0.2":
-  version: 17.0.2
-  resolution: "react-is@npm:17.0.2"
-  checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
-  languageName: node
-  linkType: hard
-
 "react-tabs@npm:^3.2.2":
   version: 3.2.3
   resolution: "react-tabs@npm:3.2.3"
@@ -4205,9 +4202,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redoc-cli@npm:^0.13.2":
-  version: 0.13.10
-  resolution: "redoc-cli@npm:0.13.10"
+"redoc-cli@npm:^0.13.14":
+  version: 0.13.14
+  resolution: "redoc-cli@npm:0.13.14"
   dependencies:
     chokidar: ^3.5.1
     handlebars: ^4.7.7
@@ -4217,21 +4214,20 @@ __metadata:
     node-libs-browser: ^2.2.1
     react: ^17.0.1
     react-dom: ^17.0.1
-    redoc: 2.0.0-rc.66
+    redoc: 2.0.0-rc.70
     styled-components: ^5.3.0
     yargs: ^17.3.1
   bin:
     redoc-cli: index.js
-  checksum: 32e422e83a915e462fef5128a7542aa17b859f59e2f90937d290fe528ec541c2b1242f033b67fcad2134b4966478213f2485559576e51fb9833e1ec049dd35ca
+  checksum: c9fc6267b14fe549989e8a1324d6750d42ad88340eec47fbbe134576ff50c4398d56d438382f398645bc81065b6f74ad2e2fab963c806e30448277087cba6984
   languageName: node
   linkType: hard
 
-"redoc@npm:2.0.0-rc.66":
-  version: 2.0.0-rc.66
-  resolution: "redoc@npm:2.0.0-rc.66"
+"redoc@npm:2.0.0-rc.70":
+  version: 2.0.0-rc.70
+  resolution: "redoc@npm:2.0.0-rc.70"
   dependencies:
-    "@redocly/openapi-core": ^1.0.0-beta.88
-    "@redocly/react-dropdown-aria": ^2.0.11
+    "@redocly/openapi-core": ^1.0.0-beta.97
     classnames: ^2.3.1
     decko: ^1.2.0
     dompurify: ^2.2.8
@@ -4239,9 +4235,9 @@ __metadata:
     json-pointer: ^0.6.2
     lunr: ^2.3.9
     mark.js: ^8.11.1
-    marked: ^4.0.10
+    marked: ^4.0.15
     mobx-react: ^7.2.0
-    openapi-sampler: ^1.2.1
+    openapi-sampler: ^1.2.3
     path-browserify: ^1.0.1
     perfect-scrollbar: ^1.5.1
     polished: ^4.1.3
@@ -4259,7 +4255,7 @@ __metadata:
     react: ^16.8.4 || ^17.0.0
     react-dom: ^16.8.4 || ^17.0.0
     styled-components: ^4.1.1 || ^5.1.1
-  checksum: 3570535ed43b0ebf089e947c45d7fc1c831297e738277410f383f6827965843886a11fafa8a39a85f3accaa9d7652e02f4da63b219f7315d253e63166fa69286
+  checksum: f3cea939d4418e6d9f122cd4c03bea20fe316ace9d4e6a1df0b20652919396b3089febf6d7041d4a3714239dacd27b6069b728af24937a7ad5ffb0dad006b047
   languageName: node
   linkType: hard
 
@@ -5341,7 +5337,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^1.10.0, yaml@npm:^1.10.2":
+"yaml@npm:^1.10.0":
   version: 1.10.2
   resolution: "yaml@npm:1.10.2"
   checksum: ce4ada136e8a78a0b08dc10b4b900936912d15de59905b2bf415b4d33c63df1d555d23acb2a41b23cf9fb5da41c256441afca3d6509de7247daa062fd2c5ea5f

@@ -1,0 +1,12 @@
+ShopItem:
+  value:
+    name: Shovel
+    price: '45.00'
+
+ShopItems:
+  value:
+    items:
+      - name: red wheelbarrow
+        price: '99.99'
+      - name: cultivator
+        price: '346.00'

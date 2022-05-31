@@ -1,4 +1,0 @@
-BearerAuth:
-  $ref: './bearer.yaml'
-BasicAuth:
-  $ref: './basic.yaml'

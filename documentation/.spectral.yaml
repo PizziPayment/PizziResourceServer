@@ -1,6 +1,12 @@
 extends: '@ibm-cloud/openapi-ruleset'
 rules:
+  array-responses: off
   content-entry-provided: off
   major-version-in-path: off
+  pagination-style: off
+  parameter-description: off
+  property-description: off
+  property-inconsistent-name-and-type: off
   response-error-response-schema: off
+  schema-description: off
   string-boundary: off

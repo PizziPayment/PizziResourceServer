@@ -3,10 +3,10 @@ info:
   x-logo:
     url: "https://avatars.githubusercontent.com/u/72045151?s=400&u=2da454a65a925719805331f9e3993bec4bc0b417&v=4"
   title: Pizzi API - Ressource server
-  version: "0.1.0"
+  version: "0.2.0"
   description: >
     This is the internal API resource server documentation for the PizziPayment.
-    You can find out more about Pizzi [here](https://www.pizzi-payment.fr).
+    You can find out more about Pizzi [here](https://pizzipayment.netlify.app/#/).
   contact:
     email: contact@pizzi-payment.fr
 
@@ -15,6 +15,9 @@ servers:
     url: http://localhost:5000
 
 tags:
+  - name: Payments
+    description: Everything about payments.
+
   - name: Shop Item
     description: >
       Every route about a shop item. We call shop item product and service that
@@ -28,51 +31,181 @@ tags:
 
   - name: Transactions
     description: >
-      Everything about transactions. We call transaction the virtual object describing
-      a contract between a user and a shop.
+      Everything about transactions. We call transaction the virtual object
+      describing a contract between a user and a shop.
 
 
 paths:
   /users:
-    $ref: './components/endpoints/resource/user.yaml'
+    $ref: './components/endpoints/users.yaml'
   /users/me/email:
-    $ref: './components/endpoints/resource/user/email.yaml'
+    $ref: './components/endpoints/users/email.yaml'
   /users/me/password:
-    $ref: './components/endpoints/resource/user/password.yaml'
+    $ref: './components/endpoints/users/password.yaml'
   /users/me/receipts:
-    $ref: './components/endpoints/resource/user/receipts.yaml'
+    $ref: './components/endpoints/users/receipts.yaml'
   /users/me/receipts/{receipt_id}:
-    $ref: './components/endpoints/resource/user/receipt.yaml'
+    $ref: './components/endpoints/users/receipt.yaml'
   /users/me/transactions:
-    $ref: './components/endpoints/resource/user/take_transaction.yaml'
+    $ref: './components/endpoints/users/take_transaction.yaml'
 
   /shops:
-    $ref: './components/endpoints/resource/shop.yaml'
+    $ref: './components/endpoints/shops.yaml'
   /shops/me/email:
-    $ref: './components/endpoints/resource/shop/email.yaml'
+    $ref: './components/endpoints/shops/email.yaml'
   /shops/me/password:
-    $ref: './components/endpoints/resource/shop/password.yaml'
+    $ref: './components/endpoints/shops/password.yaml'
   /shops/me/items:
-    $ref: './components/endpoints/resource/shop/item.yaml'
+    $ref: './components/endpoints/shops/item.yaml'
   /shops/me/items/{id}:
-    $ref: './components/endpoints/resource/shop/item/id.yaml'
+    $ref: './components/endpoints/shops/item/id.yaml'
   /shops/me/receipts:
-    $ref: './components/endpoints/resource/shop/receipts.yaml'
+    $ref: './components/endpoints/shops/receipts.yaml'
   /shops/me/receipts/{receipt_id}:
-    $ref: './components/endpoints/resource/shop/receipt.yaml'
+    $ref: './components/endpoints/shops/receipt.yaml'
   /shops/me/transactions:
-    $ref: './components/endpoints/resource/shop/transactions.yaml'
+    $ref: './components/endpoints/shops/transactions.yaml'
 
   /transactions:
-    $ref: './components/endpoints/transactions/transactions.yaml'
+    $ref: './components/endpoints/transactions.yaml'
   /transactions/{id}/user:
-    $ref: './components/endpoints/transactions/transaction_user.yaml'
+    $ref: './components/endpoints/transactions/user.yaml'
   /transactions/{id}/payment_method:
-    $ref: './components/endpoints/transactions/transaction_payment_method.yaml'
+    $ref: './components/endpoints/transactions/payment_method.yaml'
+
   /payments:
-    $ref: './components/endpoints/payments/payments.yaml'
+    $ref: './components/endpoints/payments.yaml'
 
 
 components:
+  schemas:
+  # Types
+    password:
+      $ref: './components/types.yaml#/password'
+    # filter:
+    #   $ref: './components/types.yaml#/filter'
+    payment_method:
+      $ref: './components/types.yaml#/payment_method'
+
+  # Requests
+    # Common
+    RequestChangeEmail:
+      $ref: './components/schemas/requests/change_email.yaml'
+    RequestChangePassword:
+      $ref: './components/schemas/requests/change_password.yaml'
+
+    # Shop items
+    RequestShopItem:
+      $ref: './components/schemas/requests/shop_item.yaml'
+
+  # Responses
+    ResponseError:
+      $ref: './components/schemas/responses/error.yaml'
+
+    # Shop items
+    ResponseShopItem:
+      $ref: './components/schemas/responses/shop_item.yaml'
+
+    # Shops
+    ResponseShopsInfo:
+      $ref: './components/schemas/responses/shops/info.yaml'
+
+    # Transactions
+    ResponseTransaction:
+      $ref: './components/schemas/responses/transaction.yaml'
+
+    # Users
+    ResponseUsersInfo:
+      $ref: './components/schemas/responses/users/info.yaml'
+
+  examples:
+  # Requests
+    # Common
+    RequestChangeEmail:
+      $ref: './components/examples/requests/change_email.yaml'
+    RequestChangePassword:
+      $ref: './components/examples/requests/change_password.yaml'
+
+    # Shop items
+    RequestShopItem:
+      $ref: './components/examples/requests/shop_item.yaml#/ShopItem'
+    RequestShopItems:
+      $ref: './components/examples/requests/shop_item.yaml#/ShopItems'
+
+  # Responses
+    # Shop items
+    ResponseShopItem:
+      $ref: './components/examples/responses/shop_item.yaml#/ShopItem'
+    ResponseShopItems:
+      $ref: './components/examples/responses/shop_item.yaml#/ShopItems'
+
+    # Shops
+    ResponseShopsInfo:
+      $ref: './components/examples/responses/shops/info.yaml'
+
+    # Users
+    ResponseUsersInfo:
+      $ref: './components/examples/responses/users/info.yaml'
+
+
+  responses:
+    204:
+      description:  Operation succeeded.
+    400:
+      description: Invalid or missing field(s) in body or parameter(s).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+          examples:
+            InvalidField:
+              value:
+                source: '/source'
+                message: invalid `user_id` field
+            NoClientCredentialsGiven:
+              value:
+                source: '/source'
+                message: No client credentials given
+            NoTokenGiven:
+              value:
+                source: '/source'
+                message: No token given
+    401:
+      description: Unauthorized.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+          examples:
+            InvalidToken:
+              value:
+                source: '/source'
+                message: 'Invalid token'
+            InvalidClientCredentials:
+              value:
+                source: '/source'
+                message: Invalid client credentials
+
+    500:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+          example:
+            source: '/source'
+            message: Internal server error
+
   securitySchemes:
-    $ref: './components/security/_index.yaml'
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer <token>
+    BasicAuth:
+      type: http
+      scheme: basic
+      description: >
+        The credentials are constructed by first combining the client's id and
+        the client's secret with a colon (`client_id:client_secret`), then by
+        encoding the resulting string in base64
+        (`Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQK`).

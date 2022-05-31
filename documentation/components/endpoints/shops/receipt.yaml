@@ -1,0 +1,70 @@
+get:
+  operationId: get_shop_receipt_details
+  tags:
+    - Shop
+  summary: Receipt details
+  description: Get a receipt's details
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: receipt_id
+      in: path
+      required: true
+      description: The receipt's id
+      schema:
+        type: number
+  responses:
+    200:
+      description: Receipt.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              products:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    product_name:
+                      type: string
+                    quantity:
+                      type: number
+                    price_unit:
+                      type: number
+                    warranty:
+                      type: string
+                    eco_tax:
+                      type: number
+                    discount:
+                      type: number
+              creation_date:
+                type: string
+              payment_type:
+                $ref: '../../../openapi.yaml#/components/schemas/payment_method'
+                type: string
+              tva_percentage:
+                type: number
+              total_ht:
+                type: number
+              total_ttc:
+                type: number
+          example:
+            products:
+              - product_name: Outer Wilds
+                quantity: 1
+                price_unit: 17.4916
+                warranty: "18/06/2022"
+                eco_tax: 0
+                discount: 0
+            payment_type: card
+            tva_percentage: 20
+            creation_date: "18/06/2020"
+            total_ht: 17.4916
+            total_ttc: 20.99
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

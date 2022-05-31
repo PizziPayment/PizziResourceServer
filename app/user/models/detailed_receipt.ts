@@ -11,7 +11,7 @@ export class DetailedReceiptModel {
   vendor: {
     logo: string
     name: string
-    address: {
+    place: {
       street: string
       city: string
       postal_code: number

@@ -1,0 +1,129 @@
+post:
+  operationId: create_shop_items
+  tags:
+    - Shop Item
+  summary: Create shop items
+  description: >
+    Create shop items from a list of items.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: List of items to create.
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - items
+          properties:
+            items:
+              type: array
+              description: Array of shop items to create.
+              minItems: 1
+              items:
+                $ref: '../../../openapi.yaml#/components/schemas/RequestShopItem'
+        examples:
+          ShopItems:
+            $ref: '../../../openapi.yaml#/components/examples/RequestShopItems'
+  responses:
+    201:
+      description: Shop items created.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '../../../openapi.yaml#/components/schemas/ResponseShopItem'
+          examples:
+            ShopItems:
+              $ref: '../../../openapi.yaml#/components/examples/ResponseShopItems'
+
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'
+
+get:
+  operationId: list_shop_items
+  tags:
+    - Shop Item
+  summary: List shop items
+  description: >
+    Get a list of shop items by page.
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: query
+      name: page
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+      description: Page number.
+    - in: query
+      name: nb_items
+      schema:
+        type: integer
+        default: 25
+        minimum: 1
+      description: Number of item(s) per page
+    - in: query
+      name: query
+      schema:
+        type: string
+      description: >
+        Return only results with an occurence of `query`.
+
+        **Only works with the `sort_by=name` parameter**.
+    - in: query
+      name: sort_by
+      schema:
+        type: string
+        enum:
+          - date
+          - name
+          - price
+        default: name
+      description: >
+        Sort by:
+          * `date` - creation date
+          * `name` - name of the shop item
+          * `price` - price of the shop item
+    - in: query
+      name: order
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: asc
+      description: >
+        Order:
+          * `asc` - Ascending
+          * `desc` - Descending
+  responses:
+    200:
+      description: Operation succeeded.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '../../../openapi.yaml#/components/schemas/ResponseShopItem'
+          examples:
+            ShopItems:
+              $ref: '../../../openapi.yaml#/components/examples/ResponseShopItems'
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

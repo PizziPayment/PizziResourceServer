@@ -1,0 +1,10 @@
+type: object
+description: Product/service of a shop.
+properties:
+  name:
+    type: string
+    description: Product/service's name.
+  price:
+    type: string
+    description: >
+      Product/service's unitary price in euro (Max value: 999 999 999 999.99).
