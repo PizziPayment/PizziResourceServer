@@ -328,7 +328,7 @@ describe('Shop item endpoint', () => {
               .set(bearer_header)
               .send(new_item_properties)
           ).statusCode,
-        ).toBe(403)
+        ).toBe(404)
       })
     })
   })
@@ -393,7 +393,7 @@ describe('Shop item endpoint', () => {
               .delete(endpoint + `/${shop_item.id}`)
               .set(bearer_header)
           ).statusCode,
-        ).toBe(403)
+        ).toBe(404)
       })
 
       it("that doesn't belong to the shop", async () => {

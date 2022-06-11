@@ -19,38 +19,26 @@ import { ReceiptListModel } from '../models/receipt_list.model'
 import { DetailedReceiptModel } from '../models/detailed_receipt'
 import { siretLength } from '../../common/constants'
 import TakeTransactionRequestModel from '../models/take_transaction.request.model'
+import { createResponseHandler } from '../../common/services/error_handling'
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
 
-  await UsersServices.getUserFromId(credentials.user_id).match(
-    (user) => res.status(200).send(new InfosResponseModel(user)),
-    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-  )
+  await UsersServices.getUserFromId(credentials.user_id).match((user) => res.status(200).send(new InfosResponseModel(user)), createResponseHandler(req, res))
 }
 
 export async function register(req: Request<unknown, unknown, RegisterRequestModel>, res: Response): Promise<void> {
   await UsersServices.createUser(req.body.name, req.body.surname, `${req.body.place.address}, ${req.body.place.city}`, req.body.place.zipcode)
     .andThen((user) =>
       CredentialsService.createCredentialWithId('user', user.id, req.body.email, EncryptionService.encrypt(req.body.password)).mapErr(() =>
-        UsersServices.deleteUserById(user.id).match(
-          () => null,
-          // TODO Should be replace by a custom file logger or anything
-          (e) => console.log(`Error when trying to delete User ID ${user.id}: ${e}`),
-        ),
+        UsersServices.deleteUserById(user.id),
       ),
     )
-    .match(
-      () => res.status(201).send(),
-      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-    )
+    .match(() => res.status(201).send(), createResponseHandler(req, res))
 }
 
 export async function deleteAccount(req: Request, res: Response<unknown, Record<string, TokenModel>>): Promise<void> {
-  await CredentialsService.deleteCredentialFromId(res.locals.token.credential_id).match(
-    () => res.status(204).send(),
-    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-  )
+  await CredentialsService.deleteCredentialFromId(res.locals.token.credential_id).match(() => res.status(204).send(), createResponseHandler(req, res))
 }
 
 export async function changeUserInformation(
@@ -65,10 +53,7 @@ export async function changeUserInformation(
     req.body.surname,
     address,
     req.body.place?.zipcode,
-  ).match(
-    (user) => res.status(200).send(user),
-    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-  )
+  ).match((user) => res.status(200).send(user), createResponseHandler(req, res))
 }
 
 export async function receipts(
@@ -87,10 +72,7 @@ export async function receipts(
         }
       }),
     )
-    .match(
-      (receipts) => res.status(200).send(receipts),
-      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-    )
+    .match((receipts) => res.status(200).send(receipts), createResponseHandler(req, res))
 }
 
 export async function receipt(
@@ -130,10 +112,7 @@ export async function receipt(
         })
       })
     })
-    .match(
-      (receipt) => res.status(200).send(receipt),
-      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-    )
+    .match((receipt) => res.status(200).send(receipt), createResponseHandler(req, res))
 }
 
 export async function takeTransaction(
@@ -142,10 +121,7 @@ export async function takeTransaction(
 ): Promise<void> {
   await TransactionsService.updateTransactionUserIdFromId(req.body.id, res.locals.credential.user_id)
     .andThen(() => TransactionsService.updateTransactionStateFromId(req.body.id, 'validated'))
-    .match(
-      () => res.status(204).send(),
-      () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-    )
+    .match(() => res.status(204).send(), createResponseHandler(req, res))
 }
 
 function compute_tax(price: string, tax_percentage: number): number {
