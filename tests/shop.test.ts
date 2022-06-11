@@ -1,13 +1,12 @@
 import {
   ClientsService,
   CredentialsService,
-  CredentialsServiceError,
+  ErrorCause,
   rewriteTables,
   ShopModel,
   ShopsServices,
   TokenModel,
   TokensService,
-  TokensServiceError,
 } from 'pizzi-db'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
 import * as request from 'supertest'
@@ -127,7 +126,7 @@ describe('Shop endpoint', () => {
 
       const res_cred = await CredentialsService.getCredentialFromId(token.credential_id)
       expect(res_cred.isErr()).toBeTruthy()
-      expect(res_cred._unsafeUnwrapErr()).toBe(CredentialsServiceError.OwnerNotFound)
+      expect(res_cred._unsafeUnwrapErr().code).toBe(ErrorCause.CredentialNotFound)
     })
 
     it('should not allow the deletion of a shop using an invalid token', async () => {
@@ -175,7 +174,7 @@ describe('Shop endpoint', () => {
 
       let revoked_token = await TokensService.getTokenFromValue(token.access_token)
       expect(revoked_token.isErr()).toBe(true)
-      expect(revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
+      expect(revoked_token._unsafeUnwrapErr().code).toEqual(ErrorCause.TokenNotFound)
 
       await getShopToken(shop.email, body.new_password)
     })

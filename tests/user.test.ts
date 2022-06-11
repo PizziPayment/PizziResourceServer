@@ -2,7 +2,7 @@ import { App } from '../app/api'
 import { baseUrl as endpoint, baseUrlPassword as endpoint_password, baseUrlEmail as endpoint_email } from '../app/user/routes.config'
 import { config } from '../app/common/config'
 import * as request from 'supertest'
-import { rewriteTables, TokensServiceError, UsersServices, CredentialsService, EncryptionService, ClientsService, TokensService } from 'pizzi-db'
+import { rewriteTables, UsersServices, CredentialsService, EncryptionService, ClientsService, TokensService, ErrorCause } from 'pizzi-db'
 import { users, client, client_header } from './common/models'
 import { getUser, getUserToken, createRandomToken, createBearerHeader } from './common/services'
 
@@ -306,7 +306,7 @@ describe('User endpoint', () => {
 
       let not_revoked_token = await TokensService.getTokenFromValue(token)
       expect(not_revoked_token.isErr()).toBe(true)
-      expect(not_revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
+      expect(not_revoked_token._unsafeUnwrapErr().code).toEqual(ErrorCause.TokenNotFound)
 
       await getUserToken(user.email, body.new_password)
     })

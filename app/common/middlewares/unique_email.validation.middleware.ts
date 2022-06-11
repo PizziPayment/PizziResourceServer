@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { ApiFailure, ApiResponseWrapper } from '../models/api.response.model'
-import { CredentialsService } from 'pizzi-db'
+import { ApiResponseWrapper } from '../models/api.response.model'
+import { CredentialsService, ErrorCause } from 'pizzi-db'
+import { createResponseHandler } from '../services/error_handling'
 
 interface EmailRequest {
   email: string
@@ -11,11 +12,8 @@ export default async function validUniqueEmail(
   res: Response<ApiResponseWrapper<unknown>>,
   next: NextFunction,
 ): Promise<Response | void> {
-  const unique_email = await CredentialsService.isEmailUnique(req.body.email)
-
-  if (unique_email.isOk()) {
-    return next()
-  } else {
-    return res.status(400).send(new ApiFailure(req.url, 'Email already registered'))
-  }
+  await CredentialsService.isEmailUnique(req.body.email).match(
+    () => next(),
+    createResponseHandler(req, res, [[ErrorCause.DuplicatedEmail, 400, 'Email already registered']]),
+  )
 }

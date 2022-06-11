@@ -3,16 +3,16 @@ import { ShopItemCreationRequestModel } from '../models/create.request.model'
 import { ShopItemResponseModel, ShopItemsResponseModel } from '../models/response.model'
 import { ShopItemsService } from 'pizzi-db'
 import { CredentialModel } from 'pizzi-db'
-import { ApiFailure } from '../../common/models/api.response.model'
 import { Filter, intoDBOrder, intoDBSortBy } from '../models/retrieve.request.model'
 import { ShopItemUpdateParamModel, ShopItemUpdateRequestModel } from '../models/update.request.model'
+import { createResponseHandler } from '../../common/services/error_handling'
 
 export async function createShopItems(req: Request<unknown, unknown, ShopItemCreationRequestModel>, res: Response): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
 
   await ShopItemsService.createShopItems(credentials.shop_id, req.body.items).match(
     (items) => res.status(201).send(new ShopItemsResponseModel(items)),
-    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+    createResponseHandler(req, res),
   )
 }
 
@@ -27,10 +27,7 @@ export async function retrieveShopItems(req: Request<unknown, unknown, unknown, 
     intoDBSortBy(filter.sort_by),
     intoDBOrder(filter.order),
     filter.query,
-  ).match(
-    (items) => res.status(200).send(new ShopItemsResponseModel(items)),
-    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-  )
+  ).match((items) => res.status(200).send(new ShopItemsResponseModel(items)), createResponseHandler(req, res))
 }
 
 export async function updateShopItem(req: Request<ShopItemUpdateParamModel, unknown, ShopItemUpdateRequestModel>, res: Response): Promise<void> {
@@ -39,15 +36,12 @@ export async function updateShopItem(req: Request<ShopItemUpdateParamModel, unkn
 
   await ShopItemsService.updateShopItemFromId(shop_item_id, shop_item.name, shop_item.price).match(
     (new_shop_item) => res.status(200).send(new ShopItemResponseModel(new_shop_item)),
-    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+    createResponseHandler(req, res),
   )
 }
 
 export async function deleteShopItem(req: Request<ShopItemUpdateParamModel, unknown, unknown>, res: Response): Promise<void> {
   const shop_item_id = req.params.id
 
-  await ShopItemsService.deleteShopItemById(shop_item_id).match(
-    () => res.status(204).send(),
-    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
-  )
+  await ShopItemsService.deleteShopItemById(shop_item_id).match(() => res.status(204).send(), createResponseHandler(req, res))
 }
