@@ -1,6 +1,16 @@
 import { ShopUpdateModel } from 'pizzi-db'
+import { ObjectDescriptor, TypeValidator } from 'record-validator'
 
 export class PatchRequestModel {
+  static descriptor: ObjectDescriptor<Required<PatchRequestModel>> = {
+    description: { type: 'string', required: false },
+    website: { type: 'string', required: false },
+    instagram: { type: 'string', required: false },
+    twitter: { type: 'string', required: false },
+    facebook: { type: 'string', required: false },
+  }
+  static validator: TypeValidator<Required<PatchRequestModel>> = new TypeValidator(this.descriptor)
+
   description?: string
   website?: string
   instagram?: string
