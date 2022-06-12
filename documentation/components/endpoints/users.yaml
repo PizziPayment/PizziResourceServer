@@ -1,0 +1,165 @@
+get:
+  operationId: get_user_info
+  tags:
+    - User
+  summary: Get user infos
+  description: Returns the informations related to the given token.
+  security:
+    - BearerAuth: []
+  responses:
+    200:
+      description: Operation succeeded.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/ResponseUsersInfo'
+          examples:
+            UserInfo:
+              $ref: '../../openapi.yaml#/components/examples/ResponseUsersInfo'
+    401:
+      $ref: '../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../openapi.yaml#/components/responses/500'
+
+post:
+  operationId: create_user
+  tags:
+    - User
+  summary: Register User
+  description: Create a Pizzi user account.
+  security:
+    - BasicAuth: []
+  requestBody:
+    description: User's informations.
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - name
+            - surname
+            - email
+            - password
+            - place
+          properties:
+            name:
+              type: string
+            surname:
+              type: string
+            email:
+              type: string
+            password:
+              $ref: "../../openapi.yaml#/components/schemas/password"
+            place:
+              type: object
+              properties:
+                address:
+                  type: string
+                city:
+                  type: string
+                zipcode:
+                  type: number
+        example:
+          name: Valérie Debout
+          surname: Valoche
+          email: valerie.debout@example.com
+          password: Testeee8!eee
+          place:
+            address: 238 rue de Vaugirard
+            city: Bordeaux
+            zipcode: 33000
+  responses:
+    201:
+      description: User created.
+    400:
+      $ref: '../../openapi.yaml#/components/responses/400'
+    500:
+      $ref: '../../openapi.yaml#/components/responses/500'
+
+delete:
+  operationId: delete_user
+  tags:
+    - User
+  summary: Delete User
+  description: Delete the Pizzi user account related to the given token.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: User's password.
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - password
+          properties:
+            password:
+              $ref: "../../openapi.yaml#/components/schemas/password"
+        example:
+          password: Valid_passw0rd
+  responses:
+    204:
+      $ref: "../../openapi.yaml#/components/responses/204"
+    400:
+      $ref: '../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../openapi.yaml#/components/responses/500'
+
+patch:
+  operationId: update_user
+  tags:
+    - User
+  summary: Update User
+  description: >
+    Update the Pizzi user account related to the given token. Notice that every
+    items in the request's body are optionals. However, if you try to update a
+    place, you'll need the `place.address` and the `place.city` correctly
+    filled.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: User's information.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            surname:
+              type: string
+            place:
+              type: object
+              properties:
+                address:
+                  type: string
+                city:
+                  type: string
+                zipcode:
+                  type: number
+        example:
+          name: Louis de Funes
+          surname: Loulou
+          place:
+            address: 62 rue de l'église
+            city: Courbevoie
+            zipcode: 92400
+  responses:
+    200:
+      description: Operation succeed.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/ResponseUsersInfo'
+          examples:
+            UpdatedUser:
+              $ref: '../../openapi.yaml#/components/examples/ResponseUsersInfo'
+    400:
+      $ref: '../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../openapi.yaml#/components/responses/500'

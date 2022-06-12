@@ -1,0 +1,8 @@
+allOf:
+  - type: object
+    description: Product/service of a shop.
+    properties:
+      id:
+        type: number
+        description: Id of the shop item.
+  - $ref: '../../../openapi.yaml#/components/schemas/RequestShopItem'

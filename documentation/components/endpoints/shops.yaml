@@ -1,0 +1,175 @@
+get:
+  operationId: get_shop_info
+  tags:
+    - Shop
+  summary: Get shop infos
+  description: Returns the informations related to the given token.
+  security:
+    - BearerAuth: []
+  responses:
+    200:
+      description: Operation succeeded.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/ResponseShopsInfo'
+          examples:
+            ShopInfo:
+              $ref: '../../openapi.yaml#/components/examples/ResponseShopsInfo'
+    401:
+      $ref: '../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../openapi.yaml#/components/responses/500'
+
+patch:
+  operationId: "update_shop_info"
+  tags:
+    - Shop
+  summary: Update shop infos
+  description: >
+    Update shop informations related to the given token. Note that every
+    field in the request's body is optional.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: Update shop body.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            description:
+              type: string
+              description: Shop's description.
+            website:
+              type: string
+              description: Shop's website.
+            instagram:
+              type: string
+              description: Shop's instagram page.
+            twitter:
+              type: string
+              description: Shop's twitter account.
+            facebook:
+              type: string
+              description: Shop's facebook page.
+        example:
+          description: We sell things,
+          website: "https://example.com"
+          instagram: "https://instagram.com"
+          twitter: "https://twitter.com/Twitter"
+          facebook: "https://facebook.com"
+  responses:
+    200:
+      description: Operation succeeded.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/ResponseShopsInfo'
+          examples:
+            ShopInfo:
+              $ref: '../../openapi.yaml#/components/examples/ResponseShopsInfo'
+    400:
+      $ref: '../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../openapi.yaml#/components/responses/500'
+
+post:
+  operationId: create_shop
+  tags:
+    - Shop
+  summary: Register Shop
+  description: Create a Pizzi shop account.
+  security:
+    - BasicAuth: []
+  requestBody:
+    description: User's informations.
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - name
+            - place
+            - email
+            - phone
+            - password
+            - siret
+          properties:
+            name:
+              type: string
+              description: Shop's name.
+            place:
+              type: object
+              description: Shop's address information.
+              properties:
+                address:
+                  type: string
+                  description: Shop's address.
+                city:
+                  type: string
+                  description: Shop's city.
+                zipcode:
+                  type: number
+                  description: Shop's zipcode.
+            email:
+              type: string
+              description: Shop's email.
+            phone:
+              type: string
+              description: Shop's phone number.
+            password:
+              $ref: '../../openapi.yaml#/components/schemas/password'
+            siret:
+              type: string
+              description: Shop's siret.
+        example:
+          name: Voitukle
+          place:
+            address": 13 rue de la ville
+            city": Ville
+            zipcode": 25619
+          email: "shop@example.com"
+          phone: "+33 6 12 34 56 78"
+          password: Testeee8!eee
+          siret: "12345678912345"
+  responses:
+    201:
+      description: Shop created.
+    400:
+      $ref: '../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../openapi.yaml#/components/responses/500'
+
+delete:
+  operationId: delete_shop
+  tags:
+    - Shop
+  summary: Delete Shop
+  description: Delete the Pizzi shop account related to the given token.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: Shop's password.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            password:
+              $ref: "../../openapi.yaml#/components/schemas/password"
+        example:
+          password: Valid_passw0rd
+  responses:
+    204:
+      $ref: '../../openapi.yaml#/components/responses/204'
+    400:
+      $ref: '../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../openapi.yaml#/components/responses/500'

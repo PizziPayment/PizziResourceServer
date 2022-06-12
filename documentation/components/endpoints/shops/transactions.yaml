@@ -1,0 +1,82 @@
+post:
+  operationId: create_shop_transaction
+  tags:
+    - Shop
+  summary: Create transaction
+  description: Create a transaction.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: The transaction's contents.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            tva_percentage:
+              type: number
+              description: The sales tax percentage
+            total_price:
+              type: string
+              description: The transaction's total price (without tax)
+            payment_method:
+              $ref: '../../../openapi.yaml#/components/schemas/payment_method'
+            items:
+              type: array
+              description: The transaction's shop items
+              items:
+                type: object
+                properties:
+                  shop_item_id:
+                    type: number
+                    description: The shop item's id
+                  discount:
+                    type: number
+                    description: The discount applied to the shop item's price
+                  eco_tax:
+                    type: number
+                    description: The eco tax applied to the shop item's price
+                  quantity:
+                    type: number
+                    description: The amount of this item in the transaction
+                  warranty:
+                    type: string
+                    description: The item's warranty
+        example:
+          tva_percentage: 20
+          total_price: "27.89"
+          payment_method: card
+          items:
+            - shop_item_id: 0
+              discount: 0
+              eco_tax: 0
+              quantity: 1
+              warranty: non
+            - shop_item_id: 1
+              discount: 0
+              eco_tax: 0
+              quantity: 1
+              warranty: non
+  responses:
+    201:
+      description: Operation succeeded.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                description: The created transaction's id
+              token:
+                type: string
+                description: The token to give to the user
+          example:
+            id: 1
+            token: Ceciestuntoken
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

@@ -1,0 +1,11 @@
+type: object
+properties:
+  receipt_id:
+    type: number
+  user_id:
+    type: number
+    optional: true
+  shop_id:
+    type: number
+  payment_method:
+    $ref: '../../../openapi.yaml#/components/schemas/payment_method'

@@ -183,9 +183,9 @@ describe('User receipts endpoint', () => {
 
       expect(vendor.name).toEqual(shop.name)
       expect(vendor.shop_number).toEqual(shop.phone)
-      expect(vendor.address.street).toEqual(shop.place.address)
-      expect(vendor.address.city).toEqual(shop.place.city)
-      expect(vendor.address.postal_code).toEqual(shop.place.zipcode)
+      expect(vendor.place.street).toEqual(shop.place.address)
+      expect(vendor.place.city).toEqual(shop.place.city)
+      expect(vendor.place.postal_code).toEqual(shop.place.zipcode)
       expect(vendor.siret).toEqual(shop.siret)
 
       for (const i of Array(items.length).keys()) {

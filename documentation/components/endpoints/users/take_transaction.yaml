@@ -1,0 +1,34 @@
+post:
+  operationId: dc_user_take_transaction
+  tags:
+    - User
+  summary: Take transaction
+  description: Self assign a transaction.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: The transaction's id and the required token
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - id
+            - token
+          properties:
+            id:
+              type: number
+            token:
+              type: string
+        example:
+          id: 12345
+          token: token
+  responses:
+    204:
+      $ref: '../../../openapi.yaml#/components/responses/204'
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

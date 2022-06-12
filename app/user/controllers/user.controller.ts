@@ -106,7 +106,7 @@ export async function receipt(
               vendor: {
                 logo: shop.logo?.toString() || '',
                 name: shop.name,
-                address: { street: shop.address, city: shop.city, postal_code: shop.zipcode },
+                place: { street: shop.address, city: shop.city, postal_code: shop.zipcode },
                 siret: String(shop.siret).padStart(siretLength, '0'),
                 shop_number: shop.phone,
               },

@@ -1,0 +1,37 @@
+patch:
+  operationId: update_transaction_payment_method
+  tags:
+    - Transactions
+  summary: Update payment method
+  description: Update payment method registered for the transaction.
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: path
+      required: true
+      name: id
+      schema:
+        type: number
+      description: Transaction's id
+  requestBody:
+    description: Payment method
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - payment_method
+          properties:
+            payment_method:
+              $ref: '../../../openapi.yaml#/components/schemas/payment_method'
+          example:
+            payment_method: card
+  responses:
+    204:
+      $ref: '../../../openapi.yaml#/components/responses/204'
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

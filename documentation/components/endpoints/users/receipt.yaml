@@ -1,0 +1,99 @@
+get:
+  operationId: get_user_receipt_details
+  tags:
+    - User
+  summary: Get receipt details
+  description: Get a receipt's details
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: receipt_id
+      in: path
+      description: The receipt's id
+      required: true
+      schema:
+        type: number
+      example: 4
+  responses:
+    200:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              vendor:
+                type: object
+                properties:
+                  logo:
+                    type: string
+                  name:
+                    type: string
+                  place:
+                    type: object
+                    properties:
+                      street:
+                        type: string
+                      city:
+                        type: string
+                      postal_code:
+                        type: number
+                  siret:
+                    type: string
+                  shop_number:
+                    type: string
+              products:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    product_name:
+                      type: string
+                    quantity:
+                      type: number
+                    price_unit:
+                      type: number
+                    warranty:
+                      type: string
+                    eco_tax:
+                      type: number
+                    discount:
+                      type: number
+              creation_date:
+                type: string
+              payment_type:
+                type: string
+              tva_percentage:
+                type: number
+              total_ht:
+                type: number
+              total_ttc:
+                type: number
+          example:
+            vendor:
+              logo: "https://store.steampowered.com/favicon.ico"
+              name: Steam
+              place:
+                street: Rue
+                city: Ville
+                postal_code: 12345
+              siret: "12345678912345"
+              shop_number: "00 00 00 00 00"
+            products:
+              - product_name: Outer Wilds
+                quantity: 1
+                price_unit: 17.4916
+                warranty: 18/06/2022
+                eco_tax: 0
+                discoun": 0
+            payment_type: card
+            tva_percentage: 20
+            creation_date: 18/06/2020
+            total_ht: 17.4916
+            total_ttc: 20.99
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'
