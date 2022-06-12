@@ -4647,6 +4647,7 @@ __metadata:
     neverthrow: ^4.3.1
     pizzi-db: "git@github.com:PizziPayment/PizziAPIDB.git#commit=96d7e6a56414c19a6ca43e32d00fb8d2a49baf88"
     prettier: ^2.5.1
+    record-validator: ^1.5.0
     reflect-metadata: ^0.1.13
     source-map-support: ^0.5.21
     supertest: ^6.1.6
@@ -4870,6 +4871,13 @@ __metadata:
     string_decoder: ^1.1.1
     util-deprecate: ^1.0.1
   checksum: d4ea81502d3799439bb955a3a5d1d808592cf3133350ed352aeaa499647858b27b1c4013984900238b0873ec8d0d8defce72469fb7a83e61d53f5ad61cb80dc8
+  languageName: node
+  linkType: hard
+
+"record-validator@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "record-validator@npm:1.5.0"
+  checksum: 109677323ae3b8ce6e73ac08783ce95dc8d65761b4c74d2243c625450d9bd8ea1230a906bcec847c417ba79d0dcecdb4cab1bf1e3b2fa5e7b19842d2d4ef42b2
   languageName: node
   linkType: hard
 

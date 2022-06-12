@@ -37,23 +37,20 @@ export async function register(req: Request<unknown, unknown, RegisterRequestMod
     .match(() => res.status(201).send(), createResponseHandler(req, res))
 }
 
-export async function deleteAccount(req: Request, res: Response<unknown, Record<string, TokenModel>>): Promise<void> {
+export async function deleteAccount(req: Request, res: Response<unknown, { token: TokenModel }>): Promise<void> {
   await CredentialsService.deleteCredentialFromId(res.locals.token.credential_id).match(() => res.status(204).send(), createResponseHandler(req, res))
 }
 
 export async function changeUserInformation(
   req: Request<unknown, unknown, PatchRequestModel>,
-  res: Response<unknown, Record<string, TokenModel | CredentialModel>>,
+  res: Response<unknown, { token: TokenModel; credential: CredentialModel }>,
 ): Promise<void> {
   const address = req.body.place && req.body.place.address && req.body.place.city ? `${req.body.place.address}, ${req.body.place.city}` : undefined
 
-  await UsersServices.updateUserFromId(
-    (res.locals.credential as CredentialModel).user_id,
-    req.body.name,
-    req.body.surname,
-    address,
-    req.body.place?.zipcode,
-  ).match((user) => res.status(200).send(user), createResponseHandler(req, res))
+  await UsersServices.updateUserFromId(res.locals.credential.user_id, req.body.name, req.body.surname, address, req.body.place?.zipcode).match(
+    (user) => res.status(200).send(user),
+    createResponseHandler(req, res),
+  )
 }
 
 export async function receipts(

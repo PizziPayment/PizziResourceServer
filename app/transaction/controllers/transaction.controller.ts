@@ -15,7 +15,7 @@ export async function createTransaction(req: Request<unknown, unknown, Transacti
   )
 }
 
-export async function getTransactions(req: Request<unknown, unknown, TransactionCreationModel, TransactionStateQuery>, res: Response): Promise<void> {
+export async function getTransactions(req: Request<unknown, unknown, unknown, TransactionStateQuery>, res: Response): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
 
   await TransactionsService.getOwnerTransactionsByState('shop', credentials.shop_id, req.query.state).match(

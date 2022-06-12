@@ -112,7 +112,6 @@ describe('Shop item endpoint', () => {
     describe('should not allow the creation of shop items with a body', () => {
       const bodies = [
         ['without items', {}],
-        ['without item in items', { items: [] }],
         ["with an items which isn't an array", { items: {} }],
         ['with an item without price', shop_items_missing_price],
         ['with an item without name', shop_items_missing_name],
@@ -233,6 +232,29 @@ describe('Shop item endpoint', () => {
           expect(parseFloat(new_shop_item.price)).toBe(parseFloat(shop_item.price))
         }
       })
+
+      it('with the same properties', async () => {
+        const [_, token, created_items] = await setupShopItem()
+        const shop_item = created_items[0]
+        const new_item_properties: ShopItemUpdateRequestModel = { name: shop_item.name, price: shop_item.price }
+
+        const res = await request(App)
+          .patch(endpoint + `/${shop_item.id}`)
+          .set(createBearerHeader(token.access_token))
+          .send(new_item_properties)
+        expect(res.statusCode).toBe(200)
+      })
+
+      it('with no property', async () => {
+        const [_, token, created_items] = await setupShopItem()
+        const shop_item = created_items[0]
+
+        const res = await request(App)
+          .patch(endpoint + `/${shop_item.id}`)
+          .set(createBearerHeader(token.access_token))
+          .send({})
+        expect(res.statusCode).toBe(200)
+      })
     })
 
     describe('should not allow the modification of a shop item', () => {
@@ -283,29 +305,6 @@ describe('Shop item endpoint', () => {
           .set(bearer_header)
           .send(new_item_properties)
         expect(res.statusCode).toBe(404)
-      })
-
-      it('with no property', async () => {
-        const [_, token, created_items] = await setupShopItem()
-        const shop_item = created_items[0]
-
-        const res = await request(App)
-          .patch(endpoint + `/${shop_item.id}`)
-          .set(createBearerHeader(token.access_token))
-          .send({})
-        expect(res.statusCode).toBe(400)
-      })
-
-      it('with the same properties', async () => {
-        const [_, token, created_items] = await setupShopItem()
-        const shop_item = created_items[0]
-        const new_item_properties: ShopItemUpdateRequestModel = { name: shop_item.name, price: shop_item.price }
-
-        const res = await request(App)
-          .patch(endpoint + `/${shop_item.id}`)
-          .set(createBearerHeader(token.access_token))
-          .send(new_item_properties)
-        expect(res.statusCode).toBe(400)
       })
 
       it('that is deleted', async () => {
