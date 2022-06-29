@@ -26,7 +26,7 @@ export default function validRegisterRequest(
     if (!req.body.siret || !FieldValidationService.isValidSiret(req.body.siret)) {
       errors.push('invalid "siret"')
     }
-    if (!req.body.place || !req.body.place.address || !req.body.place.city || !req.body.place.zipcode) {
+    if (!req.body.place || !req.body.place.address || !req.body.place.city || !req.body.place.zipcode || isNan(parseInt(req.body.place.zipcode))) {
       errors.push('invalid "place"')
     }
     if (errors.length === 0) {
