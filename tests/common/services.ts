@@ -14,7 +14,7 @@ import ShopRegisterRequestModel from '../../app/shop/models/register.request.mod
 import { shops, client } from './models'
 
 async function getUserCredentials(email: string, password: string): Promise<CredentialModel> {
-  return (await CredentialsService.getCredentialFromMailAndPassword(email, EncryptionService.encrypt(password)))._unsafeUnwrap()
+  return (await CredentialsService.getCredentialFromEmailAndPassword(email, EncryptionService.encrypt(password)))._unsafeUnwrap()
 }
 
 export async function getUser(email: string, password: string): Promise<UserModel> {
@@ -26,7 +26,7 @@ export async function getUser(email: string, password: string): Promise<UserMode
 export async function getUserToken(email: string, password: string): Promise<TokenModel> {
   let client_handle = (await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()
   let credentials = await getUserCredentials(email, password)
-  let token = (await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials))._unsafeUnwrap()
+  let token = (await TokensService.generateTokenBetweenClientAndCredential(client_handle.id, credentials.id))._unsafeUnwrap()
 
   return token
 }
@@ -42,8 +42,8 @@ export async function createShop(shop: ShopRegisterRequestModel = shops[0]): Pro
 
 export async function getShopToken(email: string, password: string): Promise<TokenModel> {
   let client_handle = (await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()
-  let credentials = (await CredentialsService.getCredentialFromMailAndPassword(email, EncryptionService.encrypt(password)))._unsafeUnwrap()
-  let token = (await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials))._unsafeUnwrap()
+  let credentials = (await CredentialsService.getCredentialFromEmailAndPassword(email, EncryptionService.encrypt(password)))._unsafeUnwrap()
+  let token = (await TokensService.generateTokenBetweenClientAndCredential(client_handle.id, credentials.id))._unsafeUnwrap()
 
   return token
 }

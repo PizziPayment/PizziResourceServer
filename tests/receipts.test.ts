@@ -50,7 +50,7 @@ async function setupUser(id?: number): Promise<{ token: string; id: number }> {
   expect(client_handle_result.isOk()).toBeTruthy()
   const client_handle = client_handle_result._unsafeUnwrap()
 
-  const token_result = await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials)
+  const token_result = await TokensService.generateTokenBetweenClientAndCredential(client_handle.id, credentials.id)
   expect(token_result.isOk()).toBeTruthy()
   const token = token_result._unsafeUnwrap()
 
@@ -105,7 +105,7 @@ async function setupShop(id?: number): Promise<{ id: number; items: Array<Comple
   expect(credentials_result.isOk())
   const credentials = credentials_result._unsafeUnwrap()
 
-  const token_result = await TokensService.generateTokenBetweenClientAndCredential(client_handle, credentials)
+  const token_result = await TokensService.generateTokenBetweenClientAndCredential(client_handle.id, credentials.id)
   expect(token_result.isOk()).toBeTruthy()
   const token = token_result._unsafeUnwrap()
 

@@ -173,7 +173,7 @@ describe('Shop endpoint', () => {
       const put_res = await request(App).put(endpoint_password).set(header).send(body)
       expect(put_res.statusCode).toEqual(204)
 
-      let revoked_token = await TokensService.getTokenFromValue(token.access_token)
+      let revoked_token = await TokensService.getTokenFromAccessValue(token.access_token)
       expect(revoked_token.isErr()).toBe(true)
       expect(revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
 

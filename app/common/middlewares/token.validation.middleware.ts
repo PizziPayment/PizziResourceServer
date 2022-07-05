@@ -7,10 +7,10 @@ export default async function validToken(req: Request, res: Response<ApiResponse
 
   if (authorization_type && authorization_type.length === 2 && authorization_type[0] === 'Bearer') {
     const access_token = authorization_type[1]
-    const maybe_token = await TokensService.getTokenFromValue(access_token)
+    const maybe_token = await TokensService.getTokenFromAccessValue(access_token)
 
     if (maybe_token.isOk()) {
-      if (new Date(maybe_token.value.expires_at).getTime() > new Date().getTime()) {
+      if (new Date(maybe_token.value.access_expires_at).getTime() > new Date().getTime()) {
         res.locals.token = maybe_token.value
         return next()
       } else {
