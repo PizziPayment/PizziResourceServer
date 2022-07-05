@@ -304,7 +304,7 @@ describe('User endpoint', () => {
       const put_res = await request(App).put(endpoint_password).set(header).send(body)
       expect(put_res.statusCode).toEqual(204)
 
-      let not_revoked_token = await TokensService.getTokenFromValue(token)
+      let not_revoked_token = await TokensService.getTokenFromAccessValue(token)
       expect(not_revoked_token.isErr()).toBe(true)
       expect(not_revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
 
