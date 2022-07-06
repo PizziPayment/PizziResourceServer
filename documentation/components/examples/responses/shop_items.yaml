@@ -1,0 +1,9 @@
+description: Shop items example
+value:
+  items:
+    - id: 1
+      name: red wheelbarrow
+      price: '99.99'
+    - id: 2
+      name: cultivator
+      price: '346.00'

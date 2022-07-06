@@ -48,3 +48,7 @@ export class Filter {
   nb_items?: number
   query?: string
 }
+
+export class ShopItemRetrieveParamModel {
+  id: number
+}

@@ -135,9 +135,9 @@ components:
   # Responses
     # Shop items
     ResponseShopItem:
-      $ref: './components/examples/responses/shop_item.yaml#/ShopItem'
+      $ref: './components/examples/responses/shop_item.yaml'
     ResponseShopItems:
-      $ref: './components/examples/responses/shop_item.yaml#/ShopItems'
+      $ref: './components/examples/responses/shop_items.yaml'
 
     # Shops
     ResponseShopsInfo:

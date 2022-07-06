@@ -4,8 +4,9 @@ import { ShopItemResponseModel, ShopItemsResponseModel } from '../models/respons
 import { ShopItemsService } from 'pizzi-db'
 import { CredentialModel } from 'pizzi-db'
 import { ApiFailure } from '../../common/models/api.response.model'
-import { Filter, intoDBOrder, intoDBSortBy } from '../models/retrieve.request.model'
+import { Filter, intoDBOrder, intoDBSortBy, ShopItemRetrieveParamModel } from '../models/retrieve.request.model'
 import { ShopItemUpdateParamModel, ShopItemUpdateRequestModel } from '../models/update.request.model'
+import { ShopItemDeleteParamModel } from '../models/delete.model'
 
 export async function createShopItems(req: Request<unknown, unknown, ShopItemCreationRequestModel>, res: Response): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -33,6 +34,15 @@ export async function retrieveShopItems(req: Request<unknown, unknown, unknown, 
   )
 }
 
+export async function retrieveShopItem(req: Request<ShopItemRetrieveParamModel>, res: Response): Promise<void> {
+  const credentials = res.locals.credential as CredentialModel
+
+  await ShopItemsService.retrieveShopItemFromId(credentials.shop_id).match(
+    (item) => res.status(200).send(new ShopItemResponseModel(item)),
+    () => res.status(500).send(new ApiFailure(req.url, 'Internal error')),
+  )
+}
+
 export async function updateShopItem(req: Request<ShopItemUpdateParamModel, unknown, ShopItemUpdateRequestModel>, res: Response): Promise<void> {
   const shop_item_id = req.params.id
   const shop_item = req.body
@@ -43,7 +53,7 @@ export async function updateShopItem(req: Request<ShopItemUpdateParamModel, unkn
   )
 }
 
-export async function deleteShopItem(req: Request<ShopItemUpdateParamModel, unknown, unknown>, res: Response): Promise<void> {
+export async function deleteShopItem(req: Request<ShopItemDeleteParamModel, unknown, unknown>, res: Response): Promise<void> {
   const shop_item_id = req.params.id
 
   await ShopItemsService.deleteShopItemById(shop_item_id).match(

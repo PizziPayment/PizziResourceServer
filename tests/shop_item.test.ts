@@ -130,56 +130,86 @@ describe('Shop item endpoint', () => {
   })
 
   describe('GET request', () => {
-    it('should not allow the retrieval of shop item with an invalid token', async () => {
-      const [_, token, __] = await setupShopItem()
-      const res = await request(App)
-        .post(endpoint)
-        .set(createBearerHeader(createRandomToken(token.access_token)))
-        .send(shop_items)
+    describe('List shop items', () => {
+      it('should not allow the retrieval of shop item with an invalid token', async () => {
+        const [_, token, __] = await setupShopItem()
+        const res = await request(App)
+          .post(endpoint)
+          .set(createBearerHeader(createRandomToken(token.access_token)))
+          .send(shop_items)
 
-      expect(res.statusCode).toBe(401)
+        expect(res.statusCode).toBe(401)
+      })
+
+      describe('should retrieve items given a query', () => {
+        const params = [
+          [{ page: 1, nb_items: 3, sort_by: SortBy.NAME, order: Order.ASC, query: '', expected_si: shop_items.items }],
+          [{ page: 2, nb_items: 1, sort_by: SortBy.NAME, order: Order.DESC, query: '', expected_si: [shop_items.items[0]] }],
+          [{ page: 1, nb_items: 1, sort_by: SortBy.NAME, order: Order.ASC, query: '', expected_si: [shop_items.items[0]] }],
+          [
+            {
+              page: 1,
+              nb_items: 2,
+              sort_by: SortBy.PRICE,
+              order: Order.DESC,
+              query: '',
+              expected_si: shop_items.items,
+            },
+          ],
+          [{ page: 1, nb_items: 2, sort_by: SortBy.NAME, order: Order.ASC, query: 'cul', expected_si: [shop_items.items[0]] }],
+        ]
+
+        it.each(params)('Test n%#', async (param) => {
+          const [_, token, __] = await setupShopItem()
+          const { page, nb_items, sort_by, order, query, expected_si } = param
+
+          const res = await request(App)
+            .get(endpoint)
+            .query({
+              page,
+              nb_items,
+              sort_by: sort_by,
+              order: order,
+              query: query,
+            })
+            .set(createBearerHeader(token.access_token))
+          expect(res.statusCode).toBe(200)
+          const retrieved_items = (res.body as ShopItemsResponseModel).items
+          expect(retrieved_items.length).toBe(expected_si.length)
+
+          for (let i = 0; i < retrieved_items.length; i++) {
+            expect(retrieved_items[i].name).toBe(expected_si[i].name)
+            expect(parseFloat(retrieved_items[i].price)).toBe(parseFloat(expected_si[i].price))
+          }
+        })
+      })
     })
 
-    describe('should retrieve items given a query', () => {
-      const params = [
-        [{ page: 1, nb_items: 3, sort_by: SortBy.NAME, order: Order.ASC, query: '', expected_si: shop_items.items }],
-        [{ page: 2, nb_items: 1, sort_by: SortBy.NAME, order: Order.DESC, query: '', expected_si: [shop_items.items[0]] }],
-        [{ page: 1, nb_items: 1, sort_by: SortBy.NAME, order: Order.ASC, query: '', expected_si: [shop_items.items[0]] }],
-        [
-          {
-            page: 1,
-            nb_items: 2,
-            sort_by: SortBy.PRICE,
-            order: Order.DESC,
-            query: '',
-            expected_si: shop_items.items,
-          },
-        ],
-        [{ page: 1, nb_items: 2, sort_by: SortBy.NAME, order: Order.ASC, query: 'cul', expected_si: [shop_items.items[0]] }],
-      ]
-
-      it.each(params)('Test n%#', async (param) => {
-        const [_, token, __] = await setupShopItem()
-        const { page, nb_items, sort_by, order, query, expected_si } = param
-
+    describe('Get shop item', () => {
+      it('should not allow the retrieval of shop item with an invalid token', async () => {
+        const [_, token, shop_items] = await setupShopItem()
+        const shop_item = shop_items[0]
         const res = await request(App)
-          .get(endpoint)
-          .query({
-            page,
-            nb_items,
-            sort_by: sort_by,
-            order: order,
-            query: query,
-          })
-          .set(createBearerHeader(token.access_token))
-        expect(res.statusCode).toBe(200)
-        const retrieved_items = (res.body as ShopItemsResponseModel).items
-        expect(retrieved_items.length).toBe(expected_si.length)
+          .get(endpoint + `/${shop_item.id}`)
+          .set(createBearerHeader(createRandomToken(token.access_token)))
+          .send(shop_items)
 
-        for (let i = 0; i < retrieved_items.length; i++) {
-          expect(retrieved_items[i].name).toBe(expected_si[i].name)
-          expect(parseFloat(retrieved_items[i].price)).toBe(parseFloat(expected_si[i].price))
-        }
+        expect(res.statusCode).toBe(401)
+      })
+
+      it('should be able to retrieve a shop item by its id', async () => {
+        const [_, token, shop_items] = await setupShopItem()
+        const shop_item = shop_items[0]
+        const res = await request(App)
+          .get(endpoint + `/${shop_item.id}`)
+          .set(createBearerHeader(token.access_token))
+          .send(shop_items)
+
+        expect(res.statusCode).toBe(200)
+        const retrieved_shop_item = res.body as ShopItemResponseModel
+        expect(retrieved_shop_item.name).toBe(shop_item.name)
+        expect(retrieved_shop_item.price).toBe(shop_item.price)
+        expect(retrieved_shop_item.created_at).toBe(shop_item.created_at)
       })
     })
   })

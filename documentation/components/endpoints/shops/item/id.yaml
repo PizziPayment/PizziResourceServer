@@ -1,3 +1,36 @@
+get:
+  operationId: get_shop_item
+  tags:
+    - Shop Item
+  summary: Get shop item
+  description: >
+    Retrieve a shop item by its id.
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Item's id.
+  security:
+    - BearerAuth: []
+  responses:
+    200:
+      description: Operation succeeded.
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../openapi.yaml#/components/schemas/ResponseShopItem'
+          examples:
+            ShopItem:
+              $ref: '../../../../openapi.yaml#/components/examples/ResponseShopItem'
+    400:
+      $ref: '../../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../../openapi.yaml#/components/responses/500'
+
 delete:
   operationId: delete_shop_item
   tags:
