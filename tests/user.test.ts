@@ -14,6 +14,9 @@ async function createUser(): Promise<void> {
   expect((await CredentialsService.createCredentialWithId('user', user_handle.id, user.email, EncryptionService.encrypt(user.password))).isOk()).toBeTruthy()
 }
 
+// @ts-ignore
+let sequelize: Sequelize = undefined
+
 beforeEach(async () => {
   const database = config.database
   const orm_config = {
@@ -25,9 +28,11 @@ beforeEach(async () => {
     logging: false,
   }
 
-  await rewriteTables(orm_config)
+  sequelize = await rewriteTables(orm_config)
   await ClientsService.createClientFromIdAndSecret(client.client_id, client.client_secret)
 })
+
+afterEach(async () => await sequelize.close())
 
 describe('User endpoint', () => {
   describe('GET request', () => {

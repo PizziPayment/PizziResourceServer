@@ -37,3 +37,21 @@ export function validRequestQueryFor<T>(
     next()
   }
 }
+
+export function validRequestParamsFor<T>(
+  validator: TypeValidator<T>,
+): (req: Request<T>, res: Response, next: NextFunction) => Response | void {
+  return (req, res, next) => {
+    if (!req.params) {
+      return res.status(400).send(new ApiFailure(req.url, 'Missing parameters'))
+    }
+
+    const error = validator.test(req.params)
+
+    if (error !== null) {
+      return res.status(400).send(new ApiFailure(req.url, error))
+    }
+
+    next()
+  }
+}

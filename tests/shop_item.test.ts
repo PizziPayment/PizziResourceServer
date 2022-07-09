@@ -18,11 +18,11 @@ const shop_items: ShopItemCreationRequestModel = {
   items: [
     {
       name: 'cultivator',
-      price: '346',
+      price: 34600,
     },
     {
       name: 'red wheelbarrow',
-      price: '99.99',
+      price: 9999,
     },
   ],
 }
@@ -31,7 +31,7 @@ const shop_items_missing_price = {
   items: [
     {
       name: 'cultivator',
-      price: '346',
+      price: 34600,
     },
     {
       name: 'red wheelbarrow',
@@ -43,10 +43,10 @@ const shop_items_missing_name = {
   items: [
     {
       name: 'cultivator',
-      price: '346',
+      price: 34600,
     },
     {
-      price: '99.99',
+      price: 9999,
     },
   ],
 }
@@ -55,7 +55,7 @@ const shop_items_invalid_price = {
   items: [
     {
       name: 'cultivator',
-      price: 'Not a float',
+      price: 100.1,
     },
   ],
 }
@@ -76,6 +76,9 @@ async function setupShopItem(
   return [created_shop, token, (res_shop_items.body as ShopItemsResponseModel).items]
 }
 
+// @ts-ignore
+let sequelize: Sequelize = undefined
+
 beforeEach(async () => {
   const database = config.database
   const orm_config: OrmConfig = {
@@ -87,9 +90,11 @@ beforeEach(async () => {
     logging: false,
   }
 
-  await rewriteTables(orm_config)
+  sequelize = await rewriteTables(orm_config)
   await ClientsService.createClientFromIdAndSecret(client.client_id, client.client_secret)
 })
+
+afterEach(async () => await sequelize.close())
 
 describe('Shop item endpoint', () => {
   describe('POST request', () => {
@@ -102,10 +107,10 @@ describe('Shop item endpoint', () => {
 
       for (let i = 0; i < shop_items.items.length; i++) {
         expect(created_items[i].name).toBe(shop_items.items[i].name)
-        expect(parseFloat(created_items[i].price)).toBe(parseFloat(shop_items.items[i].price))
+        expect(created_items[i].price).toBe(shop_items.items[i].price)
         expect(retrieved_items[i].shop_id).toBe(shop.id)
         expect(retrieved_items[i].name).toBe(shop_items.items[i].name)
-        expect(parseFloat(retrieved_items[i].price)).toBe(parseFloat(shop_items.items[i].price))
+        expect(retrieved_items[i].price).toBe(shop_items.items[i].price)
       }
     })
 
@@ -177,7 +182,7 @@ describe('Shop item endpoint', () => {
 
         for (let i = 0; i < retrieved_items.length; i++) {
           expect(retrieved_items[i].name).toBe(expected_si[i].name)
-          expect(parseFloat(retrieved_items[i].price)).toBe(parseFloat(expected_si[i].price))
+          expect(retrieved_items[i].price).toBe(expected_si[i].price)
         }
       })
     })
@@ -192,10 +197,10 @@ describe('Shop item endpoint', () => {
             price: undefined,
           },
         ],
-        [{ name: undefined, price: '4500' }],
-        [{ name: 'hoe', price: '4599' }],
-        [{ name: 'Manual Edge Trimmer', price: '4599' }],
-        [{ name: 'hoe', price: '34.5' }],
+        [{ name: undefined, price: 450000 }],
+        [{ name: 'hoe', price: 459900 }],
+        [{ name: 'Manual Edge Trimmer', price: 459900 }],
+        [{ name: 'hoe', price: 3450 }],
       ]
 
       it.each(new_items_properties)('Test n%#', async (new_item_properties) => {
@@ -203,7 +208,7 @@ describe('Shop item endpoint', () => {
           items: [
             {
               name: 'Manual Edge Trimmer',
-              price: '34.5',
+              price: 3450,
             },
           ],
         }
@@ -227,9 +232,9 @@ describe('Shop item endpoint', () => {
         }
 
         if (new_item_properties.price !== undefined) {
-          expect(parseFloat(new_shop_item.price)).toBe(parseFloat(new_item_properties.price))
+          expect(new_shop_item.price).toBe(new_item_properties.price)
         } else {
-          expect(parseFloat(new_shop_item.price)).toBe(parseFloat(shop_item.price))
+          expect(new_shop_item.price).toBe(shop_item.price)
         }
       })
 
@@ -260,7 +265,7 @@ describe('Shop item endpoint', () => {
     describe('should not allow the modification of a shop item', () => {
       it('with an invalid price', async () => {
         const [_, token, created_items] = await setupShopItem()
-        const new_item_properties: ShopItemUpdateRequestModel = { name: 'Toto', price: 'Not a float' }
+        const new_item_properties: ShopItemUpdateRequestModel = { name: 'Toto', price: 100.1 }
         const shop_item = created_items[0]
 
         const res = await request(App)
@@ -272,7 +277,7 @@ describe('Shop item endpoint', () => {
 
       it('with an invalid token', async () => {
         const [_, token, created_items] = await setupShopItem()
-        const new_item_propertoes: ShopItemUpdateRequestModel = { name: 'Toto', price: '23.00' }
+        const new_item_propertoes: ShopItemUpdateRequestModel = { name: 'Toto', price: 2300 }
         const shop_item = created_items[0]
 
         const res = await request(App)
@@ -298,7 +303,7 @@ describe('Shop item endpoint', () => {
         await createShop(shops[1])
         const bearer_header = await createBearerHeaderFromCredential(shops[1].email, shops[1].password)
 
-        const new_item_properties: ShopItemUpdateRequestModel = { name: 'Toto', price: '23.00' }
+        const new_item_properties: ShopItemUpdateRequestModel = { name: 'Toto', price: 2300 }
 
         const res = await request(App)
           .patch(endpoint + `/${shop_item.id}`)
@@ -310,7 +315,7 @@ describe('Shop item endpoint', () => {
       it('that is deleted', async () => {
         const [_, token, created_items] = await setupShopItem()
         const shop_item = created_items[0]
-        const new_item_properties: ShopItemUpdateRequestModel = { name: 'Toto', price: '23.00' }
+        const new_item_properties: ShopItemUpdateRequestModel = { name: 'Toto', price: 2300 }
         const bearer_header = createBearerHeader(token.access_token)
 
         expect(

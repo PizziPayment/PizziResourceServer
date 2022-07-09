@@ -4,12 +4,12 @@ import { withFieldValidator } from "../../common/services/error_handling"
 export class ShopItemCreationModel {
   static descriptor: ObjectDescriptor<ShopItemCreationModel> = {
     name: { type: 'string' },
-    price: { type: 'string', customValidator: withFieldValidator((value) => !isNaN(parseFloat(value))) },
+    price: { type: 'number', customValidator: withFieldValidator(Number.isInteger) },
   }
   static validator: TypeValidator<ShopItemCreationModel> = new TypeValidator(this.descriptor)
 
   name: string
-  price: string
+  price: number
 }
 
 export class ShopItemCreationRequestModel {

@@ -15,11 +15,14 @@ import {
 } from 'pizzi-db'
 import * as request from 'supertest'
 import { users, shops, client } from './common/models'
-import { ReceiptModel } from '../app/user/models/receipt_list.model'
+import { ReceiptModel } from '../app/user/models/receipt_list.response.model'
 import { DetailedReceiptModel } from '../app/user/models/detailed_receipt'
 import CreateTransactionRequestModel from '../app/shop/models/create_transaction.request.model'
 
 const shop = shops[0]
+
+// @ts-ignore
+let sequelize: Sequelize = undefined
 
 beforeEach(async () => {
   const database = config.database
@@ -32,9 +35,11 @@ beforeEach(async () => {
     logging: false,
   }
 
-  await rewriteTables(orm_config)
+  sequelize = await rewriteTables(orm_config)
   await ClientsService.createClientFromIdAndSecret(client.client_id, client.client_secret)
 })
+
+afterEach(async () => await sequelize.close())
 
 async function setupUser(id?: number): Promise<{ token: string; id: number }> {
   const user = users[id || 0]
@@ -59,7 +64,7 @@ async function setupUser(id?: number): Promise<{ token: string; id: number }> {
 
 class Item {
   name: string
-  price: string
+  price: number
   discount: number
   eco_tax: number
   quantity: number
@@ -70,18 +75,17 @@ class CompleteItem extends Item {
   id: number
 }
 
-const items: Item[] = [
-  { name: 'Outer Wilds', price: '17.49', discount: 0, eco_tax: 0, quantity: 1, warranty: 'none' },
-  { name: 'Outer Wilds - Echoes of the Eye', price: '10.40', discount: 0, eco_tax: 0, quantity: 1, warranty: 'none' },
+const items: Array<Item> = [
+  { name: 'Outer Wilds', price: 1749, discount: 0, eco_tax: 0, quantity: 1, warranty: 'none' },
+  { name: 'Outer Wilds - Echoes of the Eye', price: 1040, discount: 0, eco_tax: 0, quantity: 1, warranty: 'none' },
 ]
-const total_price = Number(
-  items
-    .map((item) => Number(item.price))
-    .reduce((lhs, rhs) => lhs + rhs)
-    .toFixed(2),
-)
 
-async function setupShop(id?: number): Promise<{ id: number; items: Array<CompleteItem>; token: string }> {
+function getTotalPrice(items: Array<Item>): number {
+  return items.map((item) => item.price).reduce((lhs, rhs) => lhs + rhs)
+}
+const tax_percentage = 20
+
+async function setupShop(id?: number, shop_items: Array<Item> = items): Promise<{ id: number; items: Array<CompleteItem>; token: string }> {
   const shop = shops[id || 0]
   const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, Number(shop.siret), shop.place.address, shop.place.city, shop.place.zipcode)
   expect(shop_handle_result.isOk()).toBeTruthy()
@@ -89,7 +93,7 @@ async function setupShop(id?: number): Promise<{ id: number; items: Array<Comple
 
   const items_total = []
 
-  for (const item of items) {
+  for (const item of shop_items) {
     const item_handle_result = await ShopItemsService.createShopItem(shop_handle.id, item.name, item.price)
     expect(item_handle_result.isOk()).toBeTruthy()
     const item_handle = item_handle_result._unsafeUnwrap()
@@ -112,8 +116,9 @@ async function setupShop(id?: number): Promise<{ id: number; items: Array<Comple
   return { id: shop_handle.id, items: items_total, token: token.access_token }
 }
 
-async function setupReceipts(user: number, shop: number, items: Array<CompleteItem>): Promise<number> {
-  const receipt_result = await ReceiptsService.createReceipt(20, total_price.toString())
+async function setupReceipt(user: number, shop: number, items: Array<CompleteItem>): Promise<{ id: number, total_price: number, date: Date }> {
+  const total_price = getTotalPrice(items)
+  const receipt_result = await ReceiptsService.createReceipt(tax_percentage, total_price)
   expect(receipt_result.isOk()).toBeTruthy()
   const receipt = receipt_result._unsafeUnwrap()
 
@@ -127,7 +132,7 @@ async function setupReceipts(user: number, shop: number, items: Array<CompleteIt
 
   expect((await TransactionsService.updateTransactionStateFromId(transaction.id, 'validated')).isOk()).toBeTruthy()
 
-  return receipt.id
+  return { id: receipt.id, total_price, date: transaction.created_at }
 }
 
 function createBearerHeader(token: string): Object {
@@ -138,8 +143,8 @@ function approximateDate(date: Date, tolerance: number): boolean {
   return Math.abs(date.getTime() - new Date().getTime()) < tolerance
 }
 
-function compute_tax(price: string, tax_percentage: number): number {
-  return Number((Number(price) * (1 + tax_percentage / 100)).toFixed(2))
+function compute_tax(price: number): number {
+  return Math.round(price + price * tax_percentage)
 }
 
 describe('User receipts endpoint', () => {
@@ -149,17 +154,169 @@ describe('User receipts endpoint', () => {
     it('basic test', async () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
-      const receipt_id = await setupReceipts(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
 
       const res = await request(App).get(endpoint).set(createBearerHeader(user_infos.token)).send()
       const body: ReceiptModel = res.body[0]
 
       expect(res.statusCode).toEqual(200)
       expect(approximateDate(new Date(body.date), 60000)).toBeTruthy()
-      expect(body.total_ttc).toEqual(Number((total_price * 1.2).toFixed(2)))
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price))
       expect(body.shop_name).toEqual(shop.name)
       expect(body.shop_logo !== undefined).toBeTruthy()
-      expect(body.receipt_id).toEqual(receipt_id)
+      expect(body.receipt_id).toEqual(receipt.id)
+    })
+
+    it('order by ascending price', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?filter=price_ascending').set(createBearerHeader(user_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(body[index - 1].total_ttc).toBeLessThanOrEqual(body[index].total_ttc)
+      }
+    })
+
+    it('order by descending price', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?filter=price_descending').set(createBearerHeader(user_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(body[index - 1].total_ttc).toBeGreaterThanOrEqual(body[index].total_ttc)
+      }
+    })
+
+    it('order by ascending date', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?filter=oldest').set(createBearerHeader(user_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(new Date(body[index - 1].date).getTime()).toBeLessThanOrEqual(new Date(body[index].date).getTime())
+      }
+    })
+
+    it('order by descending date', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?filter=latest').set(createBearerHeader(user_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(new Date(body[index - 1].date).getTime()).toBeGreaterThanOrEqual(new Date(body[index].date).getTime())
+      }
+    })
+
+    it('query a specific shop', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop(0)
+      const shop_2_infos = await setupShop(1)
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_2_infos.id, shop_infos.items)
+
+      const res = await request(App).get(endpoint + `?query=${shops[0].name}`).set(createBearerHeader(user_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+      expect(body.length).toBe(1)
+      expect(body[0].shop_name).toBe(shops[0].name)
+    })
+
+    it('retrieve receipts from a given date', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop(0)
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?from=' + receipt_2.date.toISOString()).set(createBearerHeader(user_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+      expect(body.length).toBe(2)
+
+      for (let index = 0; index < body.length; index++) {
+        expect(new Date(body[index].date).getTime()).toBeGreaterThanOrEqual(receipt_2.date.getTime())
+      }
+    })
+
+    it('retrieve receipts up to a given date', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop(0)
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?to=' + receipt_2.date.toISOString()).set(createBearerHeader(user_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+      expect(body.length).toBe(2)
+
+      for (let index = 0; index < body.length; index++) {
+        expect(new Date(body[index].date).getTime()).toBeLessThanOrEqual(receipt_2.date.getTime())
+      }
+    })
+
+    it('retrieve receipts using every query parameter', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop(0)
+      const shop_2_infos = await setupShop(1)
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_2_infos.id, shop_infos.items)
+      const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_2_infos.id, [shop_infos.items[0]])
+      const receipt_3 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+      await setupReceipt(user_infos.id, shop_2_infos.id, [shop_infos.items[1]])
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_2_infos.id, shop_infos.items)
+
+      const url = `${endpoint}?from=${receipt_2.date.toISOString()}&to=${receipt_3.date.toISOString()}&query=${shops[0].name}&filter=price_descending`
+      const res = await request(App).get(url).set(createBearerHeader(user_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+      expect(body.length).toBe(2)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(new Date(body[index - 1].date).getTime()).toBeLessThanOrEqual(new Date(body[index].date).getTime())
+      }
     })
   })
 
@@ -167,16 +324,16 @@ describe('User receipts endpoint', () => {
     it('basic test', async () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
-      const receipt_id = await setupReceipts(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
 
-      const res = await request(App).get(`${endpoint}/${receipt_id}`).set(createBearerHeader(user_infos.token)).send()
+      const res = await request(App).get(`${endpoint}/${receipt.id}`).set(createBearerHeader(user_infos.token)).send()
       const body: DetailedReceiptModel = res.body
       const vendor = body.vendor
       const products = body.products
 
       expect(res.statusCode).toEqual(200)
-      expect(body.total_ht).toEqual(total_price)
-      expect(body.total_ttc).toEqual(Number((total_price * 1.2).toFixed(2)))
+      expect(body.total_ht).toEqual(receipt.total_price)
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price))
       expect(body.tva_percentage).toEqual(20)
       expect(body.payment_type).toEqual('card')
       expect(approximateDate(new Date(body.creation_date), 60000))
@@ -194,7 +351,7 @@ describe('User receipts endpoint', () => {
         expect(products[i].discount).toEqual(items[i].discount)
         expect(products[i].warranty).toEqual(items[i].warranty)
         expect(products[i].product_name).toEqual(items[i].name)
-        expect(products[i].price_unit).toEqual(Number(items[i].price))
+        expect(products[i].price_unit).toEqual(items[i].price)
       }
     })
 
@@ -202,9 +359,9 @@ describe('User receipts endpoint', () => {
       const user_infos = await setupUser(0)
       const second_user_infos = await setupUser(1)
       const shop_infos = await setupShop()
-      const receipt_id = await setupReceipts(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
 
-      const res = await request(App).get(`${endpoint}/${receipt_id}`).set(createBearerHeader(second_user_infos.token)).send()
+      const res = await request(App).get(`${endpoint}/${receipt.id}`).set(createBearerHeader(second_user_infos.token)).send()
 
       expect(res.statusCode).toEqual(404)
     })
@@ -218,7 +375,7 @@ describe('Shop receipts endpoint', () => {
     it('basic test', async () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
-      const receipt_id = await setupReceipts(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
 
       const res = await request(App).get(endpoint).set(createBearerHeader(shop_infos.token)).send()
       const body: ReceiptModel = res.body[0]
@@ -226,10 +383,145 @@ describe('Shop receipts endpoint', () => {
 
       expect(res.statusCode).toEqual(200)
       expect(Math.abs(date - new Date(body.date).getTime()) < 60000).toBeTruthy()
-      expect(body.total_ttc).toEqual(Number((total_price * 1.2).toFixed(2)))
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price))
       expect(body.shop_name).toEqual(undefined)
       expect(body.shop_logo).toEqual(undefined)
-      expect(body.receipt_id).toEqual(receipt_id)
+      expect(body.receipt_id).toEqual(receipt.id)
+    })
+
+    it('order by ascending price', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?filter=price_ascending').set(createBearerHeader(shop_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(body[index - 1].total_ttc).toBeLessThanOrEqual(body[index].total_ttc)
+      }
+    })
+
+    it('order by descending price', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?filter=price_descending').set(createBearerHeader(shop_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(body[index - 1].total_ttc).toBeGreaterThanOrEqual(body[index].total_ttc)
+      }
+    })
+
+    it('order by ascending date', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?filter=oldest').set(createBearerHeader(shop_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(new Date(body[index - 1].date).getTime()).toBeLessThanOrEqual(new Date(body[index].date).getTime())
+      }
+    })
+
+    it('order by descending date', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?filter=latest').set(createBearerHeader(shop_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(new Date(body[index - 1].date).getTime()).toBeGreaterThanOrEqual(new Date(body[index].date).getTime())
+      }
+    })
+
+    it('retrieve receipts from a given date', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?from=' + receipt_2.date.toISOString()).set(createBearerHeader(shop_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+      expect(body.length).toBe(2)
+
+      for (let index = 0; index < body.length; index++) {
+        expect(new Date(body[index].date).getTime()).toBeGreaterThanOrEqual(receipt_2.date.getTime())
+      }
+    })
+
+    it('retrieve receipts up to a given date', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const res = await request(App).get(endpoint + '?to=' + receipt_2.date.toISOString()).set(createBearerHeader(shop_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+      expect(body.length).toBe(2)
+
+      for (let index = 0; index < body.length; index++) {
+        expect(new Date(body[index].date).getTime()).toBeLessThanOrEqual(receipt_2.date.getTime())
+      }
+    })
+
+    it('retrieve receipts using every query parameter', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop(0)
+
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+      const receipt_3 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+      await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+      await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
+
+      const url = `${endpoint}?from=${receipt_2.date.toISOString()}&to=${receipt_3.date.toISOString()}&filter=price_descending`
+      const res = await request(App).get(url).set(createBearerHeader(shop_infos.token)).send()
+      const body: Array<ReceiptModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+      expect(body.length).toBe(3)
+
+      for (let index = 1; index < body.length; index++) {
+        expect(new Date(body[index - 1].date).getTime()).toBeLessThanOrEqual(new Date(body[index].date).getTime())
+      }
     })
   })
 
@@ -237,16 +529,16 @@ describe('Shop receipts endpoint', () => {
     it('basic test', async () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
-      const receipt_id = await setupReceipts(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
 
-      const res = await request(App).get(`${endpoint}/${receipt_id}`).set(createBearerHeader(shop_infos.token)).send()
+      const res = await request(App).get(`${endpoint}/${receipt.id}`).set(createBearerHeader(shop_infos.token)).send()
       const body: DetailedReceiptModel = res.body
       const products = body.products
 
       expect(res.statusCode).toEqual(200)
-      expect(body.total_ht).toEqual(total_price)
+      expect(body.total_ht).toEqual(receipt.total_price)
       expect(body.tva_percentage).toEqual(20)
-      expect(body.total_ttc).toEqual(compute_tax(String(total_price), 20))
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price))
       expect(body.payment_type).toEqual('card')
 
       for (const i of Array(items.length).keys()) {
@@ -255,7 +547,7 @@ describe('Shop receipts endpoint', () => {
         expect(products[i].discount).toEqual(items[i].discount)
         expect(products[i].warranty).toEqual(items[i].warranty)
         expect(products[i].product_name).toEqual(items[i].name)
-        expect(products[i].price_unit).toEqual(Number(items[i].price))
+        expect(products[i].price_unit).toEqual(items[i].price)
       }
     })
 
@@ -263,9 +555,9 @@ describe('Shop receipts endpoint', () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop(0)
       const second_shop_infos = await setupShop(1)
-      const receipt_id = await setupReceipts(user_infos.id, shop_infos.id, shop_infos.items)
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
 
-      const res = await request(App).get(`${endpoint}/${receipt_id}`).set(createBearerHeader(second_shop_infos.token)).send()
+      const res = await request(App).get(`${endpoint}/${receipt.id}`).set(createBearerHeader(second_shop_infos.token)).send()
 
       expect(res.statusCode).toEqual(404)
     })
@@ -284,10 +576,11 @@ describe('Receipt creation and validation', () => {
     const user_token = createBearerHeader(user_infos.token)
     const shop_token = createBearerHeader(shop_infos.token)
 
+    const total_price = getTotalPrice(shop_infos.items)
     const creation_body: CreateTransactionRequestModel = {
       tva_percentage: 20,
       payment_method: 'card',
-      total_price: String(total_price),
+      total_price,
       items: shop_infos.items.map((item) => {
         return { shop_item_id: item.id, discount: item.discount, eco_tax: item.eco_tax, quantity: item.quantity, warranty: item.warranty }
       }),
@@ -308,12 +601,12 @@ describe('Receipt creation and validation', () => {
     expect(user_receipts_res.statusCode).toEqual(200)
     expect(user_receipts_res.body.length).toEqual(1)
     expect(user_receipts_res.body[0].shop_name).toEqual(shop.name)
-    expect(user_receipts_res.body[0].total_ttc).toEqual(compute_tax(String(total_price), 20))
+    expect(user_receipts_res.body[0].total_ttc).toEqual(compute_tax(total_price))
 
     const shop_receipts_res = await request(App).get(shop_receipts_endpoint).set(shop_token).send()
 
     expect(shop_receipts_res.statusCode).toEqual(200)
     expect(shop_receipts_res.body.length).toEqual(1)
-    expect(shop_receipts_res.body[0].total_ttc).toEqual(compute_tax(String(total_price), 20))
+    expect(shop_receipts_res.body[0].total_ttc).toEqual(compute_tax(total_price))
   })
 })

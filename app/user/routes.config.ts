@@ -9,13 +9,14 @@ import changePassword from '../common/controllers/password.controller'
 import changeEmail from '../common/controllers/email.controller'
 import validUserReceiptAffiliation from './middlewares/receipt_affiliation.validation.middleware'
 import validTakeTransactionRequest from './middlewares/take_transaction.validation.middleware'
-import { validRequestBodyFor } from '../common/middlewares/request.validation.middleware'
+import { validRequestBodyFor, validRequestParamsFor, validRequestQueryFor } from '../common/middlewares/request.validation.middleware'
 import RegisterRequestModel from './models/register.request.model'
 import DeleteRequestModel from './models/delete.request.model'
 import PatchRequestModel from './models/patch.request.model'
 import RequestPasswordModel from '../common/models/password.request.model'
 import ChangeEmailValidationModel from '../common/models/email.request.model'
-import { ReceiptsListRequestModel } from '../common/models/receipts.request.model'
+import { ReceiptDetailsRequestModel } from '../common/models/receipts.request.model'
+import { ReceiptsListRequestModel } from './models/receipt_list.request.model'
 import TakeTransactionRequestModel from './models/take_transaction.request.model'
 
 export const baseUrl = '/users'
@@ -31,8 +32,8 @@ export default function UserRouter(app: Application): void {
   app.patch(`${baseUrl}/`, [validRequestBodyFor(PatchRequestModel.validator), validToken, validUserTokenAffiliation, changeUserInformation])
   app.put(`${baseUrlPassword}/`, [validRequestBodyFor(RequestPasswordModel.validator), validToken, validChangePassword, changePassword])
   app.patch(`${baseUrlEmail}/`, [validRequestBodyFor(ChangeEmailValidationModel.validator), validToken, validPassword, changeEmail])
-  app.get(`${baseUrlReceipts}/:receipt_id`, [validToken, validUserTokenAffiliation, validUserReceiptAffiliation, receipt])
-  app.get(`${baseUrlReceipts}/`, [validRequestBodyFor(ReceiptsListRequestModel.validator), validToken, validUserTokenAffiliation, receipts])
+  app.get(`${baseUrlReceipts}/:receipt_id`, [validRequestParamsFor(ReceiptDetailsRequestModel.validator), validToken, validUserTokenAffiliation, validUserReceiptAffiliation, receipt])
+  app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validToken, validUserTokenAffiliation, receipts])
   app.post(`${baseUrlTransactions}`, [
     validRequestBodyFor(TakeTransactionRequestModel.validator),
     validToken,

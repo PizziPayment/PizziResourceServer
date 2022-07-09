@@ -23,6 +23,9 @@ import { createBearerHeader, createRandomToken, createShop, getShopToken } from 
 
 const shop = shops[0]
 
+// @ts-ignore
+let sequelize: Sequelize = undefined
+
 beforeEach(async () => {
   const database = config.database
   const orm_config: OrmConfig = {
@@ -34,9 +37,12 @@ beforeEach(async () => {
     logging: false,
   }
 
-  await rewriteTables(orm_config)
+  sequelize = await rewriteTables(orm_config)
   await ClientsService.createClientFromIdAndSecret(client.client_id, client.client_secret)
 })
+
+
+afterEach(async () => await sequelize.close())
 
 async function setupShopAndToken(shop: RegisterRequestModel = shops[0]): Promise<[ShopModel, TokenModel]> {
   return [await createShop(), await getShopToken(shop.email, shop.password)]

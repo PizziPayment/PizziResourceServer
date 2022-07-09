@@ -11,11 +11,14 @@ import {
   UsersServices,
   ReceiptsService,
   ShopsServices,
+  Filter,
+  ReceiptsQueryParameters,
 } from 'pizzi-db'
 import PatchRequestModel from '../models/patch.request.model'
 import InfosResponseModel from '../models/infos.response'
-import { ReceiptsListRequestModel, ReceiptDetailsRequestModel } from '../../common/models/receipts.request.model'
-import { ReceiptListModel } from '../models/receipt_list.model'
+import { ReceiptDetailsRequestModel } from '../../common/models/receipts.request.model'
+import { FilterModel, ReceiptsListRequestModel } from '../models/receipt_list.request.model'
+import { ReceiptListResponseModel } from '../models/receipt_list.response.model'
 import { DetailedReceiptModel } from '../models/detailed_receipt'
 import { siretLength } from '../../common/constants'
 import TakeTransactionRequestModel from '../models/take_transaction.request.model'
@@ -54,10 +57,39 @@ export async function changeUserInformation(
 }
 
 export async function receipts(
-  req: Request<unknown, unknown, ReceiptsListRequestModel>,
-  res: Response<ReceiptListModel | ApiFailure, { credential: CredentialModel }>,
+  req: Request<unknown, unknown, unknown, ReceiptsListRequestModel>,
+  res: Response<ReceiptListResponseModel | ApiFailure, { credential: CredentialModel }>,
 ): Promise<void> {
-  await TransactionsService.getOwnerExpandedTransactionsByState('user', res.locals.credential.user_id, 'validated')
+  const createParams = (query?: ReceiptsListRequestModel): ReceiptsQueryParameters => {
+    if (!query) {
+      return {}
+    }
+
+    const filters: Record<FilterModel, Filter> = {
+      latest: Filter.Latest,
+      oldest: Filter.Oldest,
+      price_ascending: Filter.PriceAscending,
+      price_descending: Filter.PriceDescending,
+    }
+    const params: ReceiptsQueryParameters = {}
+
+    if (query.filter) {
+      params.filter = filters[query.filter]
+    }
+    if (query.query) {
+      params.query = query.query
+    }
+    if (query.from) {
+      params.from = new Date(query.from)
+    }
+    if (query.to) {
+      params.to = new Date(query.to)
+    }
+
+    return params
+  }
+
+  await TransactionsService.getOwnerExpandedTransactionsByState('user', res.locals.credential.user_id, 'validated', createParams(req.query))
     .map((transactions) =>
       transactions.map((transaction) => {
         return {
@@ -93,7 +125,7 @@ export async function receipt(
                 return {
                   product_name: product.name,
                   quantity: product.quantity,
-                  price_unit: Number(product.price),
+                  price_unit: product.price,
                   warranty: product.warranty,
                   eco_tax: product.eco_tax,
                   discount: product.discount,
@@ -102,7 +134,7 @@ export async function receipt(
               creation_date: transaction.created_at,
               payment_type: transaction.payment_method,
               tva_percentage: receipt.tva_percentage,
-              total_ht: Number(receipt.total_price),
+              total_ht: receipt.total_price,
               total_ttc: compute_tax(receipt.total_price, receipt.tva_percentage),
             }
           })
@@ -121,6 +153,6 @@ export async function takeTransaction(
     .match(() => res.status(204).send(), createResponseHandler(req, res))
 }
 
-function compute_tax(price: string, tax_percentage: number): number {
-  return Number((Number(price) * (1 + tax_percentage / 100)).toFixed(2))
+function compute_tax(price: number, tax_percentage: number): number {
+  return Math.round(price + price * tax_percentage)
 }

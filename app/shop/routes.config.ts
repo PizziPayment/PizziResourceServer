@@ -8,14 +8,15 @@ import changePassword from '../common/controllers/password.controller'
 import validShopTokenAffiliation from '../common/middlewares/shop_token_affiliation.validation.middleware'
 import { changeShopInformation, deleteAccount, register, shopInfo, receipts, receipt, createTransaction } from './controllers/shop.controller'
 import validShopReceiptAffiliation from './middlewares/receipt_affiliation.validation.middleware'
-import { validRequestBodyFor } from '../common/middlewares/request.validation.middleware'
+import { validRequestBodyFor, validRequestParamsFor, validRequestQueryFor } from '../common/middlewares/request.validation.middleware'
 import RegisterRequestModel from './models/register.request.model'
 import DeleteRequestModel from './models/delete.request.model'
 import { PatchRequestModel } from './models/patch.request.model'
 import RequestPasswordModel from '../common/models/password.request.model'
 import ChangeEmailValidationModel from '../common/models/email.request.model'
-import { ReceiptsListRequestModel } from '../common/models/receipts.request.model'
+import { ReceiptDetailsRequestModel } from '../common/models/receipts.request.model'
 import CreateTransactionRequestModel from './models/create_transaction.request.model'
+import { ReceiptsListRequestModel } from './models/receipt_list.request.model'
 
 export const baseUrl = '/shops'
 export const baseUrlPassword = `${baseUrl}/me/password`
@@ -30,7 +31,7 @@ export default function ShopRouter(app: Application): void {
   app.patch(`${baseUrl}/`, [validRequestBodyFor(PatchRequestModel.validator), validToken, validShopTokenAffiliation, changeShopInformation])
   app.put(`${baseUrlPassword}/`, [validRequestBodyFor(RequestPasswordModel.validator), validToken, validChangePassword, changePassword])
   app.patch(`${baseUrlEmail}/`, [validRequestBodyFor(ChangeEmailValidationModel.validator), validToken, validPassword, changeEmail])
-  app.get(`${baseUrlReceipts}/:receipt_id`, [validToken, validShopTokenAffiliation, validShopReceiptAffiliation, receipt])
-  app.get(`${baseUrlReceipts}/`, [validRequestBodyFor(ReceiptsListRequestModel.validator), validToken, validShopTokenAffiliation, receipts])
+  app.get(`${baseUrlReceipts}/:receipt_id`, [validRequestParamsFor(ReceiptDetailsRequestModel.validator), validToken, validShopTokenAffiliation, validShopReceiptAffiliation, receipt])
+  app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validToken, validShopTokenAffiliation, receipts])
   app.post(`${baseUrlTransactions}/`, [validRequestBodyFor(CreateTransactionRequestModel.validator), validToken, validShopTokenAffiliation, createTransaction])
 }

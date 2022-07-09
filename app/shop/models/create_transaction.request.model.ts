@@ -6,7 +6,7 @@ import FieldValidationService from '../../common/services/field_validation/field
 export default class CreateTransactionRequestModel {
   static descriptor: ObjectDescriptor<Required<CreateTransactionRequestModel>> = {
     tva_percentage: { type: 'number', customValidator: withFieldValidator((value) => value > 0) },
-    total_price: { type: 'string', customValidator: withFieldValidator((value) => !isNaN(parseFloat(value))) },
+    total_price: { type: 'number', customValidator: withFieldValidator(Number.isInteger) },
     payment_method: { type: 'string', customValidator: withFieldValidator(FieldValidationService.isValidPaymentMethod) },
     items: {
       type: 'array',
@@ -22,7 +22,7 @@ export default class CreateTransactionRequestModel {
   static validator: TypeValidator<Required<CreateTransactionRequestModel>> = new TypeValidator(this.descriptor)
 
   tva_percentage: number
-  total_price: string
+  total_price: number
   payment_method: PaymentMethod
   items: Array<{
     shop_item_id: number

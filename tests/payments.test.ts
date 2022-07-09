@@ -63,7 +63,7 @@ async function setupShop(): Promise<{ id: number; token: string }> {
 }
 
 async function setupReceipts(): Promise<number> {
-  const receipt_result = await ReceiptsService.createReceipt(20, '0')
+  const receipt_result = await ReceiptsService.createReceipt(20, 0)
   expect(receipt_result.isOk()).toBeTruthy()
   const receipt = receipt_result._unsafeUnwrap()
 

@@ -5,11 +5,11 @@ import { ReceiptDetailsRequestModel } from '../../common/models/receipts.request
 import { createResponseHandler } from '../../common/services/error_handling'
 
 export default async function validUserReceiptAffiliation(
-  req: Request<{ receipt_id: number }, unknown, ReceiptDetailsRequestModel>,
+  req: Request<ReceiptDetailsRequestModel, unknown, {}>,
   res: Response<ApiResponseWrapper<unknown>, { credential: CredentialModel; receipt: DetailedReceiptModel }>,
   next: NextFunction,
 ): Promise<void> {
-  await ReceiptsService.getDetailedReceiptById(req.params.receipt_id)
+  await ReceiptsService.getDetailedReceiptById(Number(req.params.receipt_id))
     .andThen((receipt) =>
       TransactionsService.getTransactionByReceiptId(receipt.id).map((transaction): [DetailedReceiptModel, TransactionModel] => [receipt, transaction]),
     )
