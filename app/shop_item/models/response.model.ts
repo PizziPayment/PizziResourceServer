@@ -4,7 +4,7 @@ import { ShopItemModel as DBShopItemModel } from 'pizzi-db'
 export class ShopItemResponseModel implements ShopItemModel {
   id: number
   name: string
-  price: string
+  price: number
   created_at: Date
 
   constructor(item: DBShopItemModel) {

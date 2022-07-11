@@ -65,7 +65,7 @@ async function setupShop(): Promise<{ id: number; token: string }> {
 }
 
 async function setupReceipts(): Promise<number> {
-  const receipt_result = await ReceiptsService.createReceipt(20, '0')
+  const receipt_result = await ReceiptsService.createReceipt(20, 0)
   expect(receipt_result.isOk()).toBeTruthy()
   const receipt = receipt_result._unsafeUnwrap()
 
@@ -110,7 +110,6 @@ describe('Transactions endpoint', () => {
       const receipt_id = await setupReceipts()
       const expected_transaction: TransactionCreationModel = {
         receipt_id: receipt_id,
-        user_id: null,
         payment_method: 'unassigned',
       }
 

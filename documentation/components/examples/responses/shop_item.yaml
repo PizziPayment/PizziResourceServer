@@ -2,14 +2,14 @@ ShopItem:
   value:
     id: 3
     name: Shovel
-    price: '45.00'
+    price: 4500
 
 ShopItems:
   value:
     items:
       - id: 1
         name: red wheelbarrow
-        price: '99.99'
+        price: 9999
       - id: 2
         name: cultivator
-        price: '346.00'
+        price: 34600

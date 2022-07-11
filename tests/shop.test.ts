@@ -1,14 +1,4 @@
-import {
-  ClientsService,
-  CredentialsService,
-  CredentialsServiceError,
-  rewriteTables,
-  ShopModel,
-  ShopsServices,
-  TokenModel,
-  TokensService,
-  TokensServiceError,
-} from 'pizzi-db'
+import { ClientsService, CredentialsService, ErrorCause, rewriteTables, ShopModel, ShopsServices, TokenModel, TokensService } from 'pizzi-db'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
 import * as request from 'supertest'
 import { App } from '../app/api'
@@ -24,6 +14,9 @@ import { createBearerHeader, createRandomToken, createShop, getShopToken } from 
 
 const shop = shops[0]
 
+// @ts-ignore
+let sequelize: Sequelize = undefined
+
 beforeEach(async () => {
   const database = config.database
   const orm_config: OrmConfig = {
@@ -35,9 +28,11 @@ beforeEach(async () => {
     logging: false,
   }
 
-  await rewriteTables(orm_config)
+  sequelize = await rewriteTables(orm_config)
   await ClientsService.createClientFromIdAndSecret(client.client_id, client.client_secret)
 })
+
+afterEach(async () => await sequelize.close())
 
 async function setupShopAndToken(shop: RegisterRequestModel = shops[0]): Promise<[ShopModel, TokenModel]> {
   return [await createShop(), await getShopToken(shop.email, shop.password)]
@@ -127,7 +122,7 @@ describe('Shop endpoint', () => {
 
       const res_cred = await CredentialsService.getCredentialFromId(token.credential_id)
       expect(res_cred.isErr()).toBeTruthy()
-      expect(res_cred._unsafeUnwrapErr()).toBe(CredentialsServiceError.OwnerNotFound)
+      expect(res_cred._unsafeUnwrapErr().code).toBe(ErrorCause.CredentialNotFound)
     })
 
     it('should not allow the deletion of a shop using an invalid token', async () => {
@@ -175,7 +170,7 @@ describe('Shop endpoint', () => {
 
       let revoked_token = await TokensService.getTokenFromAccessValue(token.access_token)
       expect(revoked_token.isErr()).toBe(true)
-      expect(revoked_token._unsafeUnwrapErr()).toEqual(TokensServiceError.TokenNotFound)
+      expect(revoked_token._unsafeUnwrapErr().code).toEqual(ErrorCause.TokenNotFound)
 
       await getShopToken(shop.email, body.new_password)
     })

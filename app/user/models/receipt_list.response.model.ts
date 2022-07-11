@@ -6,4 +6,4 @@ export class ReceiptModel {
   total_ttc: number
 }
 
-export type ReceiptListModel = Array<ReceiptModel>
+export type ReceiptListResponseModel = Array<ReceiptModel>

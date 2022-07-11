@@ -1,6 +1,6 @@
 export class ShopItemModel {
   id: number
   name: string
-  price: string
+  price: number
   created_at: Date
 }

@@ -1,15 +1,14 @@
-export const FilterModelValues = ['latest', 'oldest', 'price_ascending', 'price_descending']
-type FilterModel = typeof FilterModelValues[number]
-
-export class ReceiptsListRequestModel {
-  filter: FilterModel
-  query: string
-  time_interval: {
-    from: string
-    to: string
-  }
-}
+import { ObjectDescriptor, TypeValidator } from 'record-validator'
+import { withFieldValidator } from '../services/error_handling'
 
 export class ReceiptDetailsRequestModel {
-  receipt_id: number
+  static descriptor: ObjectDescriptor<ReceiptDetailsRequestModel> = {
+    receipt_id: {
+      type: 'string',
+      customValidator: withFieldValidator((value) => !isNaN(Number(value))),
+    },
+  }
+  static validator: TypeValidator<ReceiptDetailsRequestModel> = new TypeValidator(this.descriptor)
+
+  receipt_id: string
 }

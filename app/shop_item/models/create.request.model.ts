@@ -1,8 +1,22 @@
+import { ObjectDescriptor, TypeValidator } from 'record-validator'
+import { withFieldValidator } from '../../common/services/error_handling'
+
 export class ShopItemCreationModel {
+  static descriptor: ObjectDescriptor<ShopItemCreationModel> = {
+    name: { type: 'string' },
+    price: { type: 'number', customValidator: withFieldValidator(Number.isInteger) },
+  }
+  static validator: TypeValidator<ShopItemCreationModel> = new TypeValidator(this.descriptor)
+
   name: string
-  price: string
+  price: number
 }
 
 export class ShopItemCreationRequestModel {
+  static descriptor: ObjectDescriptor<ShopItemCreationRequestModel> = {
+    items: { type: 'array', arrayType: ShopItemCreationModel.descriptor },
+  }
+  static validator: TypeValidator<ShopItemCreationRequestModel> = new TypeValidator(this.descriptor)
+
   items: Array<ShopItemCreationModel>
 }

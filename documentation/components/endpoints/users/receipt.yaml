@@ -67,8 +67,10 @@ get:
                 type: number
               total_ht:
                 type: number
+                description: The total price (without tax) in cents.
               total_ttc:
                 type: number
+                description: The total price (with tax) in cents.
           example:
             vendor:
               logo: "https://store.steampowered.com/favicon.ico"
@@ -82,15 +84,15 @@ get:
             products:
               - product_name: Outer Wilds
                 quantity: 1
-                price_unit: 17.4916
+                price_unit: 1749
                 warranty: 18/06/2022
                 eco_tax: 0
-                discoun": 0
+                discount: 0
             payment_type: card
             tva_percentage: 20
             creation_date: 18/06/2020
-            total_ht: 17.4916
-            total_ttc: 20.99
+            total_ht: 1749
+            total_ttc: 2099
     400:
       $ref: '../../../openapi.yaml#/components/responses/400'
     401:
