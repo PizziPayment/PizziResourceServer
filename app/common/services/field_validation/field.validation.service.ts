@@ -8,8 +8,18 @@ export default class FieldValidationService {
     return rule.test(email)
   }
 
+  static password_requirements = {
+    lowercase: 'a-z',
+    uppercase: 'A-Z',
+    numbers: '0-9',
+    symbols: '!@#$%^&*()\\/|\\\\\\-_?.,;+¤{}[\\]',
+  }
+
   static isValidPassword(password: string): boolean {
-    const rule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*_?&])[A-Za-z\d \t@$!%_*?&]{12,}$/
+    const { lowercase, uppercase, numbers, symbols } = FieldValidationService.password_requirements
+    const rule = new RegExp(
+      `^(?=.*[${lowercase}])(?=.*[${uppercase}])(?=.*[${numbers}])(?=.*[${symbols}])[${uppercase}${lowercase}${numbers} \\t${symbols}]{12,}$`,
+    )
 
     return rule.test(password)
   }
@@ -34,12 +44,12 @@ export default class FieldValidationService {
           n *= 2
         }
 
-        n = n % 10 + Math.floor(n / 10)
+        n = (n % 10) + Math.floor(n / 10)
 
         sum += n
       }
 
-      return (sum % 10 == 0)
+      return sum % 10 == 0
     }
 
     return rule.test(siret) && checksum(siret)
