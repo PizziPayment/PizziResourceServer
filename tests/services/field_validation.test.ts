@@ -1,7 +1,14 @@
 import FieldValidationService from '../../app/common/services/field_validation/field.validation.service'
 
 describe('FieldValidationService', () => {
-  const valid_passwords: Array<string> = ['gY@3Cwl4FmLlQ@HycAf', 'New_passw0rd!', '4 M ! v kkkkkkkkk', '4 M v ! kkkkkkkkk', '4 v ! M kkkkkkkkk']
+  const valid_passwords: Array<string> = [
+    'gY@3Cwl4FmLlQ@HycAf',
+    'New_passw0rd!',
+    '4 M ! v kkkkkkkkk',
+    '4 M v ! kkkkkkkkk',
+    '4 v ! M kkkkkkkkk',
+    '!@#$%^&*()/|\\-_?.,;+¤{}[]aA0',
+  ]
   const invalid_passwords: Array<[string, string]> = [
     ['BCDFGH1JKL3MNOP!', 'No lowercase character'],
     ['bcd3fgh1jklmnop!', 'No uppercase character'],
