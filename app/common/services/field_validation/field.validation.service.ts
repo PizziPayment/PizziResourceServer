@@ -24,21 +24,22 @@ export default class FieldValidationService {
     const rule = new RegExp(`^[0-9]{${siretLength}}$`)
     const checksum = (str: String) => {
       let sum = 0
-      const digits = [...str.slice(0, -1)].reverse()
-      const validator = Number(str[str.length - 1])
-      const multipliers = [2, 1]
 
-      for (const [i, c] of digits.entries()) {
-        const digits = String(Number(c) * multipliers[i % 2])
+      str = str.split('').reverse().join('')
 
-        for (const n of digits) {
-          sum += Number(n)
+      for (let i = 0; i < str.length; i++) {
+        let n = Number(str[i])
+
+        if (i % 2 !== 0) {
+          n *= 2
         }
+
+        n = n % 10 + Math.floor(n / 10)
+
+        sum += n
       }
 
-      sum = 10 - (sum % 10)
-
-      return sum == validator
+      return (sum % 10 == 0)
     }
 
     return rule.test(siret) && checksum(siret)
