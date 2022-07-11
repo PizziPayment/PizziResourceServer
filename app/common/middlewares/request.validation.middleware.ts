@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { TypeValidator } from 'record-validator'
 import { ApiFailure } from '../../common/models/api.response.model'
 
-export function validRequestBodyFor<T>(
-  validator: TypeValidator<T>,
-): (req: Request<unknown, unknown, T>, res: Response, next: NextFunction) => Response | void {
+export function validRequestBodyFor<T>(validator: TypeValidator<T>): (req: Request<unknown, unknown, T>, res: Response, next: NextFunction) => Response | void {
   return (req, res, next) => {
     if (!req.body) {
       return res.status(400).send(new ApiFailure(req.url, 'Missing request body'))
@@ -38,9 +36,7 @@ export function validRequestQueryFor<T>(
   }
 }
 
-export function validRequestParamsFor<T>(
-  validator: TypeValidator<T>,
-): (req: Request<T>, res: Response, next: NextFunction) => Response | void {
+export function validRequestParamsFor<T>(validator: TypeValidator<T>): (req: Request<T>, res: Response, next: NextFunction) => Response | void {
   return (req, res, next) => {
     if (!req.params) {
       return res.status(400).send(new ApiFailure(req.url, 'Missing parameters'))

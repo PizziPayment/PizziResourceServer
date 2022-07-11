@@ -14,6 +14,12 @@ export const baseUrl = `${shopBaseUrl}/me/items`
 export default function ShopItemRouter(app: Application): void {
   app.post(`${baseUrl}/`, [validRequestBodyFor(ShopItemCreationRequestModel.validator), validToken, validShopTokenAffiliation, createShopItems])
   app.get(`${baseUrl}/`, [validToken, validShopTokenAffiliation, validShopItemsRetrieval, retrieveShopItems])
-  app.patch(`${baseUrl}/:id`, [validRequestBodyFor(ShopItemUpdateRequestModel.validator), validToken, validShopTokenAffiliation, validShopItemOwnership, updateShopItem])
+  app.patch(`${baseUrl}/:id`, [
+    validRequestBodyFor(ShopItemUpdateRequestModel.validator),
+    validToken,
+    validShopTokenAffiliation,
+    validShopItemOwnership,
+    updateShopItem,
+  ])
   app.delete(`${baseUrl}/:id`, [validToken, validShopTokenAffiliation, validShopItemOwnership, deleteShopItem])
 }

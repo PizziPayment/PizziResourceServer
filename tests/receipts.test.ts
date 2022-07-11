@@ -116,7 +116,7 @@ async function setupShop(id?: number, shop_items: Array<Item> = items): Promise<
   return { id: shop_handle.id, items: items_total, token: token.access_token }
 }
 
-async function setupReceipt(user: number, shop: number, items: Array<CompleteItem>): Promise<{ id: number, total_price: number, date: Date }> {
+async function setupReceipt(user: number, shop: number, items: Array<CompleteItem>): Promise<{ id: number; total_price: number; date: Date }> {
   const total_price = getTotalPrice(items)
   const receipt_result = await ReceiptsService.createReceipt(tax_percentage, total_price)
   expect(receipt_result.isOk()).toBeTruthy()
@@ -175,7 +175,10 @@ describe('User receipts endpoint', () => {
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?filter=price_ascending').set(createBearerHeader(user_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?filter=price_ascending')
+        .set(createBearerHeader(user_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -193,7 +196,10 @@ describe('User receipts endpoint', () => {
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?filter=price_descending').set(createBearerHeader(user_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?filter=price_descending')
+        .set(createBearerHeader(user_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -211,7 +217,10 @@ describe('User receipts endpoint', () => {
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?filter=oldest').set(createBearerHeader(user_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?filter=oldest')
+        .set(createBearerHeader(user_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -229,7 +238,10 @@ describe('User receipts endpoint', () => {
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?filter=latest').set(createBearerHeader(user_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?filter=latest')
+        .set(createBearerHeader(user_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -247,7 +259,10 @@ describe('User receipts endpoint', () => {
       await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
       await setupReceipt(user_infos.id, shop_2_infos.id, shop_infos.items)
 
-      const res = await request(App).get(endpoint + `?query=${shops[0].name}`).set(createBearerHeader(user_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + `?query=${shops[0].name}`)
+        .set(createBearerHeader(user_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -263,7 +278,10 @@ describe('User receipts endpoint', () => {
       const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?from=' + receipt_2.date.toISOString()).set(createBearerHeader(user_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?from=' + receipt_2.date.toISOString())
+        .set(createBearerHeader(user_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -282,7 +300,10 @@ describe('User receipts endpoint', () => {
       const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?to=' + receipt_2.date.toISOString()).set(createBearerHeader(user_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?to=' + receipt_2.date.toISOString())
+        .set(createBearerHeader(user_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -397,7 +418,10 @@ describe('Shop receipts endpoint', () => {
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?filter=price_ascending').set(createBearerHeader(shop_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?filter=price_ascending')
+        .set(createBearerHeader(shop_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -415,7 +439,10 @@ describe('Shop receipts endpoint', () => {
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?filter=price_descending').set(createBearerHeader(shop_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?filter=price_descending')
+        .set(createBearerHeader(shop_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -433,7 +460,10 @@ describe('Shop receipts endpoint', () => {
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?filter=oldest').set(createBearerHeader(shop_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?filter=oldest')
+        .set(createBearerHeader(shop_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -451,7 +481,10 @@ describe('Shop receipts endpoint', () => {
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?filter=latest').set(createBearerHeader(shop_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?filter=latest')
+        .set(createBearerHeader(shop_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -469,7 +502,10 @@ describe('Shop receipts endpoint', () => {
       const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?from=' + receipt_2.date.toISOString()).set(createBearerHeader(shop_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?from=' + receipt_2.date.toISOString())
+        .set(createBearerHeader(shop_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)
@@ -488,7 +524,10 @@ describe('Shop receipts endpoint', () => {
       const receipt_2 = await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[0]])
       await setupReceipt(user_infos.id, shop_infos.id, [shop_infos.items[1]])
 
-      const res = await request(App).get(endpoint + '?to=' + receipt_2.date.toISOString()).set(createBearerHeader(shop_infos.token)).send()
+      const res = await request(App)
+        .get(endpoint + '?to=' + receipt_2.date.toISOString())
+        .set(createBearerHeader(shop_infos.token))
+        .send()
       const body: Array<ReceiptModel> = res.body
 
       expect(res.statusCode).toEqual(200)

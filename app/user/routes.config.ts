@@ -32,7 +32,13 @@ export default function UserRouter(app: Application): void {
   app.patch(`${baseUrl}/`, [validRequestBodyFor(PatchRequestModel.validator), validToken, validUserTokenAffiliation, changeUserInformation])
   app.put(`${baseUrlPassword}/`, [validRequestBodyFor(RequestPasswordModel.validator), validToken, validChangePassword, changePassword])
   app.patch(`${baseUrlEmail}/`, [validRequestBodyFor(ChangeEmailValidationModel.validator), validToken, validPassword, changeEmail])
-  app.get(`${baseUrlReceipts}/:receipt_id`, [validRequestParamsFor(ReceiptDetailsRequestModel.validator), validToken, validUserTokenAffiliation, validUserReceiptAffiliation, receipt])
+  app.get(`${baseUrlReceipts}/:receipt_id`, [
+    validRequestParamsFor(ReceiptDetailsRequestModel.validator),
+    validToken,
+    validUserTokenAffiliation,
+    validUserReceiptAffiliation,
+    receipt,
+  ])
   app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validToken, validUserTokenAffiliation, receipts])
   app.post(`${baseUrlTransactions}`, [
     validRequestBodyFor(TakeTransactionRequestModel.validator),

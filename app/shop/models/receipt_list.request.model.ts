@@ -1,5 +1,5 @@
-import { ObjectDescriptor, TypeValidator } from "record-validator"
-import { withFieldValidator } from "../../common/services/error_handling"
+import { ObjectDescriptor, TypeValidator } from 'record-validator'
+import { withFieldValidator } from '../../common/services/error_handling'
 
 const FilterModelValues = ['latest', 'oldest', 'price_ascending', 'price_descending'] as const
 export type FilterModel = typeof FilterModelValues[number]

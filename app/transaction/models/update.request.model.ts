@@ -5,7 +5,7 @@ import FieldValidationService from '../../common/services/field_validation/field
 
 export class TransactionUserUpdateModel {
   static descriptor: ObjectDescriptor<TransactionUserUpdateModel> = {
-    user_id: { type: 'number' }
+    user_id: { type: 'number' },
   }
   static validator: TypeValidator<TransactionUserUpdateModel> = new TypeValidator(this.descriptor)
 
@@ -14,7 +14,7 @@ export class TransactionUserUpdateModel {
 
 export class TransactionPaymentMethodUpdateModel {
   static descriptor: ObjectDescriptor<TransactionPaymentMethodUpdateModel> = {
-    payment_method: { type: 'string', customValidator: withFieldValidator(FieldValidationService.isValidPaymentMethod) }
+    payment_method: { type: 'string', customValidator: withFieldValidator(FieldValidationService.isValidPaymentMethod) },
   }
   static validator: TypeValidator<TransactionPaymentMethodUpdateModel> = new TypeValidator(this.descriptor)
 

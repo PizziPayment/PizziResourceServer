@@ -1,13 +1,4 @@
-import {
-  ClientsService,
-  CredentialsService,
-  ErrorCause,
-  rewriteTables,
-  ShopModel,
-  ShopsServices,
-  TokenModel,
-  TokensService,
-} from 'pizzi-db'
+import { ClientsService, CredentialsService, ErrorCause, rewriteTables, ShopModel, ShopsServices, TokenModel, TokensService } from 'pizzi-db'
 import { OrmConfig } from 'pizzi-db/dist/commons/models/orm.config.model'
 import * as request from 'supertest'
 import { App } from '../app/api'
@@ -40,7 +31,6 @@ beforeEach(async () => {
   sequelize = await rewriteTables(orm_config)
   await ClientsService.createClientFromIdAndSecret(client.client_id, client.client_secret)
 })
-
 
 afterEach(async () => await sequelize.close())
 

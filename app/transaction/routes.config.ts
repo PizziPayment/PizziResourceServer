@@ -12,12 +12,7 @@ import { TransactionPaymentMethodUpdateModel, TransactionUserUpdateModel } from 
 export const baseUrl = `/transactions`
 
 export default function TransactionsRouter(app: Application): void {
-  app.post(`${baseUrl}/`, [
-    validRequestBodyFor(TransactionCreationModel.validator),
-    validToken,
-    validShopTokenAffiliation,
-    createTransaction,
-  ])
+  app.post(`${baseUrl}/`, [validRequestBodyFor(TransactionCreationModel.validator), validToken, validShopTokenAffiliation, createTransaction])
   app.get(`${baseUrl}/`, [validRequestQueryFor(TransactionStateQuery.validator), validToken, validShopTokenAffiliation, getTransactions])
   app.patch(`${baseUrl}/:id/user`, [
     validRequestBodyFor(TransactionUserUpdateModel.validator),

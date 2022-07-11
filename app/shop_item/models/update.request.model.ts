@@ -1,5 +1,5 @@
-import { ObjectDescriptor, TypeValidator } from "record-validator"
-import { withFieldValidator } from "../../common/services/error_handling"
+import { ObjectDescriptor, TypeValidator } from 'record-validator'
+import { withFieldValidator } from '../../common/services/error_handling'
 
 export class ShopItemUpdateParamModel {
   id: number
