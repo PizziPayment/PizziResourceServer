@@ -1,16 +1,17 @@
 import { Request, Response } from 'express'
 import { ApiFailure } from '../../common/models/api.response.model'
 import {
+  CredentialModel,
   CredentialsService,
   EncryptionService,
-  ShopsServices,
-  CredentialModel,
-  TransactionsService,
-  ReceiptsService,
-  ReceiptItemsService,
-  TransactionTokensService,
   Filter,
+  ProductReturnCertificatesService,
+  ReceiptItemsService,
   ReceiptsQueryParameters,
+  ReceiptsService,
+  ShopsServices,
+  TransactionsService,
+  TransactionTokensService,
 } from 'pizzi-db'
 import InfosResponseModel from '../models/infos.response.model'
 import { ReceiptDetailsRequestModel } from '../../common/models/receipts.request.model'
@@ -22,6 +23,8 @@ import CreateTransactionRequestModel from '../models/create_transaction.request.
 import CreateTransactionResponseModel from '../models/create_transaction.response.model'
 import { createResponseHandler } from '../../common/services/error_handling'
 import { FilterModel, ReceiptsListRequestModel } from '../models/receipt_list.request.model'
+import CreateProductReturnCertificateRequestModel from '../models/create_product_return_certificate.request.model'
+import ProductReturnCertificateModel from '../models/product_return_certificate.model'
 
 export async function shopInfo(req: Request, res: Response): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -151,4 +154,24 @@ export async function createTransaction(
 
 function compute_tax(price: number, tax_percentage: number): number {
   return Math.round(price + price * tax_percentage)
+}
+
+export async function productReturnCertificates(
+  req: Request<{ receipt_id: number }>,
+  res: Response<Array<ProductReturnCertificateModel> | ApiFailure>,
+): Promise<void> {
+  await ProductReturnCertificatesService.getProductReturnCertificatesFromReceiptId(req.params.receipt_id).match(
+    (certificates) => res.status(200).send(certificates),
+    createResponseHandler(req, res),
+  )
+}
+
+export async function createProductReturnCertificate(
+  req: Request<void, void, CreateProductReturnCertificateRequestModel>,
+  res: Response<ProductReturnCertificateModel | ApiFailure>,
+): Promise<void> {
+  await ProductReturnCertificatesService.createProductReturnCertificateFromReceiptItemId(req.body.receipt_item_id, req.body.quantity).match(
+    (certificate) => res.status(201).send(certificate),
+    createResponseHandler(req, res),
+  )
 }
