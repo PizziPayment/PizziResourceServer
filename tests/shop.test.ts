@@ -266,7 +266,7 @@ describe('Shop endpoint', () => {
         facebook: 'https://facebook.com',
       }
 
-      it("should allow the modification of a shop's informations", async () => {
+      it("should allow the modification of a shop's information", async () => {
         const [created_shop, token] = await setupShopAndToken()
 
         const header = createBearerHeader(token.access_token)
