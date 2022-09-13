@@ -18,8 +18,7 @@ import * as request from 'supertest'
 import { client, shops, users } from './common/models'
 import { App } from '../app/api'
 import ReceiptItemModel from 'pizzi-db/dist/receipt_items/models/receipt_items.model'
-
-const shop = shops[0]
+import { createBearerHeader } from "./common/services";
 
 // @ts-ignore
 let sequelize: Sequelize = undefined
@@ -139,18 +138,6 @@ async function setupReceipt(
   expect((await TransactionsService.updateTransactionStateFromId(transaction.id, 'validated')).isOk()).toBeTruthy()
 
   return { id: receipt.id, total_price, date: transaction.created_at, receipt_items: receipt_items }
-}
-
-function createBearerHeader(token: string): Object {
-  return { Authorization: `Bearer ${token}` }
-}
-
-function approximateDate(date: Date, tolerance: number): boolean {
-  return Math.abs(date.getTime() - new Date().getTime()) < tolerance
-}
-
-function compute_tax(price: number): number {
-  return Math.round(price + price * tax_percentage)
 }
 
 describe('Product Return Certificate endpoint', () => {
