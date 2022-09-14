@@ -18,7 +18,7 @@ import * as request from 'supertest'
 import { client, shops, users } from './common/models'
 import { App } from '../app/api'
 import ReceiptItemModel from 'pizzi-db/dist/receipt_items/models/receipt_items.model'
-import { createBearerHeader } from "./common/services";
+import { createBearerHeader } from './common/services'
 
 // @ts-ignore
 let sequelize: Sequelize = undefined
@@ -144,6 +144,17 @@ describe('Product Return Certificate endpoint', () => {
   const endpoint = (receipt_id: string) => `/shops/me/receipts/${receipt_id}/product_return_certificates`
 
   describe('Create certificate', () => {
+    it('basic test with invalid receipt_id', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+
+      const res = await request(App).post(endpoint(receipt.id.toString())).set(createBearerHeader(shop_infos.token)).send({
+        receipt_item_id: Number.MAX_VALUE,
+        quantity: 10,
+      })
+      expect(res.statusCode).toEqual(404)
+    })
     it('basic test', async () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()

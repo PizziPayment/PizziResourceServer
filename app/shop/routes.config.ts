@@ -28,6 +28,7 @@ import { ReceiptDetailsRequestModel } from '../common/models/receipts.request.mo
 import CreateTransactionRequestModel from './models/create_transaction.request.model'
 import { ReceiptsListRequestModel } from './models/receipt_list.request.model'
 import CreateProductReturnCertificateRequestModel from './models/create_product_return_certificate.request.model'
+import validReceiptItemReceiptAffiliation from './middlewares/receipt_receipt_id_affiliation.validation.middleware'
 
 export const baseUrl = '/shops'
 export const baseUrlPassword = `${baseUrl}/me/password`
@@ -57,6 +58,7 @@ export default function ShopRouter(app: Application): void {
     validToken,
     validShopTokenAffiliation,
     validShopReceiptAffiliation,
+    validReceiptItemReceiptAffiliation, // needs to be after validShopReceiptAffiliation.
     createProductReturnCertificate,
   ])
   app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validToken, validShopTokenAffiliation, receipts])
