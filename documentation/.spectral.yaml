@@ -2,6 +2,7 @@ extends: '@ibm-cloud/openapi-ruleset'
 rules:
   array-responses: off
   content-entry-provided: off
+  duplicate-path-parameter: off
   major-version-in-path: off
   pagination-style: off
   parameter-description: off

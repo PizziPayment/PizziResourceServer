@@ -47,11 +47,11 @@ get:
               quantity: 1
               return_date: 2022-08-11T16:12:59.278Z
     400:
-      $ref: '../../../openapi.yaml#/components/responses/400'
+      $ref: '../../../../openapi.yaml#/components/responses/400'
     401:
-      $ref: '../../../openapi.yaml#/components/responses/401'
+      $ref: '../../../../openapi.yaml#/components/responses/401'
     500:
-      $ref: '../../../openapi.yaml#/components/responses/500'
+      $ref: '../../../../openapi.yaml#/components/responses/500'
 
 post:
   operationId: post_product_return_certificates
@@ -109,8 +109,8 @@ post:
             quantity: 2
             return_date: 2022-08-11T16:12:59.278Z
     400:
-      $ref: '../../openapi.yaml#/components/responses/400'
+      $ref: '../../../../openapi.yaml#/components/responses/400'
     401:
-      $ref: '../../openapi.yaml#/components/responses/401'
+      $ref: '../../../../openapi.yaml#/components/responses/401'
     500:
-      $ref: '../../openapi.yaml#/components/responses/500'
+      $ref: '../../../../openapi.yaml#/components/responses/500'
