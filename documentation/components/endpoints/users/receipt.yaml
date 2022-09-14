@@ -25,8 +25,9 @@ get:
               vendor:
                 type: object
                 properties:
-                  logo:
-                    type: string
+                  avatar_id:
+                    type: number
+                    description: The id of the shop's logo
                   name:
                     type: string
                   place:
@@ -71,14 +72,14 @@ get:
                 $ref: '../../../openapi.yaml#/components/schemas/price'
           example:
             vendor:
-              logo: "https://store.steampowered.com/favicon.ico"
+              avatar_id: 9823
               name: Steam
               place:
                 street: Rue
                 city: Ville
                 postal_code: 12345
-              siret: "12345678912345"
-              shop_number: "00 00 00 00 00"
+              siret: '12345678912345'
+              shop_number: '00 00 00 00 00'
             products:
               - product_name: Outer Wilds
                 quantity: 1

@@ -1,0 +1,25 @@
+get:
+  operationId: get_image
+  tags:
+    - Image
+  summary: Retrieve an image
+  description: Returns the image associated with the given id.
+  parameters:
+    - in: path
+      required: true
+      name: id
+      schema:
+        type: number
+      description: Image's id
+  responses:
+    200:
+      description: The image
+      content:
+        image/jpeg:
+          schema: 
+            type: string
+            format: binary
+    404:
+      $ref: '../../openapi.yaml#/components/responses/404'
+    500:
+      $ref: '../../openapi.yaml#/components/responses/500'

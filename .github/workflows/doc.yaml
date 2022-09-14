@@ -17,10 +17,10 @@ jobs:
           node-version: '17'
       - run: yarn install
         name: Install documentation tools
-      - run: yarn run linter
+      - run: yarn run check
         name: Linter
-      - run: yarn run builder
-        name: Builder
+      - run: yarn run build
+        name: Build
 
   trigger-doc-build:
     if:  github.ref_name == 'master' || github.ref_name == 'develop'

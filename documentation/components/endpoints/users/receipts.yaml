@@ -41,8 +41,9 @@ get:
                   type: number
                 shop_name:
                   type: string
-                shop_logo:
-                  type: string
+                shop_avatar_id:
+                  type: number
+                  description: The id of the shop's logo
                 date:
                   type: string
                   description: Date in the `DD/MM/YYYY` format.
@@ -51,7 +52,7 @@ get:
           example:
             - receipt_id: 0
               shop_name: shop
-              shop_logo: http://url/to/image
+              shop_avatar_id: 987
               date: 21/09/2021
               total_ttc: 1234000
     400:

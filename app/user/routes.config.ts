@@ -1,5 +1,15 @@
 import { Application } from 'express'
-import { register, deleteAccount, changeUserInformation, info, receipts, receipt, takeTransaction, shareReceipt } from './controllers/user.controller'
+import {
+  register,
+  deleteAccount,
+  changeUserInformation,
+  info,
+  receipts,
+  receipt,
+  takeTransaction,
+  shareReceipt,
+  updateAvatar,
+} from './controllers/user.controller'
 import validBasicAuth from '../common/middlewares/basic_auth.validation.middleware'
 import validUniqueEmail from '../common/middlewares/unique_email.validation.middleware'
 import validToken from '../common/middlewares/token.validation.middleware'
@@ -19,12 +29,14 @@ import { ReceiptDetailsRequestModel } from '../common/models/receipts.request.mo
 import { ReceiptsListRequestModel } from './models/receipt_list.request.model'
 import TakeTransactionRequestModel from './models/take_transaction.request.model'
 import ShareReceiptRequestModel from './models/share_receipt.request.model'
+import { file_upload } from '../common/middlewares/file_upload.middleware'
 
 export const baseUrl = '/users'
 export const baseUrlPassword = `${baseUrl}/me/password`
 export const baseUrlEmail = `${baseUrl}/me/email`
 export const baseUrlReceipts = `${baseUrl}/me/receipts`
 export const baseUrlTransactions = `${baseUrl}/me/transactions`
+export const baseUrlAvatar = `${baseUrl}/me/avatar`
 
 export default function UserRouter(app: Application): void {
   app.get(`${baseUrl}/`, [validToken, validUserTokenAffiliation, info])
@@ -56,4 +68,5 @@ export default function UserRouter(app: Application): void {
     validTakeTransactionRequest,
     takeTransaction,
   ])
+  app.post(`${baseUrlAvatar}`, [validToken, validUserTokenAffiliation, file_upload.single('avatar'), updateAvatar])
 }
