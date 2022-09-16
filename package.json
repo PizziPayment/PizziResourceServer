@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc-watch --onsuccess \"node dist/index.js\"",
+    "format": "prettier -w ./app",
     "test": "jest --runInBand --verbose",
     "lint": "eslint '*/**/*.ts' --quiet --fix"
   },
