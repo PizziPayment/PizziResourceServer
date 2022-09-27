@@ -1,0 +1,37 @@
+post:
+  operationId: dc_user_share_receipt
+  tags:
+    - User
+  summary: Share receipt
+  description: Share receipt using a user's email.
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: receipt_id
+      in: path
+      required: true
+      description: The receipt's id
+      schema:
+        type: number
+  requestBody:
+    description: The transaction's id and the required token
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - recipient_email
+          properties:
+            recipient_email:
+              type: string
+        example:
+          recipient_email: "toto@tata.com"
+  responses:
+    204:
+      $ref: '../../../openapi.yaml#/components/responses/204'
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'
