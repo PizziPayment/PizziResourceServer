@@ -13,6 +13,7 @@ import {
   ShopsServices,
   Filter,
   ReceiptsQueryParameters,
+  SharedReceiptsService,
 } from 'pizzi-db'
 import PatchRequestModel from '../models/patch.request.model'
 import InfosResponseModel from '../models/infos.response'
@@ -23,6 +24,7 @@ import { DetailedReceiptModel } from '../models/detailed_receipt'
 import { siretLength } from '../../common/constants'
 import TakeTransactionRequestModel from '../models/take_transaction.request.model'
 import { createResponseHandler } from '../../common/services/error_handling'
+import ShareReceiptRequestModel from '../models/share_receipt.request.model'
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -102,6 +104,13 @@ export async function receipts(
       }),
     )
     .match((receipts) => res.status(200).send(receipts), createResponseHandler(req, res))
+}
+
+export async function shareReceipt(req: Request<{ receipt_id: number }, unknown, ShareReceiptRequestModel>, res: Response): Promise<void> {
+  SharedReceiptsService.shareReceiptByEmail(req.params.receipt_id, req.body.recipient_email).match(
+    () => res.status(204).send(),
+    createResponseHandler(req, res),
+  )
 }
 
 export async function receipt(

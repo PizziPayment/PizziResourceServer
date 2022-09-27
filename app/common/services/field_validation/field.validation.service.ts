@@ -32,7 +32,7 @@ export default class FieldValidationService {
 
   static isValidSiret(siret: string): boolean {
     const rule = new RegExp(`^[0-9]{${siretLength}}$`)
-    const checksum = (str: String) => {
+    const checksum = (str: string) => {
       let sum = 0
 
       str = str.split('').reverse().join('')
