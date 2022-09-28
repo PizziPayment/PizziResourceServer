@@ -102,7 +102,7 @@ async function setupShop(id?: number): Promise<number> {
 }
 
 describe('Share receipt endpoint', () => {
-  const endpoint = (receipt_id: string) => `/users/me/receipts/${receipt_id}/share`
+  const endpoint = (receipt_id: number) => `/users/me/receipts/${receipt_id}/share`
 
   it('basic test with valid receipt_id', async () => {
     const sender = await setupUser(0)
@@ -110,7 +110,7 @@ describe('Share receipt endpoint', () => {
     const shop = await setupShop()
     const receipt_id = await setupReceipt(sender.id, shop)
 
-    const res = await request(App).post(endpoint(receipt_id.toString())).set(createBearerHeader(sender.token)).send({
+    const res = await request(App).post(endpoint(receipt_id)).set(createBearerHeader(sender.token)).send({
       recipient_email: users[1].email,
     })
     expect(res.statusCode).toEqual(204)
@@ -121,7 +121,7 @@ describe('Share receipt endpoint', () => {
     const shop = await setupShop()
     const receipt_id = await setupReceipt(sender.id, shop)
 
-    const res = await request(App).post(endpoint(Number.MAX_VALUE.toString())).set(createBearerHeader(sender.token)).send({
+    const res = await request(App).post(endpoint(Number.MAX_VALUE)).set(createBearerHeader(sender.token)).send({
       recipient_email: users[1].email,
     })
     expect(res.statusCode).toEqual(404)
@@ -132,7 +132,7 @@ describe('Share receipt endpoint', () => {
     const shop = await setupShop()
     const receipt_id = await setupReceipt(receiver.id, shop)
 
-    const res = await request(App).post(endpoint(receipt_id.toString())).set(createBearerHeader(sender.token)).send({
+    const res = await request(App).post(endpoint(receipt_id)).set(createBearerHeader(sender.token)).send({
       recipient_email: users[1].email,
     })
     expect(res.statusCode).toEqual(404)
@@ -143,7 +143,7 @@ describe('Share receipt endpoint', () => {
     const shop = await setupShop()
     const receipt_id = await setupReceipt(sender.id, shop)
 
-    const res = await request(App).post(endpoint(receipt_id.toString())).set(createBearerHeader(sender.token)).send({
+    const res = await request(App).post(endpoint(receipt_id)).set(createBearerHeader(sender.token)).send({
       recipient_email: "invalid_email@invalid.email",
     })
     expect(res.statusCode).toEqual(400)
