@@ -126,7 +126,7 @@ describe('Share receipt endpoint', () => {
     })
     expect(res.statusCode).toEqual(404)
   })
-  it("test when sender don't own the receipt", async () => {
+  it("test when sender doesn't own the receipt", async () => {
     const sender = await setupUser(0)
     const receiver = await setupUser(1)
     const shop = await setupShop()
