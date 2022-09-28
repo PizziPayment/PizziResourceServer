@@ -110,7 +110,7 @@ export async function receipts(
 export async function shareReceipt(req: Request<{ receipt_id: number }, unknown, ShareReceiptRequestModel>, res: Response): Promise<void> {
   SharedReceiptsService.shareReceiptByEmail(req.params.receipt_id, req.body.recipient_email).match(
     () => res.status(204).send(),
-    createResponseHandler(req, res, [[ErrorCause.CredentialNotFound, 400, 'Bad Request']]),
+    createResponseHandler(req, res, [[ErrorCause.CredentialNotFound, 400, 'Invalid recipient_email']]),
   )
 }
 
