@@ -1,25 +1,18 @@
 import { App } from '../app/api'
 import { config } from '../app/common/config'
 import * as request from 'supertest'
-import { createBearerHeader } from './common/services'
+import { createBearerHeader, createShop } from './common/services'
 import { users, shops, client } from './common/models'
 import {
   ClientsService,
   CredentialsService,
   EncryptionService,
-  ReceiptItemsService,
   ReceiptsService,
   rewriteTables,
-  ShopItemsService,
-  ShopsServices,
   TokensService,
   TransactionsService,
   UsersServices,
 } from 'pizzi-db'
-import ReceiptItemModel from 'pizzi-db/dist/receipt_items/models/receipt_items.model'
-
-const sender = users[0]
-const recipient = users[1]
 
 // @ts-ignore
 let sequelize: Sequelize = undefined
@@ -79,26 +72,7 @@ async function setupReceipt(user: number, shop: number): Promise<number> {
 }
 
 async function setupShop(id?: number): Promise<number> {
-  const shop = shops[id || 0]
-  const shop_handle_result = await ShopsServices.createShop(shop.name, shop.phone, Number(shop.siret), shop.place.address, shop.place.city, shop.place.zipcode)
-  expect(shop_handle_result.isOk()).toBeTruthy()
-  const shop_handle = shop_handle_result._unsafeUnwrap()
-
-  const items_total = []
-
-  const client_handle_result = await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret)
-  expect(client_handle_result.isOk()).toBeTruthy()
-  const client_handle = client_handle_result._unsafeUnwrap()
-
-  const credentials_result = await CredentialsService.createCredentialWithId('shop', shop_handle.id, shop.email, EncryptionService.encrypt(shop.password))
-  expect(credentials_result.isOk())
-  const credentials = credentials_result._unsafeUnwrap()
-
-  const token_result = await TokensService.generateTokenBetweenClientAndCredential(client_handle.id, credentials.id)
-  expect(token_result.isOk()).toBeTruthy()
-  const token = token_result._unsafeUnwrap()
-
-  return shop_handle.id
+  return createShop(shops[id || 0]).then((shop_handle) => shop_handle.id)
 }
 
 describe('Share receipt endpoint', () => {
@@ -106,7 +80,7 @@ describe('Share receipt endpoint', () => {
 
   it('basic test with valid receipt_id', async () => {
     const sender = await setupUser(0)
-    const receiver = await setupUser(1)
+    await setupUser(1)
     const shop = await setupShop()
     const receipt_id = await setupReceipt(sender.id, shop)
 
@@ -117,9 +91,9 @@ describe('Share receipt endpoint', () => {
   })
   it('basic test with invalid receipt_id', async () => {
     const sender = await setupUser(0)
-    const receiver = await setupUser(1)
+    await setupUser(1)
     const shop = await setupShop()
-    const receipt_id = await setupReceipt(sender.id, shop)
+    await setupReceipt(sender.id, shop)
 
     const res = await request(App).post(endpoint(Number.MAX_VALUE)).set(createBearerHeader(sender.token)).send({
       recipient_email: users[1].email,
@@ -137,14 +111,14 @@ describe('Share receipt endpoint', () => {
     })
     expect(res.statusCode).toEqual(404)
   })
-  it("test whith invalid recipient email", async () => {
+  it('test whith invalid recipient email', async () => {
     const sender = await setupUser(0)
-    const receiver = await setupUser(1)
+    await setupUser(1)
     const shop = await setupShop()
     const receipt_id = await setupReceipt(sender.id, shop)
 
     const res = await request(App).post(endpoint(receipt_id)).set(createBearerHeader(sender.token)).send({
-      recipient_email: "invalid_email@invalid.email",
+      recipient_email: 'invalid_email@invalid.email',
     })
     expect(res.statusCode).toEqual(400)
   })
