@@ -170,7 +170,7 @@ export async function createProductReturnCertificate(
   req: Request<void, void, CreateProductReturnCertificateRequestModel>,
   res: Response<ProductReturnCertificateModel | ApiFailure>,
 ): Promise<void> {
-  await ProductReturnCertificatesService.createProductReturnCertificateFromReceiptItemId(req.body.receipt_item_id, req.body.quantity).match(
+  await ProductReturnCertificatesService.createProductReturnCertificateFromReceiptItemId(req.body.receipt_item_id, 'reason', req.body.quantity).match(
     (certificate) => res.status(201).send(certificate),
     createResponseHandler(req, res),
   )
