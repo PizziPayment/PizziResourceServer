@@ -11,8 +11,12 @@ export default class CreateProductReturnCertificateRequestModel {
       type: 'number',
       customValidator: withFieldValidator(Number.isInteger),
     },
+    reason: {
+      type: 'string'
+    }
   }
   static validator: TypeValidator<Required<CreateProductReturnCertificateRequestModel>> = new TypeValidator(this.descriptor)
   receipt_item_id: number
   quantity: number
+  reason: string
 }

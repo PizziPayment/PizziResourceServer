@@ -80,6 +80,8 @@ post:
               type: number
             quantity:
               type: number
+            reason:
+              type: string
         example:
           receipt_item_id: 123
           quantity: 2
@@ -100,6 +102,9 @@ post:
               quantity:
                 type: number
                 description: Quantity of item returned.
+              reason:
+                type: string
+                description: Reason of return.
               return_date:
                 type: string
                 description: Creation date of the certificate.
