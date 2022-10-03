@@ -6,7 +6,7 @@ properties:
     description: User's id.
   firstname:
     type: string
-    description: User's firsname.
+    description: User's firstname.
   surname:
     type: string
     description: User's surname.
