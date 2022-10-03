@@ -191,6 +191,17 @@ components:
               value:
                 source: '/source'
                 message: Invalid client credentials
+    404:
+      description: Not Found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+          examples:
+            RessourceNotFound:
+              value:
+                source: '/source'
+                message: 'Ressource not found.'
 
     500:
       description: Internal server error.
