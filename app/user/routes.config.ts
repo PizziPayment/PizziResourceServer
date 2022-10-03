@@ -1,5 +1,5 @@
 import { Application } from 'express'
-import { register, deleteAccount, changeUserInformation, info, receipts, receipt, takeTransaction } from './controllers/user.controller'
+import { register, deleteAccount, changeUserInformation, info, receipts, receipt, takeTransaction, shareReceipt } from './controllers/user.controller'
 import validBasicAuth from '../common/middlewares/basic_auth.validation.middleware'
 import validUniqueEmail from '../common/middlewares/unique_email.validation.middleware'
 import validToken from '../common/middlewares/token.validation.middleware'
@@ -18,6 +18,7 @@ import ChangeEmailValidationModel from '../common/models/email.request.model'
 import { ReceiptDetailsRequestModel } from '../common/models/receipts.request.model'
 import { ReceiptsListRequestModel } from './models/receipt_list.request.model'
 import TakeTransactionRequestModel from './models/take_transaction.request.model'
+import ShareReceiptRequestModel from './models/share_receipt.request.model'
 
 export const baseUrl = '/users'
 export const baseUrlPassword = `${baseUrl}/me/password`
@@ -38,6 +39,14 @@ export default function UserRouter(app: Application): void {
     validUserTokenAffiliation,
     validUserReceiptAffiliation,
     receipt,
+  ])
+  app.post(`${baseUrlReceipts}/:receipt_id/share`, [
+    validRequestParamsFor(ReceiptDetailsRequestModel.validator),
+    validRequestBodyFor(ShareReceiptRequestModel.validator),
+    validToken,
+    validUserTokenAffiliation,
+    validUserReceiptAffiliation,
+    shareReceipt
   ])
   app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validToken, validUserTokenAffiliation, receipts])
   app.post(`${baseUrlTransactions}`, [

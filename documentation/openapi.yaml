@@ -50,6 +50,8 @@ paths:
     $ref: './components/endpoints/users/receipt.yaml'
   /users/me/transactions:
     $ref: './components/endpoints/users/take_transaction.yaml'
+  /users/me/receipts/{receipt_id}/share:
+    $ref: './components/endpoints/users/share_receipt.yaml'
 
   /shops:
     $ref: './components/endpoints/shops.yaml'
@@ -189,6 +191,17 @@ components:
               value:
                 source: '/source'
                 message: Invalid client credentials
+    404:
+      description: Not Found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseError'
+          examples:
+            RessourceNotFound:
+              value:
+                source: '/source'
+                message: 'Ressource not found.'
 
     500:
       description: Internal server error.
