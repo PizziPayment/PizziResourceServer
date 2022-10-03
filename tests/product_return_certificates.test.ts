@@ -151,6 +151,7 @@ describe('Product Return Certificate endpoint', () => {
 
       const res = await request(App).post(endpoint(receipt.id.toString())).set(createBearerHeader(shop_infos.token)).send({
         receipt_item_id: Number.MAX_VALUE,
+        reason: "reason",
         quantity: 10,
       })
       expect(res.statusCode).toEqual(404)
@@ -162,6 +163,7 @@ describe('Product Return Certificate endpoint', () => {
 
       const res = await request(App).post(endpoint(receipt.id.toString())).set(createBearerHeader(shop_infos.token)).send({
         receipt_item_id: receipt.receipt_items[0].id,
+        reason: "reason",
         quantity: 10,
       })
       const body: ProductReturnCertificateModel = res.body
@@ -170,6 +172,7 @@ describe('Product Return Certificate endpoint', () => {
       expect(body).not.toBeNull()
       expect(body.receipt_item_id).toBe(receipt.receipt_items[0].id)
       expect(body.quantity).toBe(10)
+      expect(body.reason).toBe("reason")
     })
   })
 
