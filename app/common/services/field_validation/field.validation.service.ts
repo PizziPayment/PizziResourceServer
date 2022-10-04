@@ -56,6 +56,6 @@ export default class FieldValidationService {
   }
 
   static isValidPaymentMethod(method: string | PaymentMethod): boolean {
-    return ['card', 'cash', 'unassigned'].includes(method)
+    return ['card', 'cash', 'cheque', 'unassigned'].includes(method)
   }
 }
