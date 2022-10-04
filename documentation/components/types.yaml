@@ -18,6 +18,7 @@ payment_method:
   description: The payment method
   type: string
   enum:
-    - unassigned
-    - cash
     - card
+    - cash
+    - cheque
+    - unassigned
