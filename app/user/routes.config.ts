@@ -46,7 +46,7 @@ export default function UserRouter(app: Application): void {
     validToken,
     validUserTokenAffiliation,
     validUserReceiptAffiliation,
-    shareReceipt
+    shareReceipt,
   ])
   app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validToken, validUserTokenAffiliation, receipts])
   app.post(`${baseUrlTransactions}`, [
