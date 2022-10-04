@@ -47,14 +47,13 @@ get:
                   type: string
                   description: Date in the `DD/MM/YYYY` format.
                 total_ttc:
-                  type: number
-                  description: The total price (with tax) in cents.
+                  $ref: '../../../openapi.yaml#/components/schemas/price'
           example:
             - receipt_id: 0
               shop_name: shop
               shop_logo: http://url/to/image
               date: 21/09/2021
-              total_ttc: 12340
+              total_ttc: 1234000
     400:
       $ref: '../../../openapi.yaml#/components/responses/400'
     401:

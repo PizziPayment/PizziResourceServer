@@ -17,8 +17,7 @@ post:
               type: number
               description: The sales tax percentage
             total_price:
-              type: number
-              description: The transaction's total price in cents (without tax)
+              $ref: '../../../openapi.yaml#/components/schemas/price'
             payment_method:
               $ref: '../../../openapi.yaml#/components/schemas/payment_method'
             items:
@@ -44,7 +43,7 @@ post:
                     description: The item's warranty
         example:
           tva_percentage: 20
-          total_price: 2789
+          total_price: 278900
           payment_method: card
           items:
             - shop_item_id: 0

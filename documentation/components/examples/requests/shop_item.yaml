@@ -1,12 +1,12 @@
 ShopItem:
   value:
     name: Shovel
-    price: 4500
+    price: 450000
 
 ShopItems:
   value:
     items:
       - name: red wheelbarrow
-        price: 9999
+        price: 999900
       - name: cultivator
-        price: 34600
+        price: 3460000

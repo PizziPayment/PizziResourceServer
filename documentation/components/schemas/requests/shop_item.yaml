@@ -5,6 +5,4 @@ properties:
     type: string
     description: Product/service's name.
   price:
-    type: number
-    description: >
-      Product/service's unitary price in cents (Max value: 2 147 483 647).
+    $ref: '../../../openapi.yaml#/components/schemas/price'

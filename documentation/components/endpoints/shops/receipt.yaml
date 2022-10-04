@@ -30,8 +30,8 @@ get:
                       type: string
                     quantity:
                       type: number
-                    price_unit:
-                      type: number
+                    unit_price:
+                      $ref: '../../../openapi.yaml#/components/schemas/price'
                     warranty:
                       type: string
                     eco_tax:
@@ -46,24 +46,22 @@ get:
               tva_percentage:
                 type: number
               total_ht:
-                type: number
-                description: The total price (without tax) in cents.
+                $ref: '../../../openapi.yaml#/components/schemas/price'
               total_ttc:
-                type: number
-                description: The total price (with tax) in cents.
+                $ref: '../../../openapi.yaml#/components/schemas/price'
           example:
             products:
               - product_name: Outer Wilds
                 quantity: 1
-                price_unit: 17.4916
+                unit_price: 174900
                 warranty: "18/06/2022"
                 eco_tax: 0
                 discount: 0
             payment_type: card
             tva_percentage: 20
             creation_date: "18/06/2020"
-            total_ht: 1749
-            total_ttc: 2099
+            total_ht: 174900
+            total_ttc: 209880
     400:
       $ref: '../../../openapi.yaml#/components/responses/400'
     401:

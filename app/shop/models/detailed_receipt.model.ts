@@ -1,7 +1,7 @@
 export class Product {
   product_name: string
   quantity: number
-  price_unit: number
+  unit_price: number
   warranty: string
   eco_tax: number
   discount: number

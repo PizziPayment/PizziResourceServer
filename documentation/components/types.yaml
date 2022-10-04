@@ -22,3 +22,8 @@ payment_method:
     - cash
     - cheque
     - unassigned
+price:
+  description: >
+    Price stored thousandth of euro.
+  type: integer
+  min: 0
