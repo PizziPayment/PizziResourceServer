@@ -98,7 +98,7 @@ export async function receipts(
         return {
           receipt_id: transaction.receipt.id,
           shop_name: transaction.shop.name,
-          shop_logo: transaction.shop.logo?.toString() || '',
+          shop_logo: transaction.shop.avatar_id?.toString() || '',
           date: transaction.created_at,
           total_ttc: compute_tax(transaction.receipt.total_ht, transaction.receipt.tva_percentage),
         }
@@ -125,7 +125,7 @@ export async function receipt(
           return ReceiptItemsService.getDetailedReceiptItems(req.params.receipt_id).map((items) => {
             return {
               vendor: {
-                logo: shop.logo?.toString() || '',
+                logo: shop.avatar_id?.toString() || '',
                 name: shop.name,
                 place: { street: shop.address, city: shop.city, postal_code: shop.zipcode },
                 siret: String(shop.siret).padStart(siretLength, '0'),
