@@ -26,6 +26,8 @@ get:
                 items:
                   type: object
                   properties:
+                    id:
+                      type: number
                     product_name:
                       type: string
                     quantity:
@@ -53,7 +55,8 @@ get:
                 description: The total price (with tax) in cents.
           example:
             products:
-              - product_name: Outer Wilds
+              - id: 12
+                product_name: Outer Wilds
                 quantity: 1
                 price_unit: 17.4916
                 warranty: "18/06/2022"
