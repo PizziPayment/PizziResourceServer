@@ -115,6 +115,7 @@ export async function receipt(
       return {
         products: receipt.items.map((product) => {
           return {
+            id: product.id,
             product_name: product.name,
             quantity: product.quantity,
             price_unit: product.price,

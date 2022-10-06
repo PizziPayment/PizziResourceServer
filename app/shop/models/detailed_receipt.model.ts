@@ -1,4 +1,5 @@
 export class Product {
+  id: number
   product_name: string
   quantity: number
   price_unit: number
