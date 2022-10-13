@@ -372,7 +372,7 @@ describe('User receipts endpoint', () => {
         expect(products[i].discount).toEqual(items[i].discount)
         expect(products[i].warranty).toEqual(items[i].warranty)
         expect(products[i].product_name).toEqual(items[i].name)
-        expect(products[i].price_unit).toEqual(items[i].price)
+        expect(products[i].unit_price).toEqual(items[i].price)
       }
     })
 
@@ -586,7 +586,7 @@ describe('Shop receipts endpoint', () => {
         expect(products[i].discount).toEqual(items[i].discount)
         expect(products[i].warranty).toEqual(items[i].warranty)
         expect(products[i].product_name).toEqual(items[i].name)
-        expect(products[i].price_unit).toEqual(items[i].price)
+        expect(products[i].unit_price).toEqual(items[i].price)
       }
     })
 

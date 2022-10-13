@@ -118,7 +118,7 @@ export async function receipt(
             id: product.id,
             product_name: product.name,
             quantity: product.quantity,
-            price_unit: product.price,
+            unit_price: product.price,
             warranty: product.warranty,
             eco_tax: product.eco_tax,
             discount: product.discount,

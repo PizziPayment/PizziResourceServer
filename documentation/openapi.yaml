@@ -92,6 +92,8 @@ components:
     #   $ref: './components/types.yaml#/filter'
     payment_method:
       $ref: './components/types.yaml#/payment_method'
+    price:
+      $ref: './components/types.yaml#/price'
 
   # Requests
     # Common
