@@ -102,6 +102,10 @@ components:
     RequestChangePassword:
       $ref: './components/schemas/requests/change_password.yaml'
 
+    # Product return certificate
+    RequestProductReturnCertificate:
+      $ref: './components/schemas/requests/product_return_certificate.yaml'
+
     # Shop items
     RequestShopItem:
       $ref: './components/schemas/requests/shop_item.yaml'
@@ -109,6 +113,10 @@ components:
   # Responses
     ResponseError:
       $ref: './components/schemas/responses/error.yaml'
+
+    # Product return certificate
+    ResponseProductReturnCertificate:
+      $ref: './components/schemas/responses/product_return_certificate.yaml'
 
     # Shop items
     ResponseShopItem:

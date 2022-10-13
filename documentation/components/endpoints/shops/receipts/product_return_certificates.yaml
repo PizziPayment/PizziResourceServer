@@ -20,31 +20,18 @@ get:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              type: object
-              properties:
-                id:
-                  type: number
-                  description: Id of the certificate.
-                receipt_item_id:
-                  type: number
-                  description: Id of the associated receipt item.
-                quantity:
-                  type: number
-                  description: Quantity of item returned.
-                return_date:
-                  type: string
-                  description: Creation date of the certificate.
+            $ref: '../../../../openapi.yaml#/components/schemas/ResponseProductReturnCertificate'
           example:
             - id: 1
               receipt_item_id: 12
               quantity: 2
+              reason: C'est cassé.
               return_date: 2022-08-13T16:17:39.278Z
 
             - id: 2
               receipt_item_id: 4
               quantity: 1
+              reason: C'est pas le bon.
               return_date: 2022-08-11T16:12:59.278Z
     400:
       $ref: '../../../../openapi.yaml#/components/responses/400'
@@ -74,44 +61,23 @@ post:
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            receipt_item_id:
-              type: number
-            quantity:
-              type: number
-            reason:
-              type: string
+            $ref: '../../../../openapi.yaml#/components/schemas/RequestProductReturnCertificate'
         example:
           receipt_item_id: 123
           quantity: 2
+          reason: Le produit est cassé.
   responses:
     201:
       description: Product Return Certificate created.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              id:
-                type: number
-                description: Id of the certificate.
-              receipt_item_id:
-                type: number
-                description: Id of the associated receipt item.
-              quantity:
-                type: number
-                description: Quantity of item returned.
-              reason:
-                type: string
-                description: Reason of return.
-              return_date:
-                type: string
-                description: Creation date of the certificate.
+            $ref: '../../../../openapi.yaml#/components/schemas/ResponseProductReturnCertificate'
           example:
             id: 2
             receipt_item_id: 123
             quantity: 2
+            reason: Le produit est cassé.
             return_date: 2022-08-11T16:12:59.278Z
     400:
       $ref: '../../../../openapi.yaml#/components/responses/400'
