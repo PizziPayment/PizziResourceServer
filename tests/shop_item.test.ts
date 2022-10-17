@@ -19,6 +19,7 @@ const shop_items: ShopItemCreationRequestModel = {
     {
       name: 'cultivator',
       price: 34600,
+      category: 'tools',
     },
     {
       name: 'red wheelbarrow',
@@ -108,9 +109,11 @@ describe('Shop item endpoint', () => {
       for (let i = 0; i < shop_items.items.length; i++) {
         expect(created_items[i].name).toBe(shop_items.items[i].name)
         expect(created_items[i].price).toBe(shop_items.items[i].price)
+        expect(created_items[i].category).toBe(shop_items.items[i].category || null)
         expect(retrieved_items[i].shop_id).toBe(shop.id)
         expect(retrieved_items[i].name).toBe(shop_items.items[i].name)
         expect(retrieved_items[i].price).toBe(shop_items.items[i].price)
+        expect(retrieved_items[i].category).toBe(shop_items.items[i].category || null)
       }
     })
 
@@ -198,9 +201,9 @@ describe('Shop item endpoint', () => {
           },
         ],
         [{ name: undefined, price: 450000 }],
-        [{ name: 'hoe', price: 459900 }],
+        [{ name: 'hoe', price: 459900, category: 'tool' }],
         [{ name: 'Manual Edge Trimmer', price: 459900 }],
-        [{ name: 'hoe', price: 3450 }],
+        [{ name: 'hoe', price: 3450, category: 'tool' }],
       ]
 
       it.each(new_items_properties)('Test n%#', async (new_item_properties) => {
@@ -236,12 +239,18 @@ describe('Shop item endpoint', () => {
         } else {
           expect(new_shop_item.price).toBe(shop_item.price)
         }
+
+        if (new_item_properties.category !== undefined) {
+          expect(new_shop_item.category).toBe(new_item_properties.category)
+        } else {
+          expect(new_shop_item.category).toBe(shop_item.category)
+        }
       })
 
       it('with the same properties', async () => {
         const [_, token, created_items] = await setupShopItem()
         const shop_item = created_items[0]
-        const new_item_properties: ShopItemUpdateRequestModel = { name: shop_item.name, price: shop_item.price }
+        const new_item_properties: ShopItemUpdateRequestModel = { name: shop_item.name, price: shop_item.price, category: shop_item.category }
 
         const res = await request(App)
           .patch(endpoint + `/${shop_item.id}`)
