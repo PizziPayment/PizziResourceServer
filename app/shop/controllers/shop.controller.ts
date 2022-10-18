@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { ApiFailure } from '../../common/models/api.response.model'
 import {
   CredentialModel,
   CredentialsService,
@@ -13,18 +12,20 @@ import {
   TransactionsService,
   TransactionTokensService,
 } from 'pizzi-db'
-import InfosResponseModel from '../models/infos.response.model'
+import { ApiFailure } from '../../common/models/api.response.model'
 import { ReceiptDetailsRequestModel } from '../../common/models/receipts.request.model'
-import { ReceiptListModel } from '../models/receipt_list.model'
-import { DetailedReceiptModel } from '../models/detailed_receipt.model'
-import RegisterRequestModel from '../models/register.request.model'
-import { intoShopUpdateModel, PatchRequestModel } from '../models/patch.request.model'
+import { createResponseHandler } from '../../common/services/error_handling'
+import { compute_tax } from '../../common/services/tax'
+import CreateProductReturnCertificateRequestModel from '../models/create_product_return_certificate.request.model'
 import CreateTransactionRequestModel from '../models/create_transaction.request.model'
 import CreateTransactionResponseModel from '../models/create_transaction.response.model'
-import { createResponseHandler } from '../../common/services/error_handling'
-import { FilterModel, ReceiptsListRequestModel } from '../models/receipt_list.request.model'
-import CreateProductReturnCertificateRequestModel from '../models/create_product_return_certificate.request.model'
+import { DetailedReceiptModel } from '../models/detailed_receipt.model'
+import InfosResponseModel from '../models/infos.response.model'
+import { intoShopUpdateModel, PatchRequestModel } from '../models/patch.request.model'
 import ProductReturnCertificateModel from '../models/product_return_certificate.model'
+import { ReceiptListModel } from '../models/receipt_list.model'
+import { FilterModel, ReceiptsListRequestModel } from '../models/receipt_list.request.model'
+import RegisterRequestModel from '../models/register.request.model'
 
 export async function shopInfo(req: Request, res: Response): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -151,10 +152,6 @@ export async function createTransaction(
         ),
     )
     .match((body) => res.status(201).send(body), createResponseHandler(req, res))
-}
-
-function compute_tax(price: number, tax_percentage: number): number {
-  return Math.round(price + price * (tax_percentage / 100))
 }
 
 export async function productReturnCertificates(
