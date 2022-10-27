@@ -153,16 +153,16 @@ components:
 
     # Shop items
     RequestShopItem:
-      $ref: './components/examples/requests/shop_item.yaml#/ShopItem'
+      $ref: './components/examples/requests/shop_item.yaml'
     RequestShopItems:
-      $ref: './components/examples/requests/shop_item.yaml#/ShopItems'
+      $ref: './components/examples/requests/shop_items.yaml'
 
   # Responses
     # Shop items
     ResponseShopItem:
-      $ref: './components/examples/responses/shop_item.yaml#/ShopItem'
+      $ref: './components/examples/responses/shop_item.yaml'
     ResponseShopItems:
-      $ref: './components/examples/responses/shop_item.yaml#/ShopItems'
+      $ref: './components/examples/responses/shop_items.yaml'
 
     # Shops
     ResponseShopsInfo:

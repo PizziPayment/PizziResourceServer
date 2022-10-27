@@ -1,12 +1,4 @@
-ShopItem:
-  value:
-    name: Shovel
-    price: 450000
-
-ShopItems:
-  value:
-    items:
-      - name: red wheelbarrow
-        price: 999900
-      - name: cultivator
-        price: 3460000
+value:
+  name: Shovel
+  price: 450000
+  category: Tools
