@@ -26,6 +26,7 @@ import ProductReturnCertificateModel from '../models/product_return_certificate.
 import { ReceiptListModel } from '../models/receipt_list.model'
 import { FilterModel, ReceiptsListRequestModel } from '../models/receipt_list.request.model'
 import RegisterRequestModel from '../models/register.request.model'
+import sharp = require('sharp')
 
 export async function shopInfo(req: Request, res: Response): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -152,6 +153,13 @@ export async function createTransaction(
         ),
     )
     .match((body) => res.status(201).send(body), createResponseHandler(req, res))
+}
+
+export async function updateAvatar(req: Request, res: Response<void | ApiFailure>): Promise<void> {
+  const credentials = res.locals.credential as CredentialModel
+  const image = await sharp(req.file.buffer).resize(512, 512, { fit: 'cover' }).jpeg().toBuffer()
+
+  await ShopsServices.updateAvatarFromImageId(credentials.shop_id, image).match(() => res.status(204).send(), createResponseHandler(req, res))
 }
 
 export async function productReturnCertificates(

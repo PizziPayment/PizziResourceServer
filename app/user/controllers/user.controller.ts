@@ -7,12 +7,12 @@ import {
   Filter,
   ReceiptItemsService,
   ReceiptsQueryParameters,
-  ReceiptsService,
   SharedReceiptsService,
   ShopsServices,
   TokenModel,
   TransactionsService,
   UsersServices,
+  ReceiptsService,
 } from 'pizzi-db'
 import { siretLength } from '../../common/constants'
 import { ApiFailure } from '../../common/models/api.response.model'
@@ -27,6 +27,7 @@ import { ReceiptListResponseModel } from '../models/receipt_list.response.model'
 import RegisterRequestModel from '../models/register.request.model'
 import ShareReceiptRequestModel from '../models/share_receipt.request.model'
 import TakeTransactionRequestModel from '../models/take_transaction.request.model'
+import sharp = require('sharp')
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -99,7 +100,7 @@ export async function receipts(
         return {
           receipt_id: transaction.receipt.id,
           shop_name: transaction.shop.name,
-          shop_logo: transaction.shop.avatar_id?.toString() || '',
+          shop_avatar_id: transaction.shop.avatar_id,
           date: transaction.created_at,
           total_ttc: compute_tax(transaction.receipt.total_ht, transaction.receipt.tva_percentage),
         }
@@ -126,7 +127,7 @@ export async function receipt(
           return ReceiptItemsService.getDetailedReceiptItems(req.params.receipt_id).map((items) => {
             return {
               vendor: {
-                logo: shop.avatar_id?.toString() || '',
+                avatar_id: shop.avatar_id,
                 name: shop.name,
                 place: { street: shop.address, city: shop.city, postal_code: shop.zipcode },
                 siret: String(shop.siret).padStart(siretLength, '0'),
@@ -162,4 +163,15 @@ export async function takeTransaction(
   await TransactionsService.updateTransactionUserIdFromId(req.body.id, res.locals.credential.user_id)
     .andThen(() => TransactionsService.updateTransactionStateFromId(req.body.id, 'validated'))
     .match(() => res.status(204).send(), createResponseHandler(req, res))
+}
+
+export async function updateAvatar(req: Request, res: Response<void | ApiFailure>): Promise<void> {
+  const credentials = res.locals.credential as CredentialModel
+
+  try {
+    const image = await sharp(req.file.buffer).resize(512, 512, { fit: 'cover' }).jpeg().toBuffer()
+    await UsersServices.updateAvatarFromImageId(credentials.user_id, image).match(() => res.status(204).send(), createResponseHandler(req, res))
+  } catch {
+    res.status(400).send(new ApiFailure(req.url, 'Invalid image format'))
+  }
 }

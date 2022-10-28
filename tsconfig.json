@@ -11,7 +11,8 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "rootDir": "./app",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "skipLibCheck": true
   },
 
   "exclude": [

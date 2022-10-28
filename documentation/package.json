@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Dependencies related to the documentation",
   "scripts": {
-    "linter": "lint-openapi -vps --ruleset .spectral.yaml openapi.yaml",
-    "builder": "redoc-cli build openapi.yaml -o index.html"
+    "check": "lint-openapi -vps --ruleset .spectral.yaml openapi.yaml",
+    "build": "redoc-cli build openapi.yaml -o index.html"
   },
   "dependencies": {
     "ibm-openapi-validator": "^0.78.0",

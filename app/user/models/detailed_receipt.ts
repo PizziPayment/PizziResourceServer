@@ -9,7 +9,7 @@ export class Product {
 
 export class DetailedReceiptModel {
   vendor: {
-    logo: string
+    avatar_id?: number
     name: string
     place: {
       street: string

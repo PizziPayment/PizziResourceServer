@@ -19,6 +19,8 @@ import CreateTransactionRequestModel from '../app/shop/models/create_transaction
 import { DetailedReceiptModel } from '../app/user/models/detailed_receipt'
 import { ReceiptModel } from '../app/user/models/receipt_list.response.model'
 import { client, shops, users } from './common/models'
+import { baseUrlAvatar as shop_avatar_endpoint } from '../app/shop/routes.config'
+import { baseUrl as images_endpoint } from '../app/images/routes.config'
 
 const shop = shops[0]
 
@@ -160,7 +162,6 @@ describe('User receipts endpoint', () => {
       expect(approximateDate(new Date(body.date), 60000)).toBeTruthy()
       expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, tax_percentage))
       expect(body.shop_name).toEqual(shop.name)
-      expect(body.shop_logo !== undefined).toBeTruthy()
       expect(body.receipt_id).toEqual(receipt.id)
     })
 
@@ -336,6 +337,31 @@ describe('User receipts endpoint', () => {
         expect(new Date(body[index - 1].date).getTime()).toBeLessThanOrEqual(new Date(body[index].date).getTime())
       }
     })
+
+    it("returns the shop's avatar", async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+
+      const avatar_res = await request(App).post(shop_avatar_endpoint).set(createBearerHeader(shop_infos.token)).attach('avatar', 'tests/common/avatar.png')
+
+      expect(avatar_res.statusCode).toBe(204)
+
+      const res = await request(App).get(endpoint).set(createBearerHeader(user_infos.token)).send()
+      const body: ReceiptModel = res.body[0]
+
+      expect(res.statusCode).toEqual(200)
+      expect(approximateDate(new Date(body.date), 60000)).toBeTruthy()
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, 20))
+      expect(body.shop_name).toEqual(shop.name)
+      expect(body.receipt_id).toEqual(receipt.id)
+      expect(body.shop_avatar_id != undefined).toBeTruthy()
+
+      const image_res = await request(App).get(`${images_endpoint}/${body.shop_avatar_id}`)
+
+      expect(image_res.statusCode).toBe(200)
+      expect(image_res.body).toBeTruthy()
+    })
   })
 
   describe('Details request', () => {
@@ -403,7 +429,6 @@ describe('Shop receipts endpoint', () => {
       expect(Math.abs(date - new Date(body.date).getTime()) < 60000).toBeTruthy()
       expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, tax_percentage))
       expect(body.shop_name).toEqual(undefined)
-      expect(body.shop_logo).toEqual(undefined)
       expect(body.receipt_id).toEqual(receipt.id)
     })
 

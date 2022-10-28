@@ -21,7 +21,7 @@ jobs:
       - name: Install documentation tools
         run: yarn install
       - name: Build documentation
-        run: yarn run builder
+        run: yarn run build
 
       - name: Create temporary release
         uses: ncipollo/release-action@v1

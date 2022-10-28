@@ -1,10 +1,15 @@
 import { App } from '../app/api'
-import { baseUrl as endpoint, baseUrlPassword as endpoint_password, baseUrlEmail as endpoint_email } from '../app/user/routes.config'
+import {
+  baseUrl as endpoint,
+  baseUrlPassword as endpoint_password,
+  baseUrlEmail as endpoint_email,
+  baseUrlAvatar as endpoint_avatar,
+} from '../app/user/routes.config'
 import { config } from '../app/common/config'
 import * as request from 'supertest'
 import { rewriteTables, UsersServices, CredentialsService, EncryptionService, ClientsService, TokensService, ErrorCause } from 'pizzi-db'
 import { users, client, client_header } from './common/models'
-import { getUser, getUserToken, createRandomToken, createBearerHeader } from './common/services'
+import { getUser, getUserToken, createRandomToken, createBearerHeader, createBearerHeaderFromCredential } from './common/services'
 
 const user = users[0]
 
@@ -348,6 +353,22 @@ describe('User endpoint', () => {
 
       const put_res = await request(App).put(endpoint_password).set(header).send(body)
       expect(put_res.statusCode).toEqual(403)
+    })
+  })
+
+  describe('Avatar endpoint', () => {
+    describe('POST request', () => {
+      it('should allow a user to change their avatar', async () => {
+        await createUser()
+        let token = (await getUserToken(user.email, user.password)).access_token
+        const header = createBearerHeader(token)
+        try {
+          const res = await request(App).post(endpoint_avatar).set(header).attach('avatar', '../../../Pictures/toothless_scaled_cropped.png')
+          expect(res.statusCode).toBe(204)
+        } catch (e) {
+          console.log(e)
+        }
+      })
     })
   })
 })
