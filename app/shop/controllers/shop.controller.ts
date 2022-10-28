@@ -157,11 +157,21 @@ function compute_tax(price: number, tax_percentage: number): number {
   return Math.round(price + price * (tax_percentage / 100))
 }
 
-export async function productReturnCertificates(
+export async function receiptProductReturnCertificates(
   req: Request<{ receipt_id: number }>,
   res: Response<Array<ProductReturnCertificateModel> | ApiFailure>,
 ): Promise<void> {
   await ProductReturnCertificatesService.getProductReturnCertificatesFromReceiptId(req.params.receipt_id).match(
+    (certificates) => res.status(200).send(certificates),
+    createResponseHandler(req, res),
+  )
+}
+
+export async function productReturnCertificates(
+  req: Request,
+  res: Response<Array<ProductReturnCertificateModel> | ApiFailure, { credential: CredentialModel }>,
+): Promise<void> {
+  await ProductReturnCertificatesService.getProductReturnCertificatesFromShopId(res.locals.credential.shop_id).match(
     (certificates) => res.status(200).send(certificates),
     createResponseHandler(req, res),
   )

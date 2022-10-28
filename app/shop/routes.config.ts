@@ -11,11 +11,12 @@ import {
   createProductReturnCertificate,
   createTransaction,
   deleteAccount,
-  productReturnCertificates,
+  receiptProductReturnCertificates,
   receipt,
   receipts,
   register,
   shopInfo,
+  productReturnCertificates,
 } from './controllers/shop.controller'
 import validShopReceiptAffiliation from './middlewares/receipt_affiliation.validation.middleware'
 import { validRequestBodyFor, validRequestParamsFor, validRequestQueryFor } from '../common/middlewares/request.validation.middleware'
@@ -51,7 +52,7 @@ export default function ShopRouter(app: Application): void {
     validShopReceiptAffiliation,
     receipt,
   ])
-  app.get(`${baseUrlProductReturnCertificate}/`, [validToken, validShopTokenAffiliation, validShopReceiptAffiliation, productReturnCertificates])
+  app.get(`${baseUrlProductReturnCertificate}/`, [validToken, validShopTokenAffiliation, validShopReceiptAffiliation, receiptProductReturnCertificates])
   app.post(`${baseUrlProductReturnCertificate}/`, [
     validRequestParamsFor(ReceiptDetailsRequestModel.validator),
     validRequestBodyFor(CreateProductReturnCertificateRequestModel.validator),
@@ -63,4 +64,5 @@ export default function ShopRouter(app: Application): void {
   ])
   app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validToken, validShopTokenAffiliation, receipts])
   app.post(`${baseUrlTransactions}/`, [validRequestBodyFor(CreateTransactionRequestModel.validator), validToken, validShopTokenAffiliation, createTransaction])
+  app.get(`${baseUrl}/me/product_return_certificates`, [validToken, validShopTokenAffiliation, productReturnCertificates])
 }
