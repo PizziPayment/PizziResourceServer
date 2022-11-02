@@ -16,9 +16,10 @@ get:
       description: The image
       content:
         image/jpeg:
-          schema: 
+          schema:
             type: string
             format: binary
+          example: An image
     404:
       $ref: '../../openapi.yaml#/components/responses/404'
     500:

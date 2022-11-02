@@ -165,12 +165,15 @@ export async function takeTransaction(
     .match(() => res.status(204).send(), createResponseHandler(req, res))
 }
 
-export async function updateAvatar(req: Request, res: Response<void | ApiFailure>): Promise<void> {
+export async function updateAvatar(req: Request, res: Response<{ image_id: number } | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
 
   try {
     const image = await sharp(req.file.buffer).resize(512, 512, { fit: 'cover' }).jpeg().toBuffer()
-    await UsersServices.updateAvatarFromImageId(credentials.user_id, image).match(() => res.status(204).send(), createResponseHandler(req, res))
+    await UsersServices.updateAvatarFromImageId(credentials.user_id, image).match(
+      (image_id) => res.status(200).send({ image_id }),
+      createResponseHandler(req, res),
+    )
   } catch {
     res.status(400).send(new ApiFailure(req.url, 'Invalid image format'))
   }

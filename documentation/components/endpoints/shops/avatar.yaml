@@ -16,9 +16,17 @@ post:
               description: The image in binary format
               type: string
               format: binary
+        example:
+          value:
+            avatar: Hello I am an image trust me bro.
   responses:
-    204:
-      $ref: '../../../openapi.yaml#/components/responses/204'
+    200:
+      description: Updated image id
+      content:
+        application/json:
+          schema:
+            type: number
+          example: 143
     400:
       description: Invalid image
     401:
