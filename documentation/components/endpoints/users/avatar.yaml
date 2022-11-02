@@ -24,8 +24,13 @@ post:
       content:
         application/json:
           schema:
-            type: number
-          example: 143
+            type: object
+            properties:
+              avatar_id:
+                type: number
+                description: The updated avatar id
+          example:
+            avatar_id: 435
     400:
       description: Invalid image
     401:

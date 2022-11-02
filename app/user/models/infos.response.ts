@@ -7,6 +7,7 @@ export default class InfosResponseModel {
     this.surname = user.surname
     this.address = user.address
     this.zipcode = user.zipcode
+    this.avatar_id = user.avatar_id
   }
 
   id: number
@@ -14,4 +15,5 @@ export default class InfosResponseModel {
   surname: string
   address: string
   zipcode: number
+  avatar_id?: number
 }

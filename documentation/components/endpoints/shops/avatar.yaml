@@ -17,16 +17,20 @@ post:
               type: string
               format: binary
         example:
-          value:
-            avatar: Hello I am an image trust me bro.
+          avatar: An image
   responses:
     200:
       description: Updated image id
       content:
         application/json:
           schema:
-            type: number
-          example: 143
+            type: object
+            properties:
+              avatar_id:
+                type: number
+                description: The updated avatar id
+          example:
+            avatar_id: 435
     400:
       description: Invalid image
     401:
