@@ -321,7 +321,7 @@ describe('Shop endpoint', () => {
         const header = createBearerHeader(token.access_token)
         const res = await request(App).post(endpoint_avatar).set(header).attach('avatar', 'tests/common/avatar.png')
 
-        expect(res.statusCode).toBe(204)
+        expect(res.statusCode).toBe(200)
       })
     })
   })

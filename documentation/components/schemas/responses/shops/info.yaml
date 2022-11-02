@@ -1,5 +1,18 @@
 description: Shop's info
 type: object
+required:
+  - id
+  - email
+  - name
+  - phone
+  - address
+  - zipcode
+  - siret
+  - description
+  - website
+  - instagram
+  - twitter
+  - facebook
 properties:
   id:
     type: number
@@ -37,3 +50,6 @@ properties:
   facebook:
     type: string
     description: Shop's facebook page.
+  avatar_id:
+    type: number
+    description: Shop's avatar id, if it has one.

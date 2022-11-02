@@ -345,7 +345,7 @@ describe('User receipts endpoint', () => {
 
       const avatar_res = await request(App).post(shop_avatar_endpoint).set(createBearerHeader(shop_infos.token)).attach('avatar', 'tests/common/avatar.png')
 
-      expect(avatar_res.statusCode).toBe(204)
+      expect(avatar_res.statusCode).toBe(200)
 
       const res = await request(App).get(endpoint).set(createBearerHeader(user_infos.token)).send()
       const body: ReceiptModel = res.body[0]

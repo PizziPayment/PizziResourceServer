@@ -362,12 +362,9 @@ describe('User endpoint', () => {
         await createUser()
         let token = (await getUserToken(user.email, user.password)).access_token
         const header = createBearerHeader(token)
-        try {
-          const res = await request(App).post(endpoint_avatar).set(header).attach('avatar', '../../../Pictures/toothless_scaled_cropped.png')
-          expect(res.statusCode).toBe(204)
-        } catch (e) {
-          console.log(e)
-        }
+        const res = await request(App).post(endpoint_avatar).set(header).attach('avatar', 'tests/common/avatar.png')
+
+        expect(res.statusCode).toBe(200)
       })
     })
   })
