@@ -203,4 +203,23 @@ describe('Product Return Certificate endpoint', () => {
       expect(body[0].quantity).toBe(10)
     })
   })
+
+  describe("List all shop's certificates", () => {
+    const endpoint = '/shops/me/product_return_certificates'
+    
+    it('basic test with certificates', async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+      ;(await ProductReturnCertificatesService.createProductReturnCertificateFromReceiptItemId(receipt.receipt_items[0].id, 'reason', 10))._unsafeUnwrap()
+
+      const res = await request(App).get(endpoint).set(createBearerHeader(shop_infos.token)).send()
+      const body: Array<ProductReturnCertificateModel> = res.body
+
+      expect(res.statusCode).toEqual(200)
+      expect(body).toHaveLength(1)
+      expect(body[0].receipt_item_id).toBe(receipt.receipt_items[0].id)
+      expect(body[0].quantity).toBe(10)
+    })
+  })
 })
