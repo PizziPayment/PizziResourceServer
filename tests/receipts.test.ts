@@ -1,23 +1,26 @@
-import { App } from '../app/api'
-import { config } from '../app/common/config'
 import {
   ClientsService,
   CredentialsService,
   EncryptionService,
   ReceiptItemsService,
+  ReceiptsService,
   rewriteTables,
   ShopItemsService,
   ShopsServices,
   TokensService,
   TransactionsService,
   UsersServices,
-  ReceiptsService,
 } from 'pizzi-db'
 import * as request from 'supertest'
-import { users, shops, client } from './common/models'
-import { ReceiptModel } from '../app/user/models/receipt_list.response.model'
-import { DetailedReceiptModel } from '../app/user/models/detailed_receipt'
+import { App } from '../app/api'
+import { config } from '../app/common/config'
+import { compute_tax } from '../app/common/services/tax'
 import CreateTransactionRequestModel from '../app/shop/models/create_transaction.request.model'
+import { DetailedReceiptModel } from '../app/user/models/detailed_receipt'
+import { ReceiptModel } from '../app/user/models/receipt_list.response.model'
+import { client, shops, users } from './common/models'
+import { baseUrlAvatar as shop_avatar_endpoint } from '../app/shop/routes.config'
+import { baseUrl as images_endpoint } from '../app/images/routes.config'
 
 const shop = shops[0]
 
@@ -143,10 +146,6 @@ function approximateDate(date: Date, tolerance: number): boolean {
   return Math.abs(date.getTime() - new Date().getTime()) < tolerance
 }
 
-function compute_tax(price: number): number {
-  return Math.round(price + price * tax_percentage)
-}
-
 describe('User receipts endpoint', () => {
   const endpoint = '/users/me/receipts'
 
@@ -161,9 +160,8 @@ describe('User receipts endpoint', () => {
 
       expect(res.statusCode).toEqual(200)
       expect(approximateDate(new Date(body.date), 60000)).toBeTruthy()
-      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price))
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, tax_percentage))
       expect(body.shop_name).toEqual(shop.name)
-      expect(body.shop_logo !== undefined).toBeTruthy()
       expect(body.receipt_id).toEqual(receipt.id)
     })
 
@@ -339,6 +337,31 @@ describe('User receipts endpoint', () => {
         expect(new Date(body[index - 1].date).getTime()).toBeLessThanOrEqual(new Date(body[index].date).getTime())
       }
     })
+
+    it("returns the shop's avatar", async () => {
+      const user_infos = await setupUser()
+      const shop_infos = await setupShop()
+      const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
+
+      const avatar_res = await request(App).post(shop_avatar_endpoint).set(createBearerHeader(shop_infos.token)).attach('avatar', 'tests/common/avatar.png')
+
+      expect(avatar_res.statusCode).toBe(204)
+
+      const res = await request(App).get(endpoint).set(createBearerHeader(user_infos.token)).send()
+      const body: ReceiptModel = res.body[0]
+
+      expect(res.statusCode).toEqual(200)
+      expect(approximateDate(new Date(body.date), 60000)).toBeTruthy()
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, 20))
+      expect(body.shop_name).toEqual(shop.name)
+      expect(body.receipt_id).toEqual(receipt.id)
+      expect(body.shop_avatar_id != undefined).toBeTruthy()
+
+      const image_res = await request(App).get(`${images_endpoint}/${body.shop_avatar_id}`)
+
+      expect(image_res.statusCode).toBe(200)
+      expect(image_res.body).toBeTruthy()
+    })
   })
 
   describe('Details request', () => {
@@ -354,7 +377,7 @@ describe('User receipts endpoint', () => {
 
       expect(res.statusCode).toEqual(200)
       expect(body.total_ht).toEqual(receipt.total_price)
-      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price))
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, body.tva_percentage))
       expect(body.tva_percentage).toEqual(20)
       expect(body.payment_type).toEqual('card')
       expect(approximateDate(new Date(body.creation_date), 60000))
@@ -404,9 +427,8 @@ describe('Shop receipts endpoint', () => {
 
       expect(res.statusCode).toEqual(200)
       expect(Math.abs(date - new Date(body.date).getTime()) < 60000).toBeTruthy()
-      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price))
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, tax_percentage))
       expect(body.shop_name).toEqual(undefined)
-      expect(body.shop_logo).toEqual(undefined)
       expect(body.receipt_id).toEqual(receipt.id)
     })
 
@@ -577,7 +599,7 @@ describe('Shop receipts endpoint', () => {
       expect(res.statusCode).toEqual(200)
       expect(body.total_ht).toEqual(receipt.total_price)
       expect(body.tva_percentage).toEqual(20)
-      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price))
+      expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, tax_percentage))
       expect(body.payment_type).toEqual('card')
 
       for (const i of Array(items.length).keys()) {
@@ -640,12 +662,12 @@ describe('Receipt creation and validation', () => {
     expect(user_receipts_res.statusCode).toEqual(200)
     expect(user_receipts_res.body.length).toEqual(1)
     expect(user_receipts_res.body[0].shop_name).toEqual(shop.name)
-    expect(user_receipts_res.body[0].total_ttc).toEqual(compute_tax(total_price))
+    expect(user_receipts_res.body[0].total_ttc).toEqual(compute_tax(total_price, tax_percentage))
 
     const shop_receipts_res = await request(App).get(shop_receipts_endpoint).set(shop_token).send()
 
     expect(shop_receipts_res.statusCode).toEqual(200)
     expect(shop_receipts_res.body.length).toEqual(1)
-    expect(shop_receipts_res.body[0].total_ttc).toEqual(compute_tax(total_price))
+    expect(shop_receipts_res.body[0].total_ttc).toEqual(compute_tax(total_price, tax_percentage))
   })
 })

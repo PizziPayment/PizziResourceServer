@@ -8,7 +8,12 @@ import RequestPasswordModel from '../app/common/models/password.request.model'
 import InfosResponseModel from '../app/shop/models/infos.response.model'
 import { PatchRequestModel } from '../app/shop/models/patch.request.model'
 import RegisterRequestModel from '../app/shop/models/register.request.model'
-import { baseUrl as endpoint, baseUrlEmail as endpoint_email, baseUrlPassword as endpoint_password } from '../app/shop/routes.config'
+import {
+  baseUrl as endpoint,
+  baseUrlEmail as endpoint_email,
+  baseUrlPassword as endpoint_password,
+  baseUrlAvatar as endpoint_avatar,
+} from '../app/shop/routes.config'
 import { client, client_header, shops } from './common/models'
 import { createBearerHeader, createRandomToken, createShop, getShopToken } from './common/services'
 
@@ -307,6 +312,16 @@ describe('Shop endpoint', () => {
 
           expect((await request(App).patch(endpoint).send(body)).statusCode).toBe(400)
         })
+      })
+    })
+
+    describe(endpoint_avatar, () => {
+      it("should allow a shop to set it's avatar", async () => {
+        const [_, token] = await setupShopAndToken()
+        const header = createBearerHeader(token.access_token)
+        const res = await request(App).post(endpoint_avatar).set(header).attach('avatar', 'tests/common/avatar.png')
+
+        expect(res.statusCode).toBe(204)
       })
     })
   })

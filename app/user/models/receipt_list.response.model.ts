@@ -1,7 +1,7 @@
 export class ReceiptModel {
   receipt_id: number
   shop_name: string
-  shop_logo: string
+  shop_avatar_id?: number
   date: Date
   total_ttc: number
 }

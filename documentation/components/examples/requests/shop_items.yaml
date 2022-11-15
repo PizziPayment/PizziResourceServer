@@ -1,0 +1,8 @@
+value:
+  items:
+    - name: red wheelbarrow
+      price: 999900
+      category: Tools
+    - name: cultivator
+      price: 3460000
+      category: Tools

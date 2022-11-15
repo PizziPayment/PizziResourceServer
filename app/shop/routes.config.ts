@@ -17,6 +17,7 @@ import {
   register,
   shopInfo,
   productReturnCertificates,
+  updateAvatar,
 } from './controllers/shop.controller'
 import validShopReceiptAffiliation from './middlewares/receipt_affiliation.validation.middleware'
 import { validRequestBodyFor, validRequestParamsFor, validRequestQueryFor } from '../common/middlewares/request.validation.middleware'
@@ -30,6 +31,7 @@ import CreateTransactionRequestModel from './models/create_transaction.request.m
 import { ReceiptsListRequestModel } from './models/receipt_list.request.model'
 import CreateProductReturnCertificateRequestModel from './models/create_product_return_certificate.request.model'
 import validReceiptItemReceiptAffiliation from './middlewares/receipt_receipt_id_affiliation.validation.middleware'
+import { file_upload } from '../common/middlewares/file_upload.middleware'
 
 export const baseUrl = '/shops'
 export const baseUrlPassword = `${baseUrl}/me/password`
@@ -37,6 +39,7 @@ export const baseUrlEmail = `${baseUrl}/me/email`
 export const baseUrlReceipts = `${baseUrl}/me/receipts`
 export const baseUrlProductReturnCertificate = `${baseUrlReceipts}/:receipt_id/product_return_certificates`
 export const baseUrlTransactions = `${baseUrl}/me/transactions`
+export const baseUrlAvatar = `${baseUrl}/avatar`
 
 export default function ShopRouter(app: Application): void {
   app.get(`${baseUrl}/`, [validToken, validShopTokenAffiliation, shopInfo])
@@ -65,4 +68,5 @@ export default function ShopRouter(app: Application): void {
   app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validToken, validShopTokenAffiliation, receipts])
   app.post(`${baseUrlTransactions}/`, [validRequestBodyFor(CreateTransactionRequestModel.validator), validToken, validShopTokenAffiliation, createTransaction])
   app.get(`${baseUrl}/me/product_return_certificates`, [validToken, validShopTokenAffiliation, productReturnCertificates])
+  app.post(`${baseUrlAvatar}`, [validToken, validShopTokenAffiliation, file_upload.single('avatar'), updateAvatar])
 }

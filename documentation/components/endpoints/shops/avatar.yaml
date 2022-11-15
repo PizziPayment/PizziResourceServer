@@ -1,0 +1,27 @@
+post:
+  operationId: set_shop_avatar
+  tags:
+    - Shop
+  summary: Set avatar
+  description: Set shop's avatar.
+  security:
+    - BearerAuth: []
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            avatar:
+              description: The image in binary format
+              type: string
+              format: binary
+  responses:
+    204:
+      $ref: '../../../openapi.yaml#/components/responses/204'
+    400:
+      description: Invalid image
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

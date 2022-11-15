@@ -34,7 +34,7 @@ export async function updateShopItem(req: Request<ShopItemUpdateParamModel, unkn
   const shop_item_id = req.params.id
   const shop_item = req.body
 
-  await ShopItemsService.updateShopItemFromId(shop_item_id, shop_item.name, shop_item.price).match(
+  await ShopItemsService.updateShopItemFromId(shop_item_id, shop_item.name, shop_item.price, shop_item.category).match(
     (new_shop_item) => res.status(200).send(new ShopItemResponseModel(new_shop_item)),
     createResponseHandler(req, res),
   )
