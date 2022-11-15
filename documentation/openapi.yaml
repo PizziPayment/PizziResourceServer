@@ -74,6 +74,8 @@ paths:
     $ref: './components/endpoints/shops/receipt.yaml'
   /shops/me/receipts/{receipt_id}/product_return_certificates:
     $ref: './components/endpoints/shops/receipts/product_return_certificates.yaml'
+  /shops/me/product_return_certificates:
+    $ref: './components/endpoints/shops/product_return_certificates.yaml'
   /shops/me/transactions:
     $ref: './components/endpoints/shops/transactions.yaml'
   /shops/me/avatar:
