@@ -1,23 +1,17 @@
+import { ClientsService, ErrorCause, rewriteTables, TokensService } from 'pizzi-db'
+import * as request from 'supertest'
 import { App } from '../app/api'
+import { config } from '../app/common/config'
 import {
   baseUrl as endpoint,
-  baseUrlPassword as endpoint_password,
-  baseUrlEmail as endpoint_email,
   baseUrlAvatar as endpoint_avatar,
+  baseUrlEmail as endpoint_email,
+  baseUrlPassword as endpoint_password,
 } from '../app/user/routes.config'
-import { config } from '../app/common/config'
-import * as request from 'supertest'
-import { rewriteTables, UsersServices, CredentialsService, EncryptionService, ClientsService, TokensService, ErrorCause } from 'pizzi-db'
-import { users, client, client_header } from './common/models'
-import { getUser, getUserToken, createRandomToken, createBearerHeader, createBearerHeaderFromCredential } from './common/services'
+import { client, client_header, users } from './common/models'
+import { createBearerHeader, createRandomToken, createUser, getUser, getUserToken } from './common/services'
 
 const user = users[0]
-
-async function createUser(): Promise<void> {
-  const address = `${user.place.address} ${user.place.city}`
-  const user_handle = (await UsersServices.createUser(user.name, user.surname, address, user.place.zipcode))._unsafeUnwrap()
-  expect((await CredentialsService.createCredentialWithId('user', user_handle.id, user.email, EncryptionService.encrypt(user.password))).isOk()).toBeTruthy()
-}
 
 // @ts-ignore
 let sequelize: Sequelize = undefined
@@ -42,7 +36,7 @@ afterEach(async () => await sequelize.close())
 describe('User endpoint', () => {
   describe('GET request', () => {
     it("should return a user's information", async () => {
-      await createUser()
+      await createUser(user)
       const token = await getUserToken(user.email, user.password)
       const address = `${user.place.address} ${user.place.city}`
       const res = await request(App).get(endpoint).set(createBearerHeader(token.access_token)).send()
@@ -56,7 +50,7 @@ describe('User endpoint', () => {
     })
 
     it('should not accept an invalid token', async () => {
-      await createUser()
+      await createUser(user)
       const token = await getUserToken(user.email, user.password)
       const invalid = createRandomToken(token.access_token)
       const res = await request(App).get(endpoint).set(createBearerHeader(invalid)).send()
@@ -67,16 +61,16 @@ describe('User endpoint', () => {
 
   describe('POST request', () => {
     it('should allow the creation of a valid user', async () => {
-      const res = await request(App).post(endpoint).set(client_header).send(user)
+      const res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(res.statusCode).toEqual(201)
     })
 
     it('should not allow the creation of multiple users with the same email', async () => {
-      const first_res = await request(App).post(endpoint).set(client_header).send(user)
+      const first_res = await request(App).post(endpoint).set(client_header()).send(user)
       const second_res = await request(App)
         .post(endpoint)
-        .set(client_header)
+        .set(client_header())
         .send({
           ...users[1],
           email: user.email,
@@ -98,7 +92,7 @@ describe('User endpoint', () => {
       it.each(passwords)('%s: %s', async (_, password) => {
         const res = await request(App)
           .post(endpoint)
-          .set(client_header)
+          .set(client_header())
           .send({
             ...user,
             password,
@@ -111,7 +105,7 @@ describe('User endpoint', () => {
 
   describe('DELETE request', () => {
     it('should allow the deletion of a user using a valid password and token', async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
 
@@ -122,7 +116,7 @@ describe('User endpoint', () => {
     })
 
     it('should not allow the deletion of a user using an invalid token', async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
 
@@ -135,7 +129,7 @@ describe('User endpoint', () => {
 
     it('should not allow the deletion of a user using an invalid password', async () => {
       const invalid_password = 'non3Cwl4FmLlQ@HycAf'
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
 
@@ -146,7 +140,7 @@ describe('User endpoint', () => {
     })
 
     it('should not allow the deletion of a user without a password', async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
 
@@ -159,7 +153,7 @@ describe('User endpoint', () => {
 
   describe('PATCH request', () => {
     it("should allow the modification of a user's name", async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
       let user_data = await getUser(user.email, user.password)
@@ -175,7 +169,7 @@ describe('User endpoint', () => {
     })
 
     it("should allow the modification of a user's surname", async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
       let user_data = await getUser(user.email, user.password)
@@ -191,7 +185,7 @@ describe('User endpoint', () => {
     })
 
     it("should allow the modification of a user's address", async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
       let user_data = await getUser(user.email, user.password)
@@ -213,7 +207,7 @@ describe('User endpoint', () => {
     })
 
     it("should not allow the modification of a user's informations with an invalid token", async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
 
@@ -226,7 +220,7 @@ describe('User endpoint', () => {
     })
 
     it("should not allow the modification of a user's informations without a token", async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
 
@@ -243,7 +237,7 @@ describe('User endpoint', () => {
       }
 
       it("should allow the modification of a user's email", async () => {
-        const create_res = await request(App).post(endpoint).set(client_header).send(user)
+        const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
         expect(create_res.statusCode).toEqual(201)
         let token = await getUserToken(user.email, user.password)
@@ -258,7 +252,7 @@ describe('User endpoint', () => {
       })
 
       it("should not allow the modification of a user's email with an invalid token", async () => {
-        const create_res = await request(App).post(endpoint).set(client_header).send(user)
+        const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
         expect(create_res.statusCode).toEqual(201)
         let token = createRandomToken((await getUserToken(user.email, user.password)).access_token)
@@ -270,7 +264,7 @@ describe('User endpoint', () => {
       })
 
       it("should not allow the modification of a user's email with an invalid password", async () => {
-        const create_res = await request(App).post(endpoint).set(client_header).send(user)
+        const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
         expect(create_res.statusCode).toEqual(201)
         let token = (await getUserToken(user.email, user.password)).access_token
@@ -283,7 +277,7 @@ describe('User endpoint', () => {
       })
 
       it("should not allow the modification of a user's email with an invalid new email", async () => {
-        const create_res = await request(App).post(endpoint).set(client_header).send(user)
+        const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
         expect(create_res.statusCode).toEqual(201)
         let token = (await getUserToken(user.email, user.password)).access_token
@@ -299,7 +293,7 @@ describe('User endpoint', () => {
 
   describe('PUT request', () => {
     it("should allow the modification of a user's password and revoke token with a valid token", async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
 
@@ -322,7 +316,7 @@ describe('User endpoint', () => {
     })
 
     it("should not allow to modification of a user's password with an invalid token", async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
 
@@ -339,7 +333,7 @@ describe('User endpoint', () => {
     })
 
     it("should not allow to modification of a user's password with an invalid password", async () => {
-      const create_res = await request(App).post(endpoint).set(client_header).send(user)
+      const create_res = await request(App).post(endpoint).set(client_header()).send(user)
 
       expect(create_res.statusCode).toEqual(201)
 
@@ -359,7 +353,7 @@ describe('User endpoint', () => {
   describe('Avatar endpoint', () => {
     describe('POST request', () => {
       it('should allow a user to change their avatar', async () => {
-        await createUser()
+        await createUser(user)
         let token = (await getUserToken(user.email, user.password)).access_token
         const header = createBearerHeader(token)
         const res = await request(App).post(endpoint_avatar).set(header).attach('avatar', 'tests/common/avatar.png')
