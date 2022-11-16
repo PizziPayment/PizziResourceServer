@@ -16,6 +16,7 @@ export default class InfosResponseModel {
     this.instagram = shop.instagram
     this.twitter = shop.twitter
     this.facebook = shop.facebook
+    this.avatar_id = shop.avatar_id
   }
 
   id: number
@@ -31,4 +32,5 @@ export default class InfosResponseModel {
   instagram: string
   twitter: string
   facebook: string
+  avatar_id?: number
 }

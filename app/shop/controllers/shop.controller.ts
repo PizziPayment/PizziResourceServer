@@ -155,11 +155,14 @@ export async function createTransaction(
     .match((body) => res.status(201).send(body), createResponseHandler(req, res))
 }
 
-export async function updateAvatar(req: Request, res: Response<void | ApiFailure>): Promise<void> {
+export async function updateAvatar(req: Request, res: Response<{ image_id: number } | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
   const image = await sharp(req.file.buffer).resize(512, 512, { fit: 'cover' }).jpeg().toBuffer()
 
-  await ShopsServices.updateAvatarFromImageId(credentials.shop_id, image).match(() => res.status(204).send(), createResponseHandler(req, res))
+  await ShopsServices.updateAvatarFromImageId(credentials.shop_id, image).match(
+    (image_id) => res.status(200).send({ image_id }),
+    createResponseHandler(req, res),
+  )
 }
 
 export async function receiptProductReturnCertificates(

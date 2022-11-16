@@ -70,16 +70,16 @@ describe('Shop endpoint', () => {
 
   describe('POST request', () => {
     it('should allow the creation of a valid shop', async () => {
-      const res = await request(App).post(endpoint).set(client_header).send(shop)
+      const res = await request(App).post(endpoint).set(client_header()).send(shop)
 
       expect(res.statusCode).toEqual(201)
     })
 
     it('should not allow the creation of multiple shops with the same email', async () => {
-      const first_res = await request(App).post(endpoint).set(client_header).send(shop)
+      const first_res = await request(App).post(endpoint).set(client_header()).send(shop)
       const second_res = await request(App)
         .post(endpoint)
-        .set(client_header)
+        .set(client_header())
         .send({
           ...shop,
           name: 'titi',
@@ -102,7 +102,7 @@ describe('Shop endpoint', () => {
       it.each(passwords)('%s: %s', async (_, password) => {
         const res = await request(App)
           .post(endpoint)
-          .set(client_header)
+          .set(client_header())
           .send({
             ...shop,
             password,
@@ -321,7 +321,7 @@ describe('Shop endpoint', () => {
         const header = createBearerHeader(token.access_token)
         const res = await request(App).post(endpoint_avatar).set(header).attach('avatar', 'tests/common/avatar.png')
 
-        expect(res.statusCode).toBe(204)
+        expect(res.statusCode).toBe(200)
       })
     })
   })

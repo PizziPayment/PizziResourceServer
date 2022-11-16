@@ -1,5 +1,11 @@
 description: User's info
 type: object
+required:
+  - id
+  - firstname
+  - surname
+  - address
+  - zipcode
 properties:
   id:
     type: number
@@ -16,3 +22,6 @@ properties:
   zipcode:
     type: number
     description: User's zipcode.
+  avatar_id:
+    type: number
+    description: User's avatar image id, if the user has one.
