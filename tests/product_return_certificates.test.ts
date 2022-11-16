@@ -206,7 +206,7 @@ describe('Product Return Certificate endpoint', () => {
 
   describe("List all shop's certificates", () => {
     const endpoint = '/shops/me/product_return_certificates'
-    
+
     it('basic test with certificates', async () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
