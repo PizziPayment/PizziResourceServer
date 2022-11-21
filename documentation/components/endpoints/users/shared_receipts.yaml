@@ -1,0 +1,98 @@
+post:
+  operationId: dc_user_list_shared_receipt
+  tags:
+    - User
+  summary: List shared receipt
+  description: List shared receipts related to user.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: The transaction's id and the required token
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            recipient_email:
+              type: string
+        example:
+          recipient_email: 'toto@tata.com'
+  responses:
+    200:
+      description: Shared receipts list.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: number
+                shared_at:
+                  type: date
+                user:
+                  type: object
+                  properties:
+                    firstname:
+                      type: string
+                    surname:
+                      type: string
+                    avatar_id:
+                      type: number
+                receipt:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    total_price:
+                      type: number
+                    items:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                          name:
+                            type: string
+                          price:
+                            type: number
+                          tva_percentage:
+                            type: number
+                          quantity:
+                            type: number
+                          warranty:
+                            type: string
+                          eco_tax:
+                            type: number
+                          discount:
+                            type: number
+          example:
+            - id: 1
+              shared_at: 21/11/2022
+              user:
+                firstname: Jean
+                surname: Peuplu
+                avatar_id: 2311
+              receipt:
+                id: 123
+                total_price: 12333
+                items:
+                  - id: 334
+                    name: Something
+                    price: 123123
+                    tva_percentage: 12
+                    quantity: 10
+                    warranty: wololo
+                    eco_tax: 44
+                    discount: 0
+
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    404:
+      $ref: '../../../openapi.yaml#/components/responses/404'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'
