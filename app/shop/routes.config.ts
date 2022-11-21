@@ -15,11 +15,11 @@ import {
   createProductReturnCertificate,
   createTransaction,
   deleteAccount,
-  productReturnCertificates,
   receipt,
   receipts,
   register,
   shopInfo,
+  productReturnCertificates,
   updateAvatar,
 } from './controllers/shop.controller'
 import validShopReceiptAffiliation from './middlewares/receipt_affiliation.validation.middleware'
@@ -63,6 +63,8 @@ export default function ShopRouter(app: Application): void {
     validReceiptItemReceiptAffiliation, // needs to be after validShopReceiptAffiliation.
     createProductReturnCertificate,
   ])
+  app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validAccessToken, validShopTokenAffiliation, receipts])
+  app.get(`${baseUrl}/me/product_return_certificates`, [validAccessToken, validShopTokenAffiliation, productReturnCertificates])
   app.get(`${baseUrlReceipts}/`, [validRequestQueryFor(ReceiptsListRequestModel.validator), validAccessToken, validShopTokenAffiliation, receipts])
   app.post(`${baseUrlTransactions}/`, [
     validRequestBodyFor(CreateTransactionRequestModel.validator),

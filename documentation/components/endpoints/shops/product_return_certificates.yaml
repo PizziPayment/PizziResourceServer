@@ -1,0 +1,35 @@
+get:
+  operationId: get_all_product_return_certificates
+  tags:
+    - Product Return
+  summary: List All Product Return Certificates
+  description: >
+    Get all product return certificates associated to the current shop.
+  security:
+    - BearerAuth: []
+  responses:
+    200:
+      description: List of product return certificates
+      content:
+        application/json:
+          schema:
+            $ref: '../../../openapi.yaml#/components/schemas/ResponseProductReturnCertificate'
+          example:
+            - id: 1
+              receipt_item_id: 12
+              quantity: 2
+              reason: C'est cassé.
+              return_date: 2022-08-13T16:17:39.278Z
+
+            - id: 2
+              receipt_item_id: 4
+              quantity: 1
+              reason: C'est pas le bon.
+              return_date: 2022-08-11T16:12:59.278Z
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'
+
