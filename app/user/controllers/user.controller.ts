@@ -28,6 +28,7 @@ import RegisterRequestModel from '../models/register.request.model'
 import ShareReceiptRequestModel from '../models/share_receipt.request.model'
 import TakeTransactionRequestModel from '../models/take_transaction.request.model'
 import sharp = require('sharp')
+import { DetailedSharedReceiptModel } from '../models/shared_receipt.model'
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -177,4 +178,14 @@ export async function updateAvatar(req: Request, res: Response<{ image_id: numbe
   } catch {
     res.status(400).send(new ApiFailure(req.url, 'Invalid image format'))
   }
+}
+
+export async function getSharedReceipts(
+  req: Request,
+  res: Response<Array<DetailedSharedReceiptModel> | ApiFailure, { credential: CredentialModel }>,
+): Promise<void> {
+  await SharedReceiptsService.getDetailedSharedReceiptsByUserId(res.locals.credential.user_id).match(
+    (shared_receipts) => res.status(200).send(shared_receipts),
+    createResponseHandler(req, res),
+  )
 }
