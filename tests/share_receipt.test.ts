@@ -58,7 +58,7 @@ async function setupUser(id?: number): Promise<{ token: string; id: number }> {
 const tax_percentage = 20
 
 async function setupReceipt(user: number, shop: number): Promise<number> {
-  const receipt_result = await ReceiptsService.createReceipt(tax_percentage, 0)
+  const receipt_result = await ReceiptsService.createReceipt(0)
   expect(receipt_result.isOk()).toBeTruthy()
   const receipt = receipt_result._unsafeUnwrap()
 

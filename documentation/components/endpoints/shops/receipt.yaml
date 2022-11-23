@@ -34,6 +34,8 @@ get:
                       type: number
                     unit_price:
                       $ref: '../../../openapi.yaml#/components/schemas/price'
+                    tva_percentage:
+                      type: number
                     warranty:
                       type: string
                     eco_tax:
@@ -45,8 +47,6 @@ get:
               payment_type:
                 $ref: '../../../openapi.yaml#/components/schemas/payment_method'
                 type: string
-              tva_percentage:
-                type: number
               total_ht:
                 $ref: '../../../openapi.yaml#/components/schemas/price'
               total_ttc:
@@ -57,12 +57,12 @@ get:
                 product_name: Outer Wilds
                 quantity: 1
                 unit_price: 174900
-                warranty: "18/06/2022"
+                tva_percentage: 20
+                warranty: '18/06/2022'
                 eco_tax: 0
                 discount: 0
             payment_type: card
-            tva_percentage: 20
-            creation_date: "18/06/2020"
+            creation_date: '18/06/2020'
             total_ht: 174900
             total_ttc: 209880
     400:

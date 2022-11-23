@@ -96,16 +96,22 @@ export async function receipts(
   }
 
   await TransactionsService.getOwnerExpandedTransactionsByState('user', res.locals.credential.user_id, 'validated', createParams(req.query))
-    .map((transactions) =>
-      transactions.map((transaction) => {
-        return {
-          receipt_id: transaction.receipt.id,
-          shop_name: transaction.shop.name,
-          shop_avatar_id: transaction.shop.avatar_id,
-          date: transaction.created_at,
-          total_ttc: compute_tax(transaction.receipt.total_ht, transaction.receipt.tva_percentage),
-        }
-      }),
+    .map(
+      async (transactions) =>
+        await Promise.all(
+          transactions.map(async (transaction) => {
+            return {
+              receipt_id: transaction.receipt.id,
+              shop_name: transaction.shop.name,
+              shop_avatar_id: transaction.shop.avatar_id,
+              date: transaction.created_at,
+              total_ttc: await ReceiptItemsService.getDetailedReceiptItems(transaction.receipt.id).match(
+                (items) => items.reduce((a, b) => a + compute_tax(b.price * b.quantity, b.tva_percentage), 0),
+                () => 0,
+              ),
+            }
+          }),
+        ),
     )
     .match((receipts) => res.status(200).send(receipts), createResponseHandler(req, res))
 }
@@ -139,6 +145,7 @@ export async function receipt(
                   product_name: product.name,
                   quantity: product.quantity,
                   unit_price: product.price,
+                  tva_percentage: product.tva_percentage,
                   warranty: product.warranty,
                   eco_tax: product.eco_tax,
                   discount: product.discount,
@@ -146,9 +153,8 @@ export async function receipt(
               }),
               creation_date: transaction.created_at,
               payment_type: transaction.payment_method,
-              tva_percentage: receipt.tva_percentage,
               total_ht: receipt.total_price,
-              total_ttc: compute_tax(receipt.total_price, receipt.tva_percentage),
+              total_ttc: items.reduce((a, b) => a + compute_tax(b.price * b.quantity, b.tva_percentage), 0),
             }
           })
         })
