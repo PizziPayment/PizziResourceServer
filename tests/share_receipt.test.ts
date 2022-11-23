@@ -6,11 +6,15 @@ import { users, shops, client } from './common/models'
 import {
   ClientsService,
   CredentialsService,
+  DetailedSharedReceiptModel,
   EncryptionService,
+  ReceiptModel,
   ReceiptsService,
   rewriteTables,
+  SharedReceiptsService,
   TokensService,
   TransactionsService,
+  UserModel,
   UsersServices,
 } from 'pizzi-db'
 
@@ -34,7 +38,7 @@ beforeEach(async () => {
 
 afterEach(async () => await sequelize.close())
 
-async function setupUser(id?: number): Promise<{ token: string; id: number }> {
+async function setupUser(id?: number): Promise<{ token: string; id: number; user_handle: UserModel }> {
   const user = users[id || 0]
   const user_handle_result = await UsersServices.createUser(user.name, user.surname, '', user.place.zipcode)
   expect(user_handle_result.isOk())
@@ -52,12 +56,12 @@ async function setupUser(id?: number): Promise<{ token: string; id: number }> {
   expect(token_result.isOk()).toBeTruthy()
   const token = token_result._unsafeUnwrap()
 
-  return { token: token.access_token, id: user_handle.id }
+  return { token: token.access_token, id: user_handle.id, user_handle }
 }
 
 const tax_percentage = 20
 
-async function setupReceipt(user: number, shop: number): Promise<number> {
+async function setupReceipt(user: number, shop: number): Promise<ReceiptModel> {
   const receipt_result = await ReceiptsService.createReceipt(0)
   expect(receipt_result.isOk()).toBeTruthy()
   const receipt = receipt_result._unsafeUnwrap()
@@ -68,7 +72,7 @@ async function setupReceipt(user: number, shop: number): Promise<number> {
 
   expect((await TransactionsService.updateTransactionStateFromId(transaction.id, 'validated')).isOk()).toBeTruthy()
 
-  return receipt.id
+  return receipt
 }
 
 async function setupShop(id?: number): Promise<number> {
@@ -82,13 +86,14 @@ describe('Share receipt endpoint', () => {
     const sender = await setupUser(0)
     await setupUser(1)
     const shop = await setupShop()
-    const receipt_id = await setupReceipt(sender.id, shop)
+    const receipt_id = (await setupReceipt(sender.id, shop)).id
 
     const res = await request(App).post(endpoint(receipt_id)).set(createBearerHeader(sender.token)).send({
       recipient_email: users[1].email,
     })
     expect(res.statusCode).toEqual(204)
   })
+
   it('basic test with invalid receipt_id', async () => {
     const sender = await setupUser(0)
     await setupUser(1)
@@ -100,26 +105,52 @@ describe('Share receipt endpoint', () => {
     })
     expect(res.statusCode).toEqual(404)
   })
+
   it("test when sender doesn't own the receipt", async () => {
     const sender = await setupUser(0)
     const receiver = await setupUser(1)
     const shop = await setupShop()
-    const receipt_id = await setupReceipt(receiver.id, shop)
+    const receipt_id = (await setupReceipt(receiver.id, shop)).id
 
     const res = await request(App).post(endpoint(receipt_id)).set(createBearerHeader(sender.token)).send({
       recipient_email: users[1].email,
     })
     expect(res.statusCode).toEqual(404)
   })
+
   it('test whith invalid recipient email', async () => {
     const sender = await setupUser(0)
     await setupUser(1)
     const shop = await setupShop()
-    const receipt_id = await setupReceipt(sender.id, shop)
+    const receipt_id = (await setupReceipt(sender.id, shop)).id
 
     const res = await request(App).post(endpoint(receipt_id)).set(createBearerHeader(sender.token)).send({
       recipient_email: 'invalid_email@invalid.email',
     })
     expect(res.statusCode).toEqual(400)
+  })
+
+  describe('List shared receipts', () => {
+    const endpoint = '/users/me/shared_receipts'
+
+    it('basic test', async () => {
+      const sender = await setupUser(0)
+      const receiver = await setupUser(1)
+      const shop = await setupShop()
+      const receipt = await setupReceipt(sender.id, shop)
+      const shared_receipt = (await SharedReceiptsService.shareReceiptByEmail(receipt.id, users[1].email))._unsafeUnwrap()
+
+      const res = await request(App).get(endpoint).set(createBearerHeader(receiver.token))
+
+      console.log(res.body)
+      expect(res.statusCode).toEqual(200)
+      expect(res.body[0].receipt.id).toEqual(receipt.id)
+      expect(res.body[0].receipt.total_price).toEqual(receipt.total_price)
+      expect(res.body[0].id).toEqual(shared_receipt.id)
+      expect(new Date(res.body[0].shared_at)).toEqual(shared_receipt.shared_at)
+      expect(res.body[0].user.firstname).toEqual(sender.user_handle.firstname)
+      expect(res.body[0].user.surname).toEqual(sender.user_handle.surname)
+      expect(res.body[0].user.avatar_id).toEqual(sender.user_handle.avatar_id)
+    })
   })
 })
