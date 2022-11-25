@@ -4923,7 +4923,7 @@ __metadata:
     jest: ^27.4.5
     multer: ^1.4.5-lts.1
     neverthrow: ^4.3.1
-    pizzi-db: "git@github.com:PizziPayment/PizziAPIDB.git#commit=e7e5861c7ac5efe9178c80785de8250a7a08a3b7"
+    pizzi-db: "git@github.com:PizziPayment/PizziAPIDB.git#tag=v3.6.0"
     prettier: ^2.5.1
     record-validator: ^1.5.0
     reflect-metadata: ^0.1.13
@@ -4937,9 +4937,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#commit=e7e5861c7ac5efe9178c80785de8250a7a08a3b7":
+"pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#tag=v3.6.0":
   version: 1.0.1
-  resolution: "pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#commit=e7e5861c7ac5efe9178c80785de8250a7a08a3b7"
+  resolution: "pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#commit=4a8e7c619a751f3cefb1c484b1902bf85a67877f"
   dependencies:
     neverthrow: ^5.0.0
     pg: ^8.8.0

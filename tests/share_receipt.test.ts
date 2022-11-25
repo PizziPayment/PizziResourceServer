@@ -6,7 +6,6 @@ import { users, shops, client } from './common/models'
 import {
   ClientsService,
   CredentialsService,
-  DetailedSharedReceiptModel,
   EncryptionService,
   ReceiptModel,
   ReceiptsService,
