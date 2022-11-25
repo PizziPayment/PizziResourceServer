@@ -5,7 +5,7 @@ import { validAccessToken, validBasicAuth } from '../common/middlewares/authoriz
 import { file_upload } from '../common/middlewares/file_upload.middleware'
 import validPassword, { validChangePassword } from '../common/middlewares/password.validation.middleware'
 import { validRequestBodyFor, validRequestParamsFor, validRequestQueryFor } from '../common/middlewares/request.validation.middleware'
-import validShopTokenAffiliation from '../common/middlewares/shop_token_affiliation.validation.middleware'
+import { validShopTokenAffiliation } from '../common/middlewares/token_affiliation.validation.middleware'
 import validUniqueEmail from '../common/middlewares/unique_email.validation.middleware'
 import ChangeEmailValidationModel from '../common/models/email.request.model'
 import RequestPasswordModel from '../common/models/password.request.model'

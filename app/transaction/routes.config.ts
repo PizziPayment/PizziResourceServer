@@ -1,7 +1,7 @@
 import { Application } from 'express'
 import { validAccessToken } from '../common/middlewares/authorization.middleware'
 import { validRequestBodyFor, validRequestQueryFor } from '../common/middlewares/request.validation.middleware'
-import validShopTokenAffiliation from '../common/middlewares/shop_token_affiliation.validation.middleware'
+import { validShopTokenAffiliation } from '../common/middlewares/token_affiliation.validation.middleware'
 import { createTransaction, getTransactions, updateTransactionPaymentMethod, updateTransactionUser } from './controllers/transaction.controller'
 import { validUpdateRequestForUser } from './middlewares/update.request.validation.middleware'
 import { validTransactionOwnership } from './middlewares/valid_ownership.validation.middleware'

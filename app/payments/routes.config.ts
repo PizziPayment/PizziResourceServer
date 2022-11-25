@@ -1,7 +1,7 @@
 import { Application } from 'express'
 import { proceedPayment } from './controllers/payment.controller'
 import { validAccessToken } from '../common/middlewares/authorization.middleware'
-import validShopTokenAffiliation from '../common/middlewares/shop_token_affiliation.validation.middleware'
+import { validShopTokenAffiliation } from '../common/middlewares/token_affiliation.validation.middleware'
 import validPaymentRequest from './middlewares/payment_request.validation.middleware'
 
 export const baseUrl = '/payments'

@@ -1,7 +1,7 @@
 import { Application } from 'express'
 import { validAccessToken } from '../common/middlewares/authorization.middleware'
 import { validRequestBodyFor } from '../common/middlewares/request.validation.middleware'
-import validShopTokenAffiliation from '../common/middlewares/shop_token_affiliation.validation.middleware'
+import { validShopTokenAffiliation } from '../common/middlewares/token_affiliation.validation.middleware'
 import { baseUrl as shopBaseUrl } from '../shop/routes.config'
 import { createShopItems, deleteShopItem, retrieveShopItems, updateShopItem } from './controllers/shop_item.controller'
 import { validShopItemsRetrieval } from './middlewares/retrieve_param.validation.middleware'
