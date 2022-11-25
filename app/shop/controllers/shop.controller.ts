@@ -152,9 +152,7 @@ export async function createTransaction(
     .andThen((receipt) =>
       ReceiptItemsService.createReceiptItems(
         receipt.id,
-        body.items.map((item) => {
-          return { ...item, tva_percentage: body.tva_percentage }
-        }),
+        body.items.map((item) => ({ ...item, tva_percentage: body.tva_percentage })),
       )
         .andThen(() => TransactionsService.createPendingTransaction(receipt.id, null, res.locals.credential.shop_id, body.payment_method))
         .andThen((transaction) =>
