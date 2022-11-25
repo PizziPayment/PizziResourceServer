@@ -139,7 +139,6 @@ describe('Share receipt endpoint', () => {
 
       const res = await request(App).get(endpoint).set(createBearerHeader(receiver.token))
 
-      console.log(res.body)
       expect(res.statusCode).toEqual(200)
       expect(res.body[0].receipt.id).toEqual(receipt.id)
       expect(res.body[0].receipt.total_price).toEqual(receipt.total_price)
