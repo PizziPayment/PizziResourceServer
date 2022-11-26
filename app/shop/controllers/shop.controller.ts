@@ -157,12 +157,16 @@ export async function createTransaction(
 
 export async function updateAvatar(req: Request, res: Response<{ image_id: number } | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
-  const image = await sharp(req.file.buffer).resize(512, 512, { fit: 'cover' }).jpeg().toBuffer()
 
-  await ShopsServices.updateAvatarFromImageId(credentials.shop_id, image).match(
-    (image_id) => res.status(200).send({ image_id }),
-    createResponseHandler(req, res),
-  )
+  try {
+    const image = await sharp(req.file.buffer).resize(512, 512, { fit: 'cover' }).jpeg().toBuffer()
+    await ShopsServices.updateAvatarFromImageId(credentials.shop_id, image).match(
+      (image_id) => res.status(200).send({ image_id }),
+      createResponseHandler(req, res),
+    )
+  } catch {
+    res.status(400).send(new ApiFailure(req.url, 'Invalid image format'))
+  }
 }
 
 export async function receiptProductReturnCertificates(
