@@ -64,6 +64,7 @@ async function setupUser(id?: number): Promise<{ token: string; id: number }> {
 class Item {
   name: string
   price: number
+  tva_percentage: number
   discount: number
   eco_tax: number
   quantity: number
@@ -75,8 +76,8 @@ class CompleteItem extends Item {
 }
 
 const items: Array<Item> = [
-  { name: 'Outer Wilds', price: 1749, discount: 0, eco_tax: 0, quantity: 1, warranty: 'none' },
-  { name: 'Outer Wilds - Echoes of the Eye', price: 1040, discount: 0, eco_tax: 0, quantity: 1, warranty: 'none' },
+  { name: 'Outer Wilds', price: 1749, tva_percentage: 0, discount: 0, eco_tax: 0, quantity: 1, warranty: 'none' },
+  { name: 'Outer Wilds - Echoes of the Eye', price: 1040, tva_percentage: 0, discount: 0, eco_tax: 0, quantity: 1, warranty: 'none' },
 ]
 
 function getTotalPrice(items: Array<Item>): number {
@@ -122,12 +123,14 @@ async function setupReceipt(
   items: Array<CompleteItem>,
 ): Promise<{ id: number; total_price: number; date: Date; receipt_items: Array<ReceiptItemModel> }> {
   const total_price = getTotalPrice(items)
-  const receipt_result = await ReceiptsService.createReceipt(tax_percentage, total_price)
+  const receipt_result = await ReceiptsService.createReceipt(total_price)
   expect(receipt_result.isOk()).toBeTruthy()
   const receipt = receipt_result._unsafeUnwrap()
   const receipt_items = (
     await Promise.all(
-      items.map(async (item) => ReceiptItemsService.createReceiptItem(receipt.id, item.id, item.discount, item.eco_tax, item.quantity, item.warranty)),
+      items.map(async (item) =>
+        ReceiptItemsService.createReceiptItem(receipt.id, item.id, item.discount, item.eco_tax, item.tva_percentage, item.quantity, item.warranty),
+      ),
     )
   ).map((it) => it._unsafeUnwrap())
 

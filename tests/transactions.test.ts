@@ -65,7 +65,7 @@ async function setupShop(): Promise<{ id: number; token: string }> {
 }
 
 async function setupReceipts(): Promise<number> {
-  const receipt_result = await ReceiptsService.createReceipt(20, 0)
+  const receipt_result = await ReceiptsService.createReceipt(20)
   expect(receipt_result.isOk()).toBeTruthy()
   const receipt = receipt_result._unsafeUnwrap()
 
@@ -245,7 +245,7 @@ describe('Transactions endpoint', () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
       const receipt_id = await setupReceipts()
-      const transaction = await setupTransaction(receipt_id, null, shop_infos.id)
+      const transaction = await setupTransaction(receipt_id, 0, shop_infos.id)
 
       expect(transaction.payment_method).toBe('unassigned')
       const res = await request(App).patch(`${endpoint}/${transaction.id}/user`).set(createBearerHeader(shop_infos.token)).send({
@@ -263,7 +263,7 @@ describe('Transactions endpoint', () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
       const receipt_id = await setupReceipts()
-      const transaction = await setupTransaction(receipt_id, null, shop_infos.id)
+      const transaction = await setupTransaction(receipt_id, 0, shop_infos.id)
 
       ;(await TransactionsService.updateTransactionStateFromId(transaction.id, 'validated'))._unsafeUnwrap()
 
@@ -283,7 +283,7 @@ describe('Transactions endpoint', () => {
       const user_infos = await setupUser()
       const shop_infos = await setupShop()
       const receipt_id = await setupReceipts()
-      const transaction = await setupTransaction(receipt_id, null, shop_infos.id)
+      const transaction = await setupTransaction(receipt_id, 0, shop_infos.id)
 
       expect(transaction.payment_method).toBe('unassigned')
       const res = await request(App).patch(`${endpoint}/${transaction.id}/user`).set(createBearerHeader(shop_infos.token)).send({

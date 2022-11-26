@@ -13,6 +13,7 @@ import { ReceiptDetailsRequestModel } from '../common/models/receipts.request.mo
 import {
   changeUserInformation,
   deleteAccount,
+  getSharedReceipts,
   info,
   receipt,
   receipts,
@@ -34,6 +35,7 @@ export const baseUrl = '/users'
 export const baseUrlPassword = `${baseUrl}/me/password`
 export const baseUrlEmail = `${baseUrl}/me/email`
 export const baseUrlReceipts = `${baseUrl}/me/receipts`
+export const baseUrlSharedReceipts = `${baseUrl}/me/shared_receipts`
 export const baseUrlTransactions = `${baseUrl}/me/transactions`
 export const baseUrlAvatar = `${baseUrl}/me/avatar`
 
@@ -68,4 +70,5 @@ export default function UserRouter(app: Application): void {
     takeTransaction,
   ])
   app.post(`${baseUrlAvatar}`, [validAccessToken, validUserTokenAffiliation, file_upload.single('avatar'), updateAvatar])
+  app.get(`${baseUrlSharedReceipts}/`, [validAccessToken, validUserTokenAffiliation, getSharedReceipts])
 }
