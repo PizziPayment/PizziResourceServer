@@ -30,7 +30,7 @@ post:
                 id:
                   type: number
                 shared_at:
-                  type: date
+                  type: string
                 user:
                   type: object
                   properties:
