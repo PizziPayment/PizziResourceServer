@@ -37,7 +37,7 @@ export const baseUrlEmail = `${baseUrl}/me/email`
 export const baseUrlReceipts = `${baseUrl}/me/receipts`
 export const baseUrlProductReturnCertificate = `${baseUrlReceipts}/:receipt_id/product_return_certificates`
 export const baseUrlTransactions = `${baseUrl}/me/transactions`
-export const baseUrlAvatar = `${baseUrl}/avatar`
+export const baseUrlAvatar = `${baseUrl}/me/avatar`
 
 export default function ShopRouter(app: Application): void {
   app.get(`${baseUrl}/`, [validAccessToken, validShopTokenAffiliation, shopInfo])
