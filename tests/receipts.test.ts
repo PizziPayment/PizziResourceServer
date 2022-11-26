@@ -430,7 +430,7 @@ describe('Shop receipts endpoint', () => {
       expect(res.statusCode).toEqual(200)
       expect(Math.abs(date - new Date(body.date).getTime()) < 60000).toBeTruthy()
       expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, tax_percentage))
-      expect(body.shop_name).toEqual("toto")
+      expect(body.shop_name).toEqual(shop.name)
       expect(body.receipt_id).toEqual(receipt.id)
     })
 
