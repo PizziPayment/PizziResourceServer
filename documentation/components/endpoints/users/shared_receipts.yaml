@@ -1,4 +1,4 @@
-post:
+get:
   operationId: dc_user_list_shared_receipt
   tags:
     - User
@@ -6,17 +6,6 @@ post:
   description: List shared receipts related to user.
   security:
     - BearerAuth: []
-  requestBody:
-    description: The transaction's id and the required token
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            recipient_email:
-              type: string
-        example:
-          recipient_email: 'toto@tata.com'
   responses:
     200:
       description: Shared receipts list.
