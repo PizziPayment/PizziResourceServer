@@ -13,8 +13,6 @@ import {
   TransactionsService,
   UsersServices,
   ReceiptsService,
-  IPizziError,
-  DetailedReceiptItemModel,
 } from 'pizzi-db'
 import { siretLength } from '../../common/constants'
 import { ApiFailure } from '../../common/models/api.response.model'
@@ -25,7 +23,7 @@ import { DetailedReceiptModel } from '../models/detailed_receipt'
 import InfosResponseModel from '../models/infos.response'
 import PatchRequestModel from '../models/patch.request.model'
 import { FilterModel, ReceiptsListRequestModel } from '../models/receipt_list.request.model'
-import { ReceiptListResponseModel, ReceiptModel } from '../models/receipt_list.response.model'
+import { ReceiptListResponseModel } from '../models/receipt_list.response.model'
 import RegisterRequestModel from '../models/register.request.model'
 import ShareReceiptRequestModel from '../models/share_receipt.request.model'
 import TakeTransactionRequestModel from '../models/take_transaction.request.model'
