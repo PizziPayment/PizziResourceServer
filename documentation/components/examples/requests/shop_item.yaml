@@ -2,3 +2,4 @@ value:
   name: Shovel
   price: 450000
   category: Tools
+  color: "#000000"
