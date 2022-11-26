@@ -13,6 +13,8 @@ import {
   TransactionsService,
   UsersServices,
   ReceiptsService,
+  IPizziError,
+  DetailedReceiptItemModel,
 } from 'pizzi-db'
 import { siretLength } from '../../common/constants'
 import { ApiFailure } from '../../common/models/api.response.model'
@@ -23,12 +25,13 @@ import { DetailedReceiptModel } from '../models/detailed_receipt'
 import InfosResponseModel from '../models/infos.response'
 import PatchRequestModel from '../models/patch.request.model'
 import { FilterModel, ReceiptsListRequestModel } from '../models/receipt_list.request.model'
-import { ReceiptListResponseModel } from '../models/receipt_list.response.model'
+import { ReceiptListResponseModel, ReceiptModel } from '../models/receipt_list.response.model'
 import RegisterRequestModel from '../models/register.request.model'
 import ShareReceiptRequestModel from '../models/share_receipt.request.model'
 import TakeTransactionRequestModel from '../models/take_transaction.request.model'
 import sharp = require('sharp')
 import { DetailedSharedReceiptModel } from '../models/shared_receipt.model'
+import { ResultAsync } from 'neverthrow'
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -96,22 +99,18 @@ export async function receipts(
   }
 
   await TransactionsService.getOwnerExpandedTransactionsByState('user', res.locals.credential.user_id, 'validated', createParams(req.query))
-    .map(
-      async (transactions) =>
-        await Promise.all(
-          transactions.map(async (transaction) => {
-            return {
-              receipt_id: transaction.receipt.id,
-              shop_name: transaction.shop.name,
-              shop_avatar_id: transaction.shop.avatar_id,
-              date: transaction.created_at,
-              total_ttc: await ReceiptItemsService.getDetailedReceiptItems(transaction.receipt.id).match(
-                (items) => items.reduce((a, b) => a + compute_tax(b.price * b.quantity, b.tva_percentage), 0),
-                () => 0,
-              ),
-            }
-          }),
+    .andThen((transactions) =>
+      ResultAsync.combine(
+        transactions.map((transaction) =>
+          ReceiptItemsService.getDetailedReceiptItems(transaction.receipt.id).map((items) => ({
+            receipt_id: transaction.receipt.id,
+            shop_name: transaction.shop.name,
+            shop_avatar_id: transaction.shop.avatar_id,
+            date: transaction.created_at,
+            total_ttc: items.reduce((a, b) => a + compute_tax(b.price * b.quantity, b.tva_percentage), 0),
+          })),
         ),
+      ),
     )
     .match((receipts) => res.status(200).send(receipts), createResponseHandler(req, res))
 }
