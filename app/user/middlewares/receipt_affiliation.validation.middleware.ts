@@ -1,20 +1,36 @@
 import { NextFunction, Request, Response } from 'express'
 import { ApiFailure, ApiResponseWrapper } from '../../common/models/api.response.model'
-import { CredentialModel, ReceiptsService, DetailedReceiptModel, TransactionsService, TransactionModel, ErrorCause } from 'pizzi-db'
+import {
+  CredentialModel,
+  ReceiptsService,
+  DetailedReceiptModel,
+  TransactionsService,
+  TransactionModel,
+  ErrorCause,
+  SharedReceiptsService,
+  SharedReceiptModel,
+} from 'pizzi-db'
 import { ReceiptDetailsRequestModel } from '../../common/models/receipts.request.model'
 import { createResponseHandler } from '../../common/services/error_handling'
 
 export default async function validUserReceiptAffiliation(
-  req: Request<ReceiptDetailsRequestModel, unknown, {}>,
+  req: Request<ReceiptDetailsRequestModel, unknown, Record<string, unknown>>,
   res: Response<ApiResponseWrapper<unknown>, { credential: CredentialModel; receipt: DetailedReceiptModel }>,
   next: NextFunction,
 ): Promise<void> {
   await ReceiptsService.getDetailedReceiptById(Number(req.params.receipt_id))
     .andThen((receipt) =>
-      TransactionsService.getTransactionByReceiptId(receipt.id).map((transaction): [DetailedReceiptModel, TransactionModel] => [receipt, transaction]),
+      TransactionsService.getTransactionByReceiptId(receipt.id).andThen((transaction) =>
+        SharedReceiptsService.getSharedReceiptByReceiptId(receipt.id)
+          .map((shared_receipt) => [receipt, transaction, shared_receipt])
+          .mapErr(() => [receipt, transaction, undefined]),
+      ),
     )
-    .match(([receipt, transaction]) => {
-      if (transaction.user_id && transaction.user_id == res.locals.credential.user_id) {
+    .match(([receipt, transaction, shared_receipt]: [DetailedReceiptModel, TransactionModel, SharedReceiptModel]) => {
+      if (
+        (transaction.user_id && transaction.user_id == res.locals.credential.user_id) ||
+        (shared_receipt && shared_receipt.recipient_id && shared_receipt.recipient_id == res.locals.credential.user_id)
+      ) {
         res.locals.receipt = receipt
         next()
       } else {
