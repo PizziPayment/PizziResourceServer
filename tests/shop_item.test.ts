@@ -20,6 +20,7 @@ const shop_items: ShopItemCreationRequestModel = {
       name: 'cultivator',
       price: 34600,
       category: 'tools',
+      color: '#000000',
     },
     {
       name: 'red wheelbarrow',
@@ -110,6 +111,7 @@ describe('Shop item endpoint', () => {
         expect(created_items[i].name).toBe(shop_items.items[i].name)
         expect(created_items[i].price).toBe(shop_items.items[i].price)
         expect(created_items[i].category).toBe(shop_items.items[i].category || null)
+        expect(created_items[i].color).toBe(shop_items.items[i].color || null)
         expect(retrieved_items[i].shop_id).toBe(shop.id)
         expect(retrieved_items[i].name).toBe(shop_items.items[i].name)
         expect(retrieved_items[i].price).toBe(shop_items.items[i].price)
