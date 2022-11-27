@@ -4916,7 +4916,7 @@ __metadata:
     jest: ^27.4.5
     multer: ^1.4.5-lts.1
     neverthrow: ^5.1.0
-    pizzi-db: "git@github.com:PizziPayment/PizziAPIDB.git#tag=v3.9.0"
+    pizzi-db: "git@github.com:PizziPayment/PizziAPIDB.git#tag=v3.10.0"
     prettier: ^2.5.1
     record-validator: ^1.5.0
     reflect-metadata: ^0.1.13
@@ -4930,9 +4930,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#tag=v3.9.0":
+"pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#tag=v3.10.0":
   version: 1.0.1
-  resolution: "pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#commit=e20ddb7258ad8b2e39f2cfa2041beb6dfda07252"
+  resolution: "pizzi-db@git@github.com:PizziPayment/PizziAPIDB.git#commit=a243d33849eedbe087f763176382ad5652a8d3b3"
   dependencies:
     neverthrow: ^5.1.0
     pg: ^8.8.0
@@ -4940,7 +4940,7 @@ __metadata:
     reflect-metadata: ^0.1.13
     sequelize: =6.21.4
     sequelize-typescript: =2.1.3
-  checksum: d27db9839bc255e00295faa027ad2c342c44ce411873a2d7e16ef2dfeb2f4516bcf81d7279dce1b2fd2e9e0b85dad632dfb2478178210327c0dbb664f4d556a9
+  checksum: 9829358986a950aeae0a726b8bb00b4dac17080c859b5864800fc6652c98b1d4415ada06b0c7cffa99f52b877116aaf6f073a36bc57961408865fcf3f0fd88e4
   languageName: node
   linkType: hard
 
