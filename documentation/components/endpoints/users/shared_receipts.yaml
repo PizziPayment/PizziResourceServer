@@ -20,6 +20,15 @@ get:
                   type: number
                 shared_at:
                   type: string
+                shop:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    avatar_id:
+                      type: number
                 user:
                   type: object
                   properties:
@@ -36,27 +45,6 @@ get:
                       type: number
                     total_price:
                       type: number
-                    items:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                          name:
-                            type: string
-                          price:
-                            type: number
-                          tva_percentage:
-                            type: number
-                          quantity:
-                            type: number
-                          warranty:
-                            type: string
-                          eco_tax:
-                            type: number
-                          discount:
-                            type: number
           example:
             - id: 1
               shared_at: 21/11/2022
@@ -64,18 +52,13 @@ get:
                 firstname: Jean
                 surname: Peuplu
                 avatar_id: 2311
+              shop:
+                id: 123
+                name: AAAAAAAA
+                avatar_id: 2311
               receipt:
                 id: 123
                 total_price: 12333
-                items:
-                  - id: 334
-                    name: Something
-                    price: 123123
-                    tva_percentage: 12
-                    quantity: 10
-                    warranty: wololo
-                    eco_tax: 44
-                    discount: 0
 
     400:
       $ref: '../../../openapi.yaml#/components/responses/400'
