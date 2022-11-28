@@ -20,10 +20,12 @@ export default async function validUserReceiptAffiliation(
 ): Promise<void> {
   await ReceiptsService.getDetailedReceiptById(Number(req.params.receipt_id))
     .andThen((receipt) =>
-      TransactionsService.getTransactionByReceiptId(receipt.id).andThen((transaction) =>
-        SharedReceiptsService.getSharedReceiptByReceiptId(receipt.id)
-          .map((shared_receipt) => [receipt, transaction, shared_receipt])
-          .mapErr(() => [receipt, transaction, undefined]),
+      TransactionsService.getTransactionByReceiptId(receipt.id).map(
+        async (transaction): Promise<[DetailedReceiptModel, TransactionModel, SharedReceiptModel]> => [
+          receipt,
+          transaction,
+          await SharedReceiptsService.getSharedReceiptByReceiptId(receipt.id).unwrapOr(undefined),
+        ],
       ),
     )
     .match(([receipt, transaction, shared_receipt]: [DetailedReceiptModel, TransactionModel, SharedReceiptModel]) => {
