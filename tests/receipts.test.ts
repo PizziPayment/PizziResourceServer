@@ -5,6 +5,7 @@ import {
   ReceiptItemsService,
   ReceiptsService,
   rewriteTables,
+  SharedReceiptsService,
   ShopItemsService,
   ShopsServices,
   TokensService,
@@ -21,6 +22,7 @@ import { ReceiptModel } from '../app/user/models/receipt_list.response.model'
 import { client, shops, users } from './common/models'
 import { baseUrlAvatar as shop_avatar_endpoint } from '../app/shop/routes.config'
 import { baseUrl as images_endpoint } from '../app/images/routes.config'
+import SharedReceipt from 'pizzi-db/dist/commons/services/orm/models/shared_receipts.model'
 
 const shop = shops[0]
 
@@ -373,6 +375,43 @@ describe('User receipts endpoint', () => {
       const receipt = await setupReceipt(user_infos.id, shop_infos.id, shop_infos.items)
 
       const res = await request(App).get(`${endpoint}/${receipt.id}`).set(createBearerHeader(user_infos.token)).send()
+      const body: DetailedReceiptModel = res.body
+      const vendor = body.vendor
+      const products = body.products
+
+      expect(res.statusCode).toEqual(200)
+      expect(body.total_ht).toEqual(receipt.total_price)
+      //expect(body.total_ttc).toEqual(compute_tax(receipt.total_price, body.tva_percentage))
+      //expect(body.tva_percentage).toEqual(20)
+      expect(body.payment_type).toEqual('card')
+      expect(approximateDate(new Date(body.creation_date), 60000))
+
+      expect(vendor.name).toEqual(shop.name)
+      expect(vendor.shop_number).toEqual(shop.phone)
+      expect(vendor.place.street).toEqual(shop.place.address)
+      expect(vendor.place.city).toEqual(shop.place.city)
+      expect(vendor.place.postal_code).toEqual(shop.place.zipcode)
+      expect(vendor.siret).toEqual(shop.siret)
+
+      for (const i of Array(items.length).keys()) {
+        expect(products[i].quantity).toEqual(items[i].quantity)
+        expect(products[i].eco_tax).toEqual(items[i].eco_tax)
+        expect(products[i].discount).toEqual(items[i].discount)
+        expect(products[i].warranty).toEqual(items[i].warranty)
+        expect(products[i].product_name).toEqual(items[i].name)
+        expect(products[i].unit_price).toEqual(items[i].price)
+      }
+    })
+
+    it('a user should be able to view a receipt shared with themself', async () => {
+      const recipient_user_infos = await setupUser(0)
+      const shop_infos = await setupShop()
+      const sender_user_infos = await setupUser(1)
+      const receipt = await setupReceipt(sender_user_infos.id, shop_infos.id, shop_infos.items)
+
+      await (await SharedReceiptsService.shareReceiptByEmail(receipt.id, users[0].email))._unsafeUnwrap()
+
+      const res = await request(App).get(`${endpoint}/${receipt.id}`).set(createBearerHeader(recipient_user_infos.token)).send()
       const body: DetailedReceiptModel = res.body
       const vendor = body.vendor
       const products = body.products
