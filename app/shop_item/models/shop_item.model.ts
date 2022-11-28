@@ -4,4 +4,5 @@ export class ShopItemModel {
   price: number
   created_at: Date
   category?: string
+  color?: string
 }

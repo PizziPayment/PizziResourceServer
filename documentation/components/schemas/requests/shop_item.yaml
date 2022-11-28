@@ -11,3 +11,5 @@ properties:
     $ref: '../../../openapi.yaml#/components/schemas/price'
   category:
     type: string
+  color:
+    type: string

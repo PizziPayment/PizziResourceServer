@@ -7,6 +7,7 @@ export class ShopItemResponseModel implements ShopItemModel {
   price: number
   created_at: Date
   category?: string
+  color?: string
 
   constructor(item: DBShopItemModel) {
     this.id = item.id
@@ -14,6 +15,7 @@ export class ShopItemResponseModel implements ShopItemModel {
     this.price = item.price
     this.created_at = item.created_at
     this.category = item.category
+    this.color = item.color
   }
 }
 
