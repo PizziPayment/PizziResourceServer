@@ -28,6 +28,7 @@ import DeleteRequestModel from './models/delete.request.model'
 import PatchRequestModel from './models/patch.request.model'
 import { ReceiptsListRequestModel } from './models/receipt_list.request.model'
 import RegisterRequestModel from './models/register.request.model'
+import { SharedReceiptsListRequestModel } from './models/shared_receipt.request.model'
 import ShareReceiptRequestModel from './models/share_receipt.request.model'
 import TakeTransactionRequestModel from './models/take_transaction.request.model'
 
@@ -70,5 +71,10 @@ export default function UserRouter(app: Application): void {
     takeTransaction,
   ])
   app.post(`${baseUrlAvatar}`, [validAccessToken, validUserTokenAffiliation, file_upload.single('avatar'), updateAvatar])
-  app.get(`${baseUrlSharedReceipts}/`, [validAccessToken, validUserTokenAffiliation, getSharedReceipts])
+  app.get(`${baseUrlSharedReceipts}/`, [
+    validRequestQueryFor(SharedReceiptsListRequestModel.validator),
+    validAccessToken,
+    validUserTokenAffiliation,
+    getSharedReceipts,
+  ])
 }
