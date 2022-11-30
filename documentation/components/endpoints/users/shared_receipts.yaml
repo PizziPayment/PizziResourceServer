@@ -6,6 +6,31 @@ get:
   description: List shared receipts related to user.
   security:
     - BearerAuth: []
+  parameters:
+    - in: query
+      name: filter
+      schema:
+        type: string
+        enum:
+          - latest
+          - oldest
+      example: latest
+    - in: query
+      name: query
+      schema:
+        type: string
+      example: steam
+      description: Search query for shop name.
+    - in: query
+      name: from
+      schema:
+        type: string
+      example: 2018-03-20T09:12:28Z
+    - in: query
+      name: to
+      schema:
+        type: string
+      example: 2018-03-20T09:12:28Z
   responses:
     200:
       description: Shared receipts list.

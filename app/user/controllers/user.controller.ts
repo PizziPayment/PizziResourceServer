@@ -22,14 +22,15 @@ import { compute_tax } from '../../common/services/tax'
 import { DetailedReceiptModel } from '../models/detailed_receipt'
 import InfosResponseModel from '../models/infos.response'
 import PatchRequestModel from '../models/patch.request.model'
-import { FilterModel, ReceiptsListRequestModel } from '../models/receipt_list.request.model'
+import { ReceiptListFilterModel, ReceiptsListRequestModel } from '../models/receipt_list.request.model'
 import { ReceiptListResponseModel } from '../models/receipt_list.response.model'
 import RegisterRequestModel from '../models/register.request.model'
 import ShareReceiptRequestModel from '../models/share_receipt.request.model'
 import TakeTransactionRequestModel from '../models/take_transaction.request.model'
 import sharp = require('sharp')
-import { DetailedSharedReceiptModel } from '../models/shared_receipt.model'
+import { DetailedSharedReceiptModel } from '../models/shared_receipt.response.model'
 import { ResultAsync } from 'neverthrow'
+import { SharedReceiptListFilterModel, SharedReceiptsListRequestModel } from '../models/shared_receipt.request.model'
 
 export async function info(req: Request, res: Response<InfosResponseModel | ApiFailure>): Promise<void> {
   const credentials = res.locals.credential as CredentialModel
@@ -72,7 +73,7 @@ export async function receipts(
       return {}
     }
 
-    const filters: Record<FilterModel, Filter> = {
+    const filters: Record<ReceiptListFilterModel, Filter> = {
       latest: Filter.Latest,
       oldest: Filter.Oldest,
       price_ascending: Filter.PriceAscending,
@@ -184,10 +185,37 @@ export async function updateAvatar(req: Request, res: Response<{ image_id: numbe
 }
 
 export async function getSharedReceipts(
-  req: Request,
+  req: Request<unknown, unknown, unknown, SharedReceiptsListRequestModel>,
   res: Response<Array<DetailedSharedReceiptModel> | ApiFailure, { credential: CredentialModel }>,
 ): Promise<void> {
-  await SharedReceiptsService.getDetailedSharedReceiptsByUserId(res.locals.credential.user_id).match(
+  const createParams = (query?: SharedReceiptsListRequestModel): unknown => {
+    if (!query) {
+      return {}
+    }
+
+    const filters: Record<SharedReceiptListFilterModel, Filter> = {
+      latest: Filter.Latest,
+      oldest: Filter.Oldest,
+    }
+    const params: ReceiptsQueryParameters = {}
+
+    if (query.filter) {
+      params.filter = filters[query.filter]
+    }
+
+    params.query = query.query
+
+    if (query.from) {
+      params.from = new Date(query.from)
+    }
+    if (query.to) {
+      params.to = new Date(query.to)
+    }
+
+    return params
+  }
+
+  await SharedReceiptsService.getDetailedSharedReceiptsByUserId(res.locals.credential.user_id, createParams(req.query)).match(
     (shared_receipts) => res.status(200).send(shared_receipts),
     createResponseHandler(req, res),
   )

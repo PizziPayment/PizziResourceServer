@@ -148,5 +148,35 @@ describe('Share receipt endpoint', () => {
       expect(res.body[0].user.surname).toEqual(sender.user_handle.surname)
       expect(res.body[0].user.avatar_id).toEqual(sender.user_handle.avatar_id)
     })
+    it('basic test with filter that should find', async () => {
+      const sender = await setupUser(0)
+      const receiver = await setupUser(1)
+      const shop = await setupShop()
+      const receipt = await setupReceipt(sender.id, shop)
+      const shared_receipt = (await SharedReceiptsService.shareReceiptByEmail(receipt.id, users[1].email))._unsafeUnwrap()
+
+      const res = await request(App).get(`${endpoint}/?query=${shops[0].name}`).set(createBearerHeader(receiver.token))
+
+      expect(res.statusCode).toEqual(200)
+      expect(res.body[0].receipt.id).toEqual(receipt.id)
+      expect(res.body[0].receipt.total_price).toEqual(receipt.total_price)
+      expect(res.body[0].id).toEqual(shared_receipt.id)
+      expect(new Date(res.body[0].shared_at)).toEqual(shared_receipt.shared_at)
+      expect(res.body[0].user.firstname).toEqual(sender.user_handle.firstname)
+      expect(res.body[0].user.surname).toEqual(sender.user_handle.surname)
+      expect(res.body[0].user.avatar_id).toEqual(sender.user_handle.avatar_id)
+    })
+    it("basic test with filter that shouldn't find", async () => {
+      const sender = await setupUser(0)
+      const receiver = await setupUser(1)
+      const shop = await setupShop()
+      const receipt = await setupReceipt(sender.id, shop)
+      const shared_receipt = (await SharedReceiptsService.shareReceiptByEmail(receipt.id, users[1].email))._unsafeUnwrap()
+
+      const res = await request(App).get(`${endpoint}/?query=GLABOUBIOQUE`).set(createBearerHeader(receiver.token))
+
+      expect(res.statusCode).toEqual(200)
+      expect(res.body).toHaveLength(0)
+    })
   })
 })
