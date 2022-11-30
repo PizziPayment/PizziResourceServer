@@ -202,9 +202,9 @@ export async function getSharedReceipts(
     if (query.filter) {
       params.filter = filters[query.filter]
     }
-    if (query.query) {
-      params.query = query.query
-    }
+
+    params.query = query.query
+
     if (query.from) {
       params.from = new Date(query.from)
     }
