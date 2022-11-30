@@ -11,6 +11,9 @@ import {
   ShopModel,
   ShopsServices,
   ShopWithCredsModel,
+  UserModel,
+  UsersServices,
+  UserWithCredsModel,
 } from 'pizzi-db'
 import { ApiFailure } from '../common/models/api.response.model'
 import { createResponseHandler } from '../common/services/error_handling'
@@ -20,6 +23,7 @@ import { DeleteByIdRequestModel } from './models/delete_by_id.request.model'
 import { FinalGetPageRequestModel, GetPageRequestModel } from './models/get_page.request.model'
 import { randomBytes } from 'node:crypto'
 import CreateShopRequestModel from './models/create_shop.request.model'
+import CreateUserRequestModel from './models/create_user.request.model'
 
 export type AdminResponseModel = { id: number; credentials_id: number; email: string }
 export type ClientResponseModel = { id: number; client_id: string; client_secret: string }
@@ -37,6 +41,17 @@ export type ShopResponseModel = {
   instagram?: string
   twitter?: string
   facebook?: string
+  credentials: {
+    id: number
+    email: string
+  }
+}
+export type UserResponseModel = {
+  id: number
+  firstname: string
+  surname: string
+  address: string
+  zipcode: number
   credentials: {
     id: number
     email: string
@@ -64,7 +79,7 @@ export async function createAdmin(req: Request<void, void, CreateAdminRequestMod
     .match((response) => res.status(201).send(response), createResponseHandler(req, res))
 }
 
-export async function deleteAdmin(req: Request, res: Response<void | ApiFailure>): Promise<void> {
+export async function deleteAdmin(req: Request<DeleteByIdRequestModel>, res: Response<void | ApiFailure>): Promise<void> {
   AdminsService.deleteAdminById(Number(req.params.id)).match(
     () => res.status(204).send(),
     createResponseHandler(req, res, [[ErrorCause.InvalidAdmin, 404, `Admin ${req.params.id} not found`]]),
@@ -115,10 +130,36 @@ export async function createShop(req: Request<unknown, unknown, CreateShopReques
     .match((shop) => res.status(201).send(shop), createResponseHandler(req, res))
 }
 
-export async function deleteShop(req: Request, res: Response<void | ApiFailure>): Promise<void> {
+export async function deleteShop(req: Request<DeleteByIdRequestModel>, res: Response<void | ApiFailure>): Promise<void> {
   await ShopsServices.deleteShopById(Number(req.params.id)).match(
     () => res.status(204).send(),
     createResponseHandler(req, res, [[ErrorCause.ShopNotFound, 404, `Shop ${req.params.id} not found`]]),
+  )
+}
+
+export async function getUsers(req: Request<void, void, void, GetPageRequestModel>, res: Response<UserResponseModel[] | ApiFailure>): Promise<void> {
+  let params = FinalGetPageRequestModel.fromBaseModel(req.query)
+
+  UsersServices.getUsersPage(params.page_nb, params.items_nb).match(
+    (users) => res.status(200).send(users.map(to_user_response)),
+    createResponseHandler(req, res),
+  )
+}
+
+export async function createUser(req: Request<void, void, CreateUserRequestModel>, res: Response<UserResponseModel | ApiFailure>): Promise<void> {
+  await UsersServices.createUser(req.body.name, req.body.surname, `${req.body.place.address}, ${req.body.place.city}`, req.body.place.zipcode)
+    .andThen((user) =>
+      CredentialsService.createCredentialWithId('user', user.id, req.body.email, EncryptionService.encrypt(req.body.password))
+        .mapErr(() => UsersServices.deleteUserById(user.id))
+        .map((credentials) => user_and_credentials_to_user_response(user, credentials)),
+    )
+    .match((user) => res.status(201).send(user), createResponseHandler(req, res))
+}
+
+export async function deleteUser(req: Request<DeleteByIdRequestModel>, res: Response<void | ApiFailure>): Promise<void> {
+  await UsersServices.deleteUserById(Number(req.params.id)).match(
+    () => res.status(204).send(),
+    createResponseHandler(req, res, [[ErrorCause.UserNotFound, 404, `User ${req.params.id} not found`]]),
   )
 }
 
@@ -167,6 +208,34 @@ function shop_and_credentials_to_shop_response(shop: ShopModel, credentials: Cre
     instagram: shop.instagram,
     twitter: shop.twitter,
     facebook: shop.facebook,
+    credentials: {
+      id: credentials.id,
+      email: credentials.email,
+    },
+  }
+}
+
+function to_user_response(user: UserWithCredsModel): UserResponseModel {
+  return {
+    id: user.id,
+    firstname: user.firstname,
+    surname: user.surname,
+    address: user.address,
+    zipcode: user.zipcode,
+    credentials: {
+      id: user.credential.id,
+      email: user.credential.email,
+    },
+  }
+}
+
+function user_and_credentials_to_user_response(user: UserModel, credentials: CredentialModel): UserResponseModel {
+  return {
+    id: user.id,
+    firstname: user.firstname,
+    surname: user.surname,
+    address: user.address,
+    zipcode: user.zipcode,
     credentials: {
       id: credentials.id,
       email: credentials.email,
