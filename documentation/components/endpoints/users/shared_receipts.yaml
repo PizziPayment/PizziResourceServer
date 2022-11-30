@@ -20,6 +20,7 @@ get:
       schema:
         type: string
       example: steam
+      description: Search query for shop name.
     - in: query
       name: from
       schema:
