@@ -32,11 +32,13 @@ describe('Admin list endpoint', () => {
   it('basic test', async () => {
     const emails: string[] = ['toto@tata.com', 'tutu@tete.com']
     let token: string = ''
-    const admins: AdminResponseModel[] = await Promise.all(emails.map(async (email) => {
-      const details = await createAdmin(email, 'P@ssw0rdlong')
-      token = details.token
-      return { id: details.id, credentials_id: details.credentials_id, email }
-    }))
+    const admins: AdminResponseModel[] = await Promise.all(
+      emails.map(async (email) => {
+        const details = await createAdmin(email, 'P@ssw0rdlong')
+        token = details.token
+        return { id: details.id, credentials_id: details.credentials_id, email }
+      }),
+    )
     admins.sort((lhs, rhs) => lhs.id - rhs.id)
 
     const res = await request(App).get(baseUrlAdmins).set(createBearerHeader(token))
@@ -50,21 +52,27 @@ describe('Admin list endpoint', () => {
   it('with pagination', async () => {
     const emails: string[] = ['toto@tata.com', 'tutu@tete.com', 'third@stop.com']
     let token: string = ''
-    const admins: AdminResponseModel[] = await Promise.all(emails.map(async (email) => {
-      const details = await createAdmin(email, 'P@ssw0rdlong')
-      token = details.token
-      return { id: details.id, credentials_id: details.credentials_id, email }
-    }))
+    const admins: AdminResponseModel[] = await Promise.all(
+      emails.map(async (email) => {
+        const details = await createAdmin(email, 'P@ssw0rdlong')
+        token = details.token
+        return { id: details.id, credentials_id: details.credentials_id, email }
+      }),
+    )
     admins.sort((lhs, rhs) => lhs.id - rhs.id)
 
     const endpoint = `${baseUrlAdmins}?items_nb=2&page_nb=`
 
-    const res = await request(App).get(endpoint + '1').set(createBearerHeader(token))
+    const res = await request(App)
+      .get(endpoint + '1')
+      .set(createBearerHeader(token))
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(2)
     let body: AdminResponseModel[] = res.body
 
-    const second_res = await request(App).get(endpoint + '2').set(createBearerHeader(token))
+    const second_res = await request(App)
+      .get(endpoint + '2')
+      .set(createBearerHeader(token))
     expect(second_res.statusCode).toBe(200)
     expect(second_res.body.length).toBe(1)
     body.push(second_res.body[0])
@@ -116,7 +124,7 @@ describe('Admin deletion endpoint', () => {
     const admin_info = await createAdmin()
     const emails: string[] = ['toto@tata.com', 'tutu@tete.com']
     const admins: AdminResponseModel[] = []
-    const base_client = ((await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap())
+    const base_client = (await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()
     const password = 'P@ssw0rdlong'
 
     for (const email of emails) {

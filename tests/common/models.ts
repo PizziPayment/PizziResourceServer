@@ -55,7 +55,7 @@ export const shops: Array<ShopRegisterRequestModel> = [
 
 export const admin = {
   email: 'admin@mcadminface.com',
-  password: 'P@ssw*rdbutlonger'
+  password: 'P@ssw*rdbutlonger',
 }
 
 export const client = { client_id: 'toto', client_secret: 'tutu' }

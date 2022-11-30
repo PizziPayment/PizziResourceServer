@@ -31,8 +31,11 @@ afterEach(async () => {
 describe('Client list endpoint', () => {
   it('basic test', async () => {
     const admin = await createAdmin()
-    const data: [string, string][] = [['one_id', 'one_secret'], ['two_id', 'two_secret']]
-    const clients: ClientModel[] = [((await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap())]
+    const data: [string, string][] = [
+      ['one_id', 'one_secret'],
+      ['two_id', 'two_secret'],
+    ]
+    const clients: ClientModel[] = [(await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()]
 
     for (const [id, secret] of data) {
       clients.push((await ClientsService.createClientFromIdAndSecret(id, secret))._unsafeUnwrap())
@@ -49,8 +52,11 @@ describe('Client list endpoint', () => {
 
   it('with pagination', async () => {
     const admin = await createAdmin()
-    const data: [string, string][] = [['one_id', 'one_secret'], ['two_id', 'two_secret']]
-    const clients: ClientModel[] = [((await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap())]
+    const data: [string, string][] = [
+      ['one_id', 'one_secret'],
+      ['two_id', 'two_secret'],
+    ]
+    const clients: ClientModel[] = [(await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()]
 
     for (const [id, secret] of data) {
       clients.push((await ClientsService.createClientFromIdAndSecret(id, secret))._unsafeUnwrap())
@@ -58,12 +64,16 @@ describe('Client list endpoint', () => {
     clients.sort((lhs, rhs) => lhs.id - rhs.id)
 
     const endpoint = `${baseUrlClients}?items_nb=2&page_nb=`
-    const res = await request(App).get(endpoint + '1').set(createBearerHeader(admin.token))
+    const res = await request(App)
+      .get(endpoint + '1')
+      .set(createBearerHeader(admin.token))
     expect(res.statusCode).toBe(200)
     expect(res.body.length).toBe(2)
     const body: ClientResponseModel[] = res.body
 
-    const second_res = await request(App).get(endpoint + '2').set(createBearerHeader(admin.token))
+    const second_res = await request(App)
+      .get(endpoint + '2')
+      .set(createBearerHeader(admin.token))
     expect(second_res.statusCode).toBe(200)
     expect(second_res.body.length).toBe(1)
     body.push(second_res.body[0])
@@ -78,7 +88,7 @@ describe('Client creation endpoint', () => {
   it('basic test', async () => {
     const admin = await createAdmin()
     const data: string[] = ['one_id', 'two_id']
-    const clients: ClientModel[] = [((await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap())]
+    const clients: ClientModel[] = [(await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()]
 
     for (const id of data) {
       const res = await request(App).post(baseUrlClients).set(createBearerHeader(admin.token)).send({ client_id: id })
@@ -113,7 +123,7 @@ describe('Client deletion endpoint', () => {
     const admin_info = await createAdmin()
     const data: string[] = ['one_id', 'two_id']
     const clients: ClientModel[] = []
-    const base_client = ((await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap())
+    const base_client = (await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()
 
     for (const id of data) {
       const res = await request(App).post(baseUrlClients).set(createBearerHeader(admin_info.token)).send({ client_id: id })
@@ -140,7 +150,7 @@ describe('Client deletion endpoint', () => {
 
   it('should revoke the access tokens linked to a deleted client', async () => {
     const admin_info = await createAdmin()
-    const base_client = ((await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap())
+    const base_client = (await ClientsService.getClientFromIdAndSecret(client.client_id, client.client_secret))._unsafeUnwrap()
 
     const res = await request(App).post(`${baseUrlClients}/${base_client.id}`).set(createBearerHeader(admin_info.token)).send()
 

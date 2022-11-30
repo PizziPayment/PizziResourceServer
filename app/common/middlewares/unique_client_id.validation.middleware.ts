@@ -9,14 +9,11 @@ export default async function validUniqueClientId(
   res: Response<ApiResponseWrapper<unknown>>,
   next: NextFunction,
 ): Promise<Response | void> {
-  await ClientsService.isClientIdUsed(req.body.client_id).match(
-    (exists) => {
-      if (!exists) {
-        next()
-      } else {
-        res.status(400).send(new ApiFailure(req.url, 'Client id already exists'))
-      }
-    },
-    createResponseHandler(req, res),
-  )
+  await ClientsService.isClientIdUsed(req.body.client_id).match((exists) => {
+    if (!exists) {
+      next()
+    } else {
+      res.status(400).send(new ApiFailure(req.url, 'Client id already exists'))
+    }
+  }, createResponseHandler(req, res))
 }

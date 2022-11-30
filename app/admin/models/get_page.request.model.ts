@@ -16,7 +16,7 @@ export class FinalGetPageRequestModel {
   static fromBaseModel(model: GetPageRequestModel): FinalGetPageRequestModel {
     return {
       page_nb: Number(model.page_nb) || 1,
-      items_nb: Number(model.items_nb) || 25
+      items_nb: Number(model.items_nb) || 25,
     }
   }
 
