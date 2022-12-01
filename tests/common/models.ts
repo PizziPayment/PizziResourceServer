@@ -53,6 +53,11 @@ export const shops: Array<ShopRegisterRequestModel> = [
   },
 ]
 
+export const admin = {
+  email: 'admin@mcadminface.com',
+  password: 'P@ssw*rdbutlonger',
+}
+
 export const client = { client_id: 'toto', client_secret: 'tutu' }
 export const client_header = (client_id: string = client.client_id, client_secret: string = client.client_secret) => {
   return { Authorization: 'Basic ' + Buffer.from(`${client_id}:${client_secret}`).toString('base64') }

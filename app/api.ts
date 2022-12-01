@@ -7,6 +7,7 @@ import ShopItemRouter from './shop_item/routes.config'
 import TransactionsRouter from './transaction/routes.config'
 import PaymentRouter from './payments/routes.config'
 import ImagesRouter from './images/routes.config'
+import { AdminRouter } from './admin/routes.config'
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -32,5 +33,6 @@ ShopItemRouter(app)
 TransactionsRouter(app)
 PaymentRouter(app)
 ImagesRouter(app)
+AdminRouter(app)
 
 export const App = app
