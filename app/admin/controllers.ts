@@ -24,6 +24,8 @@ import { FinalGetPageRequestModel, GetPageRequestModel } from './models/get_page
 import { randomBytes } from 'node:crypto'
 import CreateShopRequestModel from './models/create_shop.request.model'
 import CreateUserRequestModel from './models/create_user.request.model'
+import UpdateCredentialsRequestModel from './models/update_credentials.request.model'
+import { okAsync } from 'neverthrow'
 
 export type AdminResponseModel = { id: number; credentials_id: number; email: string }
 export type ClientResponseModel = { id: number; client_id: string; client_secret: string }
@@ -161,6 +163,18 @@ export async function deleteUser(req: Request<DeleteByIdRequestModel>, res: Resp
     () => res.status(204).send(),
     createResponseHandler(req, res, [[ErrorCause.UserNotFound, 404, `User ${req.params.id} not found`]]),
   )
+}
+
+export async function updateCredentials(req: Request<void, void, UpdateCredentialsRequestModel>, res: Response<void | ApiFailure>): Promise<void> {
+  const f = () => {
+    if (req.body.email != undefined || req.body.password != undefined) {
+      return CredentialsService.changeEmailAndPassword(req.body.id, req.body.email, req.body.password)
+    } else {
+      return okAsync(undefined)
+    }
+  }
+
+  f().match(() => res.status(204).send(), createResponseHandler(req, res))
 }
 
 function to_admin_response(db_model: AdminModel): AdminResponseModel {
