@@ -132,7 +132,7 @@ export async function receipt(
             discount: product.discount,
           }
         }),
-        creation_date: new Date(),
+        creation_date: receipt.created_at,
         payment_type: 'card',
         total_ht: receipt.total_price,
         total_ttc: receipt.items.reduce((a, b) => a + compute_tax(b.price * b.quantity, b.tva_percentage), 0),
