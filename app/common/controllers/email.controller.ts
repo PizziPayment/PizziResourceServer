@@ -9,5 +9,5 @@ export default async function changeEmail(
 ): Promise<void> {
   const cred_id = res.locals.token.credential_id
 
-  await CredentialsService.changeEmail(cred_id, req.body.new_email).match(() => res.status(204).send(), createResponseHandler(req, res))
+  await CredentialsService.changeEmailAndPassword(cred_id, req.body.new_email).match(() => res.status(204).send(), createResponseHandler(req, res))
 }

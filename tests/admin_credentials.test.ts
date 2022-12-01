@@ -1,4 +1,4 @@
-import { ClientModel, ClientsService, CredentialsService, rewriteTables } from 'pizzi-db'
+import { ClientModel, ClientsService, CredentialsService, EncryptionService, rewriteTables } from 'pizzi-db'
 import { config } from '../app/common/config'
 import * as request from 'supertest'
 import { App } from '../app/api'
@@ -46,6 +46,6 @@ describe('Credentials update endpoint', () => {
     const credentials = (await CredentialsService.getCredentialFromId(user_body.credentials.id))._unsafeUnwrap()
 
     expect(credentials.email).toBe(users[1].email)
-    expect(credentials.password).toBe(users[1].password)
+    expect(credentials.password).toBe(EncryptionService.encrypt(users[1].password))
   })
 })

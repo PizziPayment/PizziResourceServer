@@ -133,9 +133,9 @@ export async function createShop(req: Request<unknown, unknown, CreateShopReques
 }
 
 export async function deleteShop(req: Request<DeleteByIdRequestModel>, res: Response<void | ApiFailure>): Promise<void> {
-  await ShopsServices.deleteShopById(Number(req.params.id)).match(
+  await CredentialsService.deleteCredentialFromOwnerId('shop', Number(req.params.id)).match(
     () => res.status(204).send(),
-    createResponseHandler(req, res, [[ErrorCause.ShopNotFound, 404, `Shop ${req.params.id} not found`]]),
+    createResponseHandler(req, res, [[ErrorCause.CredentialNotFound, 404, `Shop ${req.params.id} not found`]]),
   )
 }
 
@@ -159,16 +159,16 @@ export async function createUser(req: Request<void, void, CreateUserRequestModel
 }
 
 export async function deleteUser(req: Request<DeleteByIdRequestModel>, res: Response<void | ApiFailure>): Promise<void> {
-  await UsersServices.deleteUserById(Number(req.params.id)).match(
+  await CredentialsService.deleteCredentialFromOwnerId('user', Number(req.params.id)).match(
     () => res.status(204).send(),
-    createResponseHandler(req, res, [[ErrorCause.UserNotFound, 404, `User ${req.params.id} not found`]]),
+    createResponseHandler(req, res, [[ErrorCause.CredentialNotFound, 404, `User ${req.params.id} not found`]]),
   )
 }
 
 export async function updateCredentials(req: Request<void, void, UpdateCredentialsRequestModel>, res: Response<void | ApiFailure>): Promise<void> {
   const f = () => {
     if (req.body.email != undefined || req.body.password != undefined) {
-      return CredentialsService.changeEmailAndPassword(req.body.id, req.body.email, req.body.password)
+      return CredentialsService.changeEmailAndPassword(req.body.id, req.body.email, EncryptionService.encrypt(req.body.password))
     } else {
       return okAsync(undefined)
     }

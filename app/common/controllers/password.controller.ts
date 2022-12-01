@@ -9,7 +9,7 @@ export default async function changePassword(
 ): Promise<void> {
   const cred_id = res.locals.token.credential_id
 
-  await CredentialsService.changePassword(cred_id, EncryptionService.encrypt(req.body.new_password)).match(
+  await CredentialsService.changeEmailAndPassword(cred_id, undefined, EncryptionService.encrypt(req.body.new_password)).match(
     () => res.status(204).send(),
     createResponseHandler(req, res),
   )
