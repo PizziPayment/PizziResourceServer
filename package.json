@@ -55,7 +55,7 @@
     "express": "^4.17.2",
     "multer": "^1.4.5-lts.1",
     "neverthrow": "^5.1.0",
-    "pizzi-db": "git@github.com:PizziPayment/PizziAPIDB.git#tag=v3.8.0",
+    "pizzi-db": "git@github.com:PizziPayment/PizziAPIDB.git#tag=v3.9.0",
     "record-validator": "^1.5.0",
     "reflect-metadata": "^0.1.13",
     "sharp": "^0.31.0",
