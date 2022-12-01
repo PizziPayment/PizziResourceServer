@@ -64,7 +64,7 @@ export async function getAdmins(req: Request<void, void, void, GetPageRequestMod
   let params = FinalGetPageRequestModel.fromBaseModel(req.query)
 
   await AdminsService.getAdminsPage(params.page_nb, params.items_nb).match(
-    (admins) => res.status(200).send(admins.map(to_admin_response)),
+    (admins) => res.status(200).send(admins.map(toAdminResponse)),
     createResponseHandler(req, res),
   )
 }
@@ -92,7 +92,7 @@ export async function getClients(req: Request<void, void, void, GetPageRequestMo
   let params = FinalGetPageRequestModel.fromBaseModel(req.query)
 
   await ClientsService.getClientsPage(params.page_nb, params.items_nb).match(
-    (clients) => res.status(200).send(clients.map(to_client_response)),
+    (clients) => res.status(200).send(clients.map(toClientResponse)),
     createResponseHandler(req, res),
   )
 }
@@ -101,7 +101,7 @@ export async function createClient(req: Request<void, void, CreateClientRequestM
   const secret = randomBytes(4).toString('base64')
 
   await ClientsService.createClientFromIdAndSecret(req.body.client_id, secret).match(
-    (client) => res.status(201).send(to_client_response(client)),
+    (client) => res.status(201).send(toClientResponse(client)),
     createResponseHandler(req, res),
   )
 }
@@ -117,7 +117,7 @@ export async function getShops(req: Request<void, void, void, GetPageRequestMode
   let params = FinalGetPageRequestModel.fromBaseModel(req.query)
 
   await ShopsServices.getShopsPage(params.page_nb, params.items_nb).match(
-    (clients) => res.status(200).send(clients.map(to_shop_response)),
+    (clients) => res.status(200).send(clients.map(toShopResponse)),
     createResponseHandler(req, res),
   )
 }
@@ -127,7 +127,7 @@ export async function createShop(req: Request<unknown, unknown, CreateShopReques
     .andThen((shop) =>
       CredentialsService.createCredentialWithId('shop', shop.id, req.body.email, EncryptionService.encrypt(req.body.password))
         .mapErr(() => ShopsServices.deleteShopById(shop.id))
-        .map((credentials) => shop_and_credentials_to_shop_response(shop, credentials)),
+        .map((credentials) => shopAndCredentialsToShopResponse(shop, credentials)),
     )
     .match((shop) => res.status(201).send(shop), createResponseHandler(req, res))
 }
@@ -143,7 +143,7 @@ export async function getUsers(req: Request<void, void, void, GetPageRequestMode
   let params = FinalGetPageRequestModel.fromBaseModel(req.query)
 
   UsersServices.getUsersPage(params.page_nb, params.items_nb).match(
-    (users) => res.status(200).send(users.map(to_user_response)),
+    (users) => res.status(200).send(users.map(toUserResponse)),
     createResponseHandler(req, res),
   )
 }
@@ -153,7 +153,7 @@ export async function createUser(req: Request<void, void, CreateUserRequestModel
     .andThen((user) =>
       CredentialsService.createCredentialWithId('user', user.id, req.body.email, EncryptionService.encrypt(req.body.password))
         .mapErr(() => UsersServices.deleteUserById(user.id))
-        .map((credentials) => user_and_credentials_to_user_response(user, credentials)),
+        .map((credentials) => userAndCredentialsToUserResponse(user, credentials)),
     )
     .match((user) => res.status(201).send(user), createResponseHandler(req, res))
 }
@@ -177,15 +177,15 @@ export async function updateCredentials(req: Request<void, void, UpdateCredentia
   f().match(() => res.status(204).send(), createResponseHandler(req, res))
 }
 
-function to_admin_response(db_model: AdminModel): AdminResponseModel {
+function toAdminResponse(db_model: AdminModel): AdminResponseModel {
   return { id: db_model.id, credentials_id: db_model.credential_id, email: db_model.email }
 }
 
-function to_client_response(db_model: ClientModel): ClientResponseModel {
+function toClientResponse(db_model: ClientModel): ClientResponseModel {
   return { id: db_model.id, client_id: db_model.client_id, client_secret: db_model.client_secret }
 }
 
-function to_shop_response(db_model: ShopWithCredsModel): ShopResponseModel {
+function toShopResponse(db_model: ShopWithCredsModel): ShopResponseModel {
   return {
     id: db_model.id,
     name: db_model.name,
@@ -207,7 +207,7 @@ function to_shop_response(db_model: ShopWithCredsModel): ShopResponseModel {
   }
 }
 
-function shop_and_credentials_to_shop_response(shop: ShopModel, credentials: CredentialModel): ShopResponseModel {
+function shopAndCredentialsToShopResponse(shop: ShopModel, credentials: CredentialModel): ShopResponseModel {
   return {
     id: shop.id,
     name: shop.name,
@@ -229,7 +229,7 @@ function shop_and_credentials_to_shop_response(shop: ShopModel, credentials: Cre
   }
 }
 
-function to_user_response(user: UserWithCredsModel): UserResponseModel {
+function toUserResponse(user: UserWithCredsModel): UserResponseModel {
   return {
     id: user.id,
     firstname: user.firstname,
@@ -243,7 +243,7 @@ function to_user_response(user: UserWithCredsModel): UserResponseModel {
   }
 }
 
-function user_and_credentials_to_user_response(user: UserModel, credentials: CredentialModel): UserResponseModel {
+function userAndCredentialsToUserResponse(user: UserModel, credentials: CredentialModel): UserResponseModel {
   return {
     id: user.id,
     firstname: user.firstname,
