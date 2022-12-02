@@ -12,6 +12,7 @@ import { AdminRouter } from './admin/routes.config'
 const app = express()
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(bodyParser.raw({ limit: '10mb' }))
 
 //Cors
 app.use((req, res, next) => {
