@@ -1,0 +1,52 @@
+get:
+  operationId: list_shop_receipts
+  tags:
+    - Shop
+  summary: List receipts
+  description: List the shop's receipts
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: query
+      name: filter
+      schema:
+        $ref: "../../../components/types.yaml#/filter"
+      example: latest
+    - in: query
+      name: from
+      schema:
+        type: string
+      example: 2018-03-20T09:12:28Z
+    - in: query
+      name: to
+      schema:
+        type: string
+      example: 2018-03-20T09:12:28Z
+  responses:
+    200:
+      description: Receipts list.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                receipt_id:
+                  type: number
+                date:
+                  type: string
+                  description: Date in the `DD/MM/YYYY` format.
+                total_ttc:
+                  $ref: '../../../openapi.yaml#/components/schemas/price'
+          example:
+            - receipt_id: 0
+              date: "21/09/2021"
+              total_ttc: 1234000
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+      description: UNAUTHORIZED
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

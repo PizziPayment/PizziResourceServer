@@ -1,0 +1,40 @@
+name: Remove temporary PR documentation.
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+
+jobs:
+  remove-temporary-docs:
+    runs-on: ubuntu-latest
+    env:
+      REPOSITORY: ${{ github.repository_owner }}/Documentation
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository_owner }}/Documentation
+          ssh-key: ${{ secrets.PIZZI_SSH_KEY }}
+      - name: Fetch the list of tags related to PR${{ github.event.number}}.
+        run: |
+          TAGS=$(
+            gh release list --repo $REPOSITORY | \
+            grep 'ResourceServer.PR${{ github.event.number }}' | \
+            cut -f 1)
+          # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
+          echo "TAGS<<EOF" >> $GITHUB_ENV
+          echo "$TAGS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Delete list of release
+        run: echo "$TAGS" | xargs -I {} gh release delete {} --repo $REPOSITORY --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          TAGS: ${{ env.TAGS }}
+
+      - name: Delete tags from Documentation repo
+        run: echo "$TAGS" | xargs -I {} git push git@github.com:$REPOSITORY --delete {}
+        env:
+          TAGS: ${{ env.TAGS }}

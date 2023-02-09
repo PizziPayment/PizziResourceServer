@@ -1,0 +1,15 @@
+type: object
+description: Product/service of a shop.
+required:
+  - name
+  - price
+properties:
+  name:
+    type: string
+    description: Product/service's name.
+  price:
+    $ref: '../../../openapi.yaml#/components/schemas/price'
+  category:
+    type: string
+  color:
+    type: string

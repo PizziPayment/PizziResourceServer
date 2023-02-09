@@ -1,8 +1,0 @@
-type: object
-properties:
-  password:
-    $ref: "../../types.yaml#/password"
-example:
-  {
-    "password": "Valid_passw0rd"
-  }

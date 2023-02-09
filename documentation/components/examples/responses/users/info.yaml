@@ -1,0 +1,8 @@
+description: User's info example
+value:
+  id: 1
+  firstname: Louis de Funes
+  surname: Loulou
+  address: 62 rue de l'église
+  zipcode: 92400
+  avatar_id: 324

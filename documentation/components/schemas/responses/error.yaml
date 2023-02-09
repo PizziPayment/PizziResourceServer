@@ -1,0 +1,9 @@
+type: object
+description: Error object
+properties:
+  source:
+    description: An URI
+    type: string
+  message:
+    description: A human description of the error
+    type: string

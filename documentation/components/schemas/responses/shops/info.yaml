@@ -1,0 +1,55 @@
+description: Shop's info
+type: object
+required:
+  - id
+  - email
+  - name
+  - phone
+  - address
+  - zipcode
+  - siret
+  - description
+  - website
+  - instagram
+  - twitter
+  - facebook
+properties:
+  id:
+    type: number
+    description: Shop's id.
+  email:
+    type: string
+    description: Shop's email.
+  name:
+    type: string
+    description: Shop's name.
+  phone:
+    type: string
+    description: Shop's phone.
+  address:
+    type: string
+    description: Shop's location.
+  zipcode:
+    type: number
+    description: Shop's location zipcode.
+  siret:
+    type: string
+    description: Shop's siret.
+  description:
+    type: string
+    description: Shop's description.
+  website:
+    type: string
+    description: Shop's website.
+  instagram:
+    type: string
+    description: Shop's instagram page.
+  twitter:
+    type: string
+    description: Shop's twitter account.
+  facebook:
+    type: string
+    description: Shop's facebook page.
+  avatar_id:
+    type: number
+    description: Shop's avatar id, if it has one.

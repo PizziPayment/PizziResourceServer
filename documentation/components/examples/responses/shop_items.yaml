@@ -1,0 +1,12 @@
+value:
+  items:
+    - id: 1
+      name: red wheelbarrow
+      price: 999900
+      category: 'Tools'
+      color: '#000000'
+    - id: 2
+      name: cultivator
+      price: 3460000
+      category: 'Tools'
+      color: '#000000'

@@ -1,0 +1,14 @@
+allOf:
+  - type: object
+    description: Product return certificate.
+    required:
+      - id
+      - return_date
+    properties:
+      id:
+        type: number
+        description: Id of the certificate.
+      return_date:
+        type: string
+        format: date-time
+  - $ref: '../../../openapi.yaml#/components/schemas/RequestProductReturnCertificate'

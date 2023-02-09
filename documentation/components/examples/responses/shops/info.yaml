@@ -1,0 +1,14 @@
+description: Shop's info example
+value:
+  id: 2
+  email: bernard.fortune@example.com
+  name: Argent
+  phone: '0652076382'
+  address: 13 rue de la ville Ville
+  zipcode: 25619
+  siret: "32974655600060"
+  description: On vend des trucs.
+  website: "https://example.com"
+  instagram: "https://instagram.com"
+  twitter: "https://twitter.com/Twitter"
+  facebook: "https://facebook.com"

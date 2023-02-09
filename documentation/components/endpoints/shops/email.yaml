@@ -1,0 +1,26 @@
+patch:
+  operationId: update_shop_email
+  tags:
+    - Shop
+  summary: Update email
+  description: Update shop's email.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: Shop's new email
+    content:
+      application/json:
+        schema:
+          $ref: '../../../openapi.yaml#/components/schemas/RequestChangeEmail'
+        examples:
+          ChangeShopEmail:
+            $ref: '../../../openapi.yaml#/components/examples/RequestChangeEmail'
+  responses:
+    204:
+      $ref: '../../../openapi.yaml#/components/responses/204'
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

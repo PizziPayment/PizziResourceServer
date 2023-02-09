@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: number
+  receipt_id:
+    type: number
+  user_id:
+    type: number
+    nullable: true
+  shop_id:
+    type: number
+  payment_method:
+    $ref: '../../../openapi.yaml#/components/schemas/payment_method'
+  state:
+    type: string
+    description: A newly created transaction is always `pending`.
+  created_at:
+    type: string
+    format: date
+  updated_at:
+    type: string
+    nullable: true
+    format: date

@@ -1,0 +1,100 @@
+get:
+  operationId: get_user_receipt_details
+  tags:
+    - User
+  summary: Get receipt details
+  description: Get a receipt's details
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: receipt_id
+      in: path
+      description: The receipt's id
+      required: true
+      schema:
+        type: number
+      example: 4
+  responses:
+    200:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              vendor:
+                type: object
+                properties:
+                  avatar_id:
+                    type: number
+                    description: The id of the shop's logo
+                  name:
+                    type: string
+                  place:
+                    type: object
+                    properties:
+                      street:
+                        type: string
+                      city:
+                        type: string
+                      postal_code:
+                        type: number
+                  siret:
+                    type: string
+                  shop_number:
+                    type: string
+              products:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    product_name:
+                      type: string
+                    quantity:
+                      type: number
+                    unit_price:
+                      $ref: '../../../openapi.yaml#/components/schemas/price'
+                    warranty:
+                      type: string
+                    eco_tax:
+                      type: number
+                    discount:
+                      type: number
+                    tva_percentage:
+                      type: number
+              creation_date:
+                type: string
+              payment_type:
+                type: string
+              total_ht:
+                $ref: '../../../openapi.yaml#/components/schemas/price'
+              total_ttc:
+                $ref: '../../../openapi.yaml#/components/schemas/price'
+          example:
+            vendor:
+              avatar_id: 9823
+              name: Steam
+              place:
+                street: Rue
+                city: Ville
+                postal_code: 12345
+              siret: '12345678912345'
+              shop_number: '00 00 00 00 00'
+            products:
+              - product_name: Outer Wilds
+                quantity: 1
+                unit_price: 174900
+                tva_percentage: 20
+                warranty: 18/06/2022
+                eco_tax: 0
+                discount: 0
+            payment_type: card
+            creation_date: 18/06/2020
+            total_ht: 174900
+            total_ttc: 209900
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

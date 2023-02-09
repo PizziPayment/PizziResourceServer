@@ -1,0 +1,16 @@
+type: object
+description: Product return certificate.
+required:
+  - receipt_item_id
+  - quantity
+  - reason
+properties:
+  receipt_item_id:
+    type: number
+    description: Id of the associated receipt item.
+  quantity:
+    type: number
+    description: Quantity of item returned.
+  reason:
+    type: string
+    description: Reason of return.

@@ -1,0 +1,36 @@
+name: Check doc
+on:
+  push:
+    paths:
+      - documentation/**
+
+jobs:
+  check-doc:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./documentation
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '17'
+      - run: yarn install
+        name: Install documentation tools
+      - run: yarn run check
+        name: Linter
+      - run: yarn run build
+        name: Build
+
+  trigger-doc-build:
+    if:  github.ref_name == 'master' || github.ref_name == 'develop'
+    needs: check-doc
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Dispatch action to deploy the documentation'
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          repository: PizziPayment/PizziPayment.github.io
+          token: ${{ secrets.ACCESS_TOKEN }}
+          event-type: Trigger resource-server documentation build workflow
+          client-payload: '{ "repo": "resource-server", "branch": "${{ github.ref_name }}" }'

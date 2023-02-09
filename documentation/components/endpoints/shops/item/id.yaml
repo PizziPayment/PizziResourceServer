@@ -1,0 +1,68 @@
+delete:
+  operationId: delete_shop_item
+  tags:
+    - Shop Item
+  summary: Delete shop item
+  description: Delete a shop item.
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Item's id.
+  security:
+    - BearerAuth: []
+  responses:
+    204:
+      $ref: '../../../../openapi.yaml#/components/responses/204'
+    400:
+      $ref: '../../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../../openapi.yaml#/components/responses/500'
+
+
+patch:
+  operationId: update_shop_item
+  tags:
+    - Shop Item
+  summary: Update shop item
+  description: >
+    Update the shop item related to the id in path. Notice that every field in
+    the request's body are optional.
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: Id of the shop item.
+  security:
+    - BearerAuth: []
+  requestBody:
+    description: Item's information.
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../openapi.yaml#/components/schemas/RequestShopItem'
+        examples:
+          ShopItem:
+            $ref: '../../../../openapi.yaml#/components/examples/RequestShopItem'
+  responses:
+    200:
+      description: Operation succeeded.
+      content:
+        application/json:
+          schema:
+            $ref: '../../../../openapi.yaml#/components/schemas/ResponseShopItem'
+          examples:
+            ShopItem:
+              $ref: '../../../../openapi.yaml#/components/examples/ResponseShopItem'
+    400:
+      $ref: '../../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../../openapi.yaml#/components/responses/500'

@@ -1,0 +1,9 @@
+type: object
+required:
+  - password
+  - new_email
+properties:
+  password:
+    $ref: "../../../openapi.yaml#/components/schemas/password"
+  new_email:
+    type: string

@@ -1,0 +1,73 @@
+get:
+  operationId: get_shop_receipt_details
+  tags:
+    - Shop
+  summary: Receipt details
+  description: Get a receipt's details
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: receipt_id
+      in: path
+      required: true
+      description: The receipt's id
+      schema:
+        type: number
+  responses:
+    200:
+      description: Receipt.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              products:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    product_name:
+                      type: string
+                    quantity:
+                      type: number
+                    unit_price:
+                      $ref: '../../../openapi.yaml#/components/schemas/price'
+                    tva_percentage:
+                      type: number
+                    warranty:
+                      type: string
+                    eco_tax:
+                      type: number
+                    discount:
+                      type: number
+              creation_date:
+                type: string
+              payment_type:
+                $ref: '../../../openapi.yaml#/components/schemas/payment_method'
+                type: string
+              total_ht:
+                $ref: '../../../openapi.yaml#/components/schemas/price'
+              total_ttc:
+                $ref: '../../../openapi.yaml#/components/schemas/price'
+          example:
+            products:
+              - id: 12
+                product_name: Outer Wilds
+                quantity: 1
+                unit_price: 174900
+                tva_percentage: 20
+                warranty: '18/06/2022'
+                eco_tax: 0
+                discount: 0
+            payment_type: card
+            creation_date: '18/06/2020'
+            total_ht: 174900
+            total_ttc: 209880
+    400:
+      $ref: '../../../openapi.yaml#/components/responses/400'
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

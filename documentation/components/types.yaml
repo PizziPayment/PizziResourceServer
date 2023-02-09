@@ -1,3 +1,29 @@
 password:
+  description: >
+    A string longer than 12 characters with at least a number, an upper case, a
+    lower case and a special character (`!@#$%^&*()/|\-_?.,;+¤{}[]`).
   type: string
-  description: A string longer than 12 characters with at least a number, an upper case, a lower case and a special character.
+  minLength: 12
+
+filter:
+  description: The order in which the elements should be returned.
+  type: string
+  enum:
+    - latest
+    - oldest
+    - price_ascending
+    - price_descending
+
+payment_method:
+  description: The payment method
+  type: string
+  enum:
+    - card
+    - cash
+    - cheque
+    - unassigned
+price:
+  description: >
+    Price stored thousandth of euro.
+  type: integer
+  min: 0

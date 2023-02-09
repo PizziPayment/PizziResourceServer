@@ -1,0 +1,39 @@
+post:
+  operationId: set_user_avatar
+  tags:
+    - User
+  summary: Set avatar
+  description: Set user's avatar.
+  security:
+    - BearerAuth: []
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            avatar:
+              description: The image in binary format
+              type: string
+              format: binary
+        example:
+          avatar: An image
+  responses:
+    200:
+      description: Updated image id
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              avatar_id:
+                type: number
+                description: The updated avatar id
+          example:
+            avatar_id: 435
+    400:
+      description: Invalid image
+    401:
+      $ref: '../../../openapi.yaml#/components/responses/401'
+    500:
+      $ref: '../../../openapi.yaml#/components/responses/500'

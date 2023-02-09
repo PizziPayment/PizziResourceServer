@@ -1,6 +1,12 @@
 name: jest
 on:
   pull_request:
+    paths:
+      - tests/**
+      - app/**
+      - package.json
+      - jest.config.ts
+      - .github/workflows/jest.yaml
     branches:
       - 'develop'
       - 'master'
@@ -10,16 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: "Setup .npmrc/.yarnrc"
-        run: ./.github/setup/jest.sh
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.VERDACIO_TOKEN }}
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '17'
           cache: 'yarn'
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.PIZZI_SSH_KEY }}
       - name: Install dependencies.
-        run: yarn install --ignore-scripts
+        run: yarn install
       - uses: actions/checkout@v2
         with:
           repository: PizziPayment/PizziBackDeploymentTools
